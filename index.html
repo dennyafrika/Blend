@@ -892,6 +892,22 @@ html[data-pal][data-theme="dark"]{--bg:color-mix(in srgb,var(--pal) calc(var(--p
 .rtsug button{margin:6px 6px 0 0;padding:4px 10px;border-radius:99px;border:1.5px solid var(--line);font-weight:600;color:var(--ink)}
 .rteff{margin-top:10px;font-family:var(--font-mono);font-size:11.5px;color:var(--muted)}
 
+/* clearer topic controls */
+.rtopics .rtinput{width:100%;box-sizing:border-box;height:46px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);padding:0 14px;color:var(--ink);font-size:16px}
+.rtopics .rtinput:focus{outline:2px solid var(--accent);border-color:transparent}
+.rtlab{margin:12px 0 6px;font-size:12.5px;font-weight:800}.rtlab span{font-weight:500;color:var(--muted)}
+.rtopics .rtseg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rtopics .rtseg button{display:flex;align-items:center;justify-content:center;gap:6px;height:44px;padding:0;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-weight:800;font-size:14px}
+.rtopics .rtseg button i{font-style:normal;font-size:17px;line-height:1}
+.rtopics .rtseg button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.rtopics .rtseg .m-more[aria-pressed="true"]{background:#1f9d57;border-color:#1f9d57;color:#fff}
+.rtopics .rtseg .m-less[aria-pressed="true"]{background:#d98a00;border-color:#d98a00;color:#fff}
+.rtopics .rtseg .m-hide[aria-pressed="true"]{background:#d6336c;border-color:#d6336c;color:#fff}
+.rtmean{margin:8px 2px 0;font-size:12.5px;color:var(--muted)}
+.rtopics .rtgo{display:block;width:100%;height:48px;margin-top:10px;border-radius:99px;background:var(--grad,var(--ink));color:#fff;font-weight:800;font-size:15px;padding:0 16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rtprev{min-height:18px;margin-top:8px;font-size:12.5px;color:var(--ink)}
+.rtsug em{font-style:normal}
+
 /* ===== Earnings wallet and virtual card ===== */
 .wlmini{display:grid;gap:4px;width:calc(100% - 32px);margin:12px 16px 0;padding:14px;text-align:left;border:1.5px solid var(--ink);border-radius:14px;background:var(--surface)}
 .wlmini span.k{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -1464,6 +1480,34 @@ html[data-halo] nav#nav{background:var(--surface);box-shadow:0 12px 30px rgba(16
 html[data-halo] nav#nav button[aria-current="page"],html[data-halo] nav#nav .emask[aria-current="page"]{background:var(--surface2);color:var(--accent)}
 html[data-halo] nav#nav .emask{background:none;color:var(--muted)}
 html[data-halo] .mkfab{box-shadow:0 10px 24px rgba(91,75,255,.35)}
+
+
+
+.sheet.cxsheet{height:92%;max-height:92%;display:flex;flex-direction:column;padding-bottom:0}
+.cxs{display:flex;flex-direction:column;min-height:0;flex:1}
+.cxscroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 2px 12px}
+.cxauth{padding:6px 0 10px}.cxwho{display:inline-flex;gap:10px;align-items:center;cursor:pointer}.cxwho b{display:block;font-size:15px}.cxwho small{color:var(--muted);font-size:12.5px}
+.cxtxt{font-size:17px;line-height:1.45;margin:4px 0 12px;white-space:pre-wrap}
+.cxmedia{margin:0 -4px 12px;border-radius:18px;overflow:hidden;background:var(--surface2)}
+.cxmedia img{display:block;width:100%;max-height:60vh;object-fit:cover}
+.cxmedia.strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:6px;background:none}
+.cxmedia.strip img{flex:0 0 92%;scroll-snap-align:center;border-radius:16px}
+.cxart{aspect-ratio:4/3;width:100%}
+.cxh{display:flex;gap:6px;padding:6px 0 10px;border-bottom:1px solid var(--line)}
+.cxh button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:14px;background:var(--surface2);font-weight:700;font-size:13px}
+.cxh button[aria-pressed=true]{color:#d6336c}
+.cxtitle{margin:14px 0 6px;font-size:16px}
+.cxc{display:flex;gap:10px;padding:8px 0}.cxc.rep{margin-left:44px}
+.cxb{flex:1;min-width:0}.cxbub{background:var(--surface2);border-radius:18px;padding:9px 13px;display:inline-block;max-width:100%}
+.cxbub b{display:block;font-size:13.5px;cursor:pointer}.cxbub p{margin:2px 0 0;font-size:15px;line-height:1.4;word-break:break-word;white-space:pre-wrap}
+.cxm{color:var(--accent);font-weight:800;cursor:pointer}
+.cxa{display:flex;gap:14px;align-items:center;padding:4px 8px 0;font-size:12.5px;color:var(--muted)}
+.cxa button{font-weight:700;color:var(--muted);padding:2px 0}.cxa button[aria-pressed=true]{color:#d6336c}
+.cxdock{position:relative;border-top:1px solid var(--line);background:var(--surface);padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+.cxf{display:flex;gap:8px;align-items:center}.cxf input{flex:1;min-width:0;height:44px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface2);padding:0 16px;font-size:16px;color:var(--ink)}
+.cxreply{display:flex;align-items:center;justify-content:space-between;padding:4px 10px 8px;font-size:13px;color:var(--muted)}.cxreply button{padding:4px}
+.cxsug{position:absolute;left:0;right:0;bottom:100%;background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.1);max-height:220px;overflow-y:auto}
+.cxsug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px 14px}.cxsug small{display:block;color:var(--muted);font-size:12px}
 
 /* ===== Halo refinements ===== */
 html[data-halo]{--font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif;--font-display:var(--font-body);--font-mono:var(--font-body);--grad:linear-gradient(135deg,#8E7CFF,#3B2FC9)}
@@ -3990,10 +4034,10 @@ renderWatchList=function(){
  const anchor=keep.length?keep[0].c.parentNode:null;
  if(anchor)keep.forEach(x=>anchor.appendChild(x.c));
 };
-function suggestions(){
+function suggestions(q){
  const have=new Set(topics().map(x=>norm(x.t)));
  const tags=TRENDS.map(t=>t[0].replace('#','')),ppl=Object.keys(P).filter(u=>u!=='me').map(u=>P[u].n.split(' ')[0]),cats=['Cooking','Music','Travel','Photo','Tech'];
- return [...tags,...ppl,...cats].filter(x=>!have.has(norm(x))).slice(0,12);
+ const nq=norm(q||'');const all=[...tags,...ppl,...cats].filter(x=>!have.has(norm(x)));return (nq?all.filter(x=>norm(x).includes(nq)):all).slice(0,nq?8:12);
 }
 function effect(){
  const l=POSTS.filter(p=>hidden(p)).length,b=POSTS.filter(p=>weight(p)>0&&!hidden(p)).length,v=VIDS.filter(x=>hidden(x)).length;
@@ -4002,11 +4046,26 @@ function effect(){
 function setT(arr){S.recipe=Object.assign({},S.recipe,{topics:arr,name:'Custom'})}
 function panel(){
  const t=topics();
- return `<div class="rtopics"><h4>Your topics</h4><small>Add anything: a hashtag, a person, a subject. Choose more, less, or hide it. Your feed learns from this.</small>
- <div class="rtadd"><input id="rtin" placeholder="e.g. amapiano, cooking, Tom" autocomplete="off" aria-label="Add a topic"><div class="rtseg">${Object.entries(MODES).map(([k,l])=>`<button data-x="mode" data-k="${k}" aria-pressed="${mode===k}">${l}</button>`).join('')}<button class="rtgo" data-x="add">Add</button></div></div>
- ${t.length?`<div class="rtchips">${t.map((x,i)=>`<span class="rtc ${x.m}"><button class="m" data-x="cyc" data-i="${i}" aria-label="${esc(x.t)}: ${MODES[x.m]}. Tap to change"><i>${MODES[x.m]}</i>${esc(x.t)}</button><button class="x" data-x="del" data-i="${i}" aria-label="Remove ${esc(x.t)}">${I('close',12)}</button></span>`).join('')}</div>`:''}
- <div class="rtsug">Try:${suggestions().map(s=>`<button data-x="sug" data-t="${esc(s)}">+ ${esc(s)}</button>`).join('')}</div>
+ return `<div class="rtopics"><h4>Your topics</h4><small>Type anything: a hashtag, a person or a subject. Pick how you want to see it, then add it. Your feed changes straight away.</small>
+ <input id="rtin" class="rtinput" placeholder="Search or type a topic, e.g. amapiano" autocomplete="off" autocapitalize="none" enterkeyhint="done" aria-label="Add a topic">
+ <div class="rtlab">Show it:</div>
+ <div class="rtseg" role="group" aria-label="How to show this topic">${Object.entries(MODES).map(([k,l])=>`<button data-x="mode" data-k="${k}" class="m-${k}" aria-pressed="${mode===k}"><i>${k==='more'?'+':k==='less'?'−':'×'}</i>${l}</button>`).join('')}</div>
+ <div class="rtmean" id="rtmean">${meaning()}</div>
+ <button class="rtgo" data-x="add" id="rtgo">Add topic</button>
+ <div class="rtprev" id="rtprev" aria-live="polite"></div>
+ ${t.length?`<div class="rtlab">Your topics <span>tap one to switch More, Less or Hide</span></div><div class="rtchips">${t.map((x,i)=>`<span class="rtc ${x.m}"><button class="m" data-x="cyc" data-i="${i}" aria-label="${esc(x.t)}: ${MODES[x.m]}. Tap to change"><i>${MODES[x.m]}</i>${esc(x.t)}</button><button class="x" data-x="del" data-i="${i}" aria-label="Remove ${esc(x.t)}">${I('close',12)}</button></span>`).join('')}</div>`:''}
+ <div class="rtsug" id="rtsug">${sugHTML('')}</div>
  <div class="rteff" id="rteff">${effect()}</div></div>`;
+}
+const meaning=()=>mode==='more'?'You will see more of it, near the top.':mode==='less'?'You will see less of it, lower down.':'It will be hidden from your feed.';
+function sugHTML(q){const l=suggestions(q);return (q?'Matches:':'Try:')+(l.length?l.map(x=>`<button data-x="sug" data-t="${esc(x)}">+ ${esc(x)}</button>`).join(''):' <em>nothing matches. Tap Add to use "'+esc(q)+'" anyway.</em>')}
+function liveUpdate(){
+ const el=document.getElementById('rtin');if(!el)return;const q=el.value.trim();
+ const go=document.getElementById('rtgo'),pv=document.getElementById('rtprev'),sg=document.getElementById('rtsug'),mn=document.getElementById('rtmean');
+ if(go)go.textContent=q?'Add "'+q+'" as '+MODES[mode]:'Add topic';
+ if(mn)mn.textContent=meaning();
+ if(sg)sg.innerHTML=sugHTML(q);
+ if(pv){if(!q){pv.textContent=''}else{const n=norm(q),c=POSTS.filter(p=>hay(p).includes(n)).length,v=VIDS.filter(p=>hay(p).includes(n)).length;pv.textContent=(c+v)?(c+' post'+(c===1?'':'s')+' and '+v+' video'+(v===1?'':'s')+' match "'+q+'" right now.'):'Nothing matches "'+q+'" right now, but it will apply to new posts.'}}
 }
 function refresh(){
  const lb=document.querySelector('.sheet .lb'),y=lb?lb.scrollTop:0;
@@ -4030,12 +4089,13 @@ function add(raw,m){
 document.addEventListener('click',e=>{
  const b=e.target.closest('[data-x]');if(!b)return;
  const a=b.dataset.x;
- if(a==='mode'){mode=b.dataset.k;b.parentElement.querySelectorAll('[data-k]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))}
- else if(a==='add'){add($('#rtin').value,mode)}
+ if(a==='mode'){mode=b.dataset.k;b.parentElement.querySelectorAll('[data-k]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));liveUpdate();const el=document.getElementById('rtin');if(el&&el.value.trim())toast(MODES[mode]+' selected. Tap Add to apply.')}
+ else if(a==='add'){const v=$('#rtin').value;if(!v.trim()){toast('Type a topic first, then tap Add');$('#rtin').focus();return}add(v,mode)}
  else if(a==='sug'){add(b.dataset.t,mode)}
  else if(a==='cyc'){const arr=topics().map(x=>({...x})),x=arr[+b.dataset.i],o=['more','less','hide'];x.m=o[(o.indexOf(x.m)+1)%3];setT(arr);refresh()}
  else if(a==='del'){const arr=topics().filter((_,i)=>i!==+b.dataset.i);setT(arr);refresh()}
 });
+document.addEventListener('input',e=>{if(e.target.id==='rtin')liveUpdate()});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='rtin'){e.preventDefault();add(e.target.value,mode)}});
 window.__FX={topics,hidden,weight};
 })();
@@ -5534,7 +5594,7 @@ Object.assign(IC,{hub:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6
 const TV=1,MINAGE=13;
 const B=window.__BK={ready:false,uid:null,ok:false};
 let db=null,user=null,uid=null,me=null,admin=false,tab='people',thread=null,unsubs=[],mounted=false,synced=new Set(),known=new Map();
-const st={users:{},posts:[],likes:[],follows:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
+const st={users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
 const now=()=>Date.now();
 const rel=ts=>{const d=(now()-ts)/1000;return d<60?'now':d<3600?Math.floor(d/60)+'m':d<86400?Math.floor(d/3600)+'h':Math.floor(d/86400)+'d'};
 const rid=k=>'r_'+k;
@@ -5565,6 +5625,9 @@ function listen(){
  sub(col('posts').orderBy('ts','desc').limit(300),s=>{st.posts=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('likes'),s=>{st.likes=s.docs.map(d=>d.data());feedSync()});
  sub(col('follows'),s=>{st.follows=s.docs.map(d=>d.data());feedSync();refreshStats()});
+ sub(col('comments'),s=>{st.comments=s.docs.map(d=>({id:d.id,...d.data()}));feedSync();if(window.__CX)window.__CX.refresh()});
+ sub(col('clikes'),s=>{st.clikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
+ sub(col('dislikes'),s=>{st.dislikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
  sub(col('mod'),s=>{st.hide=new Set();st.ban=new Set();s.docs.forEach(d=>{const x=d.data();x.k==='hide'&&st.hide.add(x.t);x.k==='ban'&&st.ban.add(x.t)});feedSync()});
  sub(col('msgs').where('a','==',uid),s=>{mergeMsgs('a',s.docs.map(d=>({id:d.id,...d.data()})))});
  sub(col('msgs').where('b','==',uid),s=>{mergeMsgs('b',s.docs.map(d=>({id:d.id,...d.data()})))});
@@ -5592,7 +5655,7 @@ function feedSync(){
  keep.forEach(p=>{
   const mineP=p.uid===uid,key=mineP?'me':rid(p.uid),idl=rid(p.id);
   if(!mineP){P[key]=P[key]||{n:nameOf(p.uid),h:hOf(p.uid),c:hue(p.uid)};P[key].n=nameOf(p.uid);P[key].h=hOf(p.uid)}
-  const o={id:idl,u:key,type:(p.img?'photo':'text'),t:rel(p.ts),text:p.text,c:hue(p.uid),likes:lk[p.id]||0,cc:0,rp:0,comments:[],remote:true,doc:p.id,bg:p.bg,music:p.music,img:p.img,noCap:p.noCap,ts:p.tsx||undefined,mix:p.mix||undefined,media:(p.imgs&&p.imgs.length>1)?p.imgs.map(i=>({k:'p',img:i})):undefined};
+  const o={id:idl,u:key,type:(p.img?'photo':'text'),t:rel(p.ts),text:p.text,c:hue(p.uid),likes:lk[p.id]||0,cc:st.comments.filter(c=>c.pid===p.id).length,rp:0,comments:[],remote:true,doc:p.id,bg:p.bg,music:p.music,img:p.img,noCap:p.noCap,ts:p.tsx||undefined,mix:p.mix||undefined,media:(p.imgs&&p.imgs.length>1)?p.imgs.map(i=>({k:'p',img:i})):undefined};
   if(mineP)synced.add(p.id),known.set('p'+p.id,p.text);
   add.push(o)
  });
@@ -5645,7 +5708,7 @@ document.addEventListener('click',async e=>{
 
 /* ---------- notifications ---------- */
 function notify(to,kind,ref){if(!to||to===uid)return;return col('notifs').add({to,from:uid,kind,ref:ref||'',ts:now(),read:false}).catch(()=>{})}
-function nText(n){const w=nameOf(n.from);return n.kind==='like'?w+' liked your post':n.kind==='follow'?w+' started following you':n.kind==='dm'?w+' sent you a message':n.kind==='apply'?w+' applied to your job':n.kind==='verif'?'Your employer verification was '+(n.ref==='ok'?'approved':'declined'):'New activity'}
+function nText(n){const w=nameOf(n.from);return n.kind==='like'?w+' liked your post':n.kind==='follow'?w+' started following you':n.kind==='comment'?w+' commented on your post':n.kind==='reply'?w+' replied to your comment':n.kind==='mention'?w+' mentioned you in a comment':n.kind==='dm'?w+' sent you a message':n.kind==='apply'?w+' applied to your job':n.kind==='verif'?'Your employer verification was '+(n.ref==='ok'?'approved':'declined'):'New activity'}
 function unread(){return st.notifs.filter(n=>!n.read).length+(admin?st.reports.filter(r=>r.status==='open').length:0)+dmUnread()}
 function dmUnread(){return st.msgs.filter(m=>m.b===uid&&!m.read).length}
 function badge(){const b=document.querySelector('.bkbtn .dot');const n=unread();if(b){b.textContent=n>9?'9+':n;b.hidden=!n}}
@@ -5931,6 +5994,7 @@ document.addEventListener('click',e=>{
  document.addEventListener('click',e=>{if(did){e.stopPropagation();e.preventDefault();did=false}else if(moved&&e.target.closest('.nrow')){e.stopPropagation();e.preventDefault();moved=false}},true);
  document.addEventListener('contextmenu',e=>{if(e.target.closest('.nrow'))e.preventDefault()});
 })();
+B.api={on:()=>!!(B.ok&&me),col:n=>col(n),uid:()=>uid,st,nameOf,hOf,pe,guard,notify,rid,hue,rel,now,av2,vbadge,admin:()=>admin,toast:m=>toast(m)};
 })();
 
 </script>
@@ -6526,6 +6590,137 @@ document.addEventListener('click',e=>{
 },true);
 /* keep the "You" circle in step with the name */
 new MutationObserver(()=>{const b=document.querySelector('#nav [data-k=me] .ei');if(b)b.innerHTML=av('me',30)}).observe(document.querySelector('#s-me')||document.body,{childList:true});
+})();
+
+</script>
+<script>
+/* Home shows only short videos posted straight to Home. Long videos that live in Watch stay in Watch. */
+(function(){
+const isWatchVideo=p=>p&&p.type==='video'&&!!p.vid;
+const _rh=renderHome;
+renderHome=function(){
+ const all=POSTS.slice();
+ for(let i=POSTS.length-1;i>=0;i--)if(isWatchVideo(POSTS[i]))POSTS.splice(i,1);
+ try{return _rh.apply(this,arguments)}finally{POSTS.length=0;POSTS.push(...all)}
+};
+window.__HV={isWatchVideo};
+})();
+
+</script>
+<script>
+/* Comments that everyone can see: replies, @mentions, likes on comments, and a full post view. */
+(function(){
+const A=()=>window.__BK&&window.__BK.api&&window.__BK.api.on()?window.__BK.api:null;
+const _oc=openComments;
+let cur=null,replyTo=null;
+const q=s=>document.querySelector(s);
+const pidOf=it=>it.doc||it.id;
+const own=it=>it&&it.u==='me';
+function userKey(a,u){return u===a.uid()?'me':a.pe(u)}
+function avFor(a,u){return a.av2(u)}
+function handleMap(a){const m={};Object.keys(a.st.users).forEach(u=>{m[(a.st.users[u].h||'').toLowerCase()]=u});return m}
+function richText(a,t){
+ const hm=handleMap(a);
+ return esc(t).replace(/@([a-z0-9_.]{3,20})/gi,(m,h)=>{const u=hm[h.toLowerCase()];return u?`<a class="cxm" data-xp="person" data-u="${a.pe(u)}">@${h}</a>`:m}).replace(/#(\w+)/g,'<span class="tag">#$1</span>')
+}
+function likeCount(a,cid){return a.st.clikes.filter(x=>x.c===cid).length}
+function iLiked(a,cid){return a.st.clikes.some(x=>x.c===cid&&x.u===a.uid())}
+function oneComment(a,c,isReply){
+ const L=iLiked(a,c.id),n=likeCount(a,c.id),mine=c.uid===a.uid();
+ return `<div class="cxc ${isReply?'rep':''}" data-cid="${c.id}">${avFor(a,c.uid)}<div class="cxb"><div class="cxbub"><b data-xp="person" data-u="${a.pe(c.uid)}" role="button" tabindex="0">${esc(a.nameOf(c.uid))}</b><p>${richText(a,c.text)}</p></div>
+ <div class="cxa"><span>${a.rel(c.ts)}</span><button data-cx="clike" data-cid="${c.id}" aria-pressed="${L}">${L?'Liked':'Like'}${n?' · '+n:''}</button><button data-cx="reply" data-cid="${c.id}" data-h="${esc(a.hOf(c.uid))}">Reply</button>${mine?`<button data-cx="cdel" data-cid="${c.id}">Delete</button>`:`<button data-cx="crep" data-cid="${c.id}">Report</button>`}</div></div></div>`;
+}
+function listHTML(a,it){
+ const pid=pidOf(it),all=a.st.comments.filter(c=>c.pid===pid&&!a.st.blocks.has(c.uid)&&!a.st.ban.has(c.uid)).sort((x,y)=>x.ts-y.ts);
+ const top=all.filter(c=>!c.parent||!all.some(x=>x.id===c.parent)),by={};all.forEach(c=>{if(c.parent)(by[c.parent]=by[c.parent]||[]).push(c)});
+ const demo=(!it.remote&&it.comments&&it.comments.length&&!/^r_/.test(it.id))?it.comments.filter(c=>P[c.u]).map(c=>`<div class="cxc">${av(c.u,34)}<div class="cxb"><div class="cxbub"><b data-xp="person" data-u="${c.u}" role="button" tabindex="0">${esc(P[c.u].n)}</b><p>${esc(c.t)}</p></div></div></div>`).join(''):'';
+ const real=top.map(c=>oneComment(a,c,false)+(by[c.id]||[]).map(r=>oneComment(a,r,true)).join('')).join('');
+ return (demo+real)||'<div class="empty" style="padding:24px">Be the first to comment.</div>';
+}
+function head(it){
+ const a=A(),L=S.liked.has(it.id),n=a?a.st.comments.filter(c=>c.pid===pidOf(it)).length+((!it.remote&&it.comments)?it.comments.length:0):it.cc||0;
+ return `<div class="cxh"><button data-a="like" data-id="${it.id}" aria-pressed="${L}">${I('heart',22)}<span>${fmt(lk(it.id,it.likes||0))}</span></button><button data-cx="focus">${I('chat',22)}<span>${fmt(n)}</span></button>${it.type?`<button data-a="repost" data-id="${it.id}" aria-pressed="${S.rep.has(it.id)}">${I('repost',22)}<span>${fmt((it.rp||0)+(S.rep.has(it.id)?1:0))}</span></button><button data-a="share" data-id="${it.id}">${I('share',22)}<span>Share</span></button><button data-a="save" data-id="${it.id}" aria-pressed="${S.saved.has(it.id)}">${I('bookmark',22)}<span>Save</span></button>`:''}</div>`;
+}
+function mediaHTML(it){
+ if(it.type==='text')return '';
+ if(it.media&&it.media.length>1)return `<div class="cxmedia strip">${it.media.map(m=>`<img src="${esc(m.img)}" alt="">`).join('')}</div>`;
+ if(it.img)return `<div class="cxmedia"><img src="${esc(it.img)}" alt=""></div>`;
+ if(it.c!=null&&it.type)return `<div class="cxmedia"><div class="cxart" style="${art(it.c)}"></div></div>`;
+ return '';
+}
+function paint(){
+ if(!cur||!q('#cxl'))return;
+ const it=find(cur.id);if(!it)return;const a=A();
+ const l=q('#cxl'),y=l.scrollTop;
+ if(a)l.innerHTML=listHTML(a,it);
+ const h=q('#cxhead');if(h)h.innerHTML=head(it);
+ l.scrollTop=y;
+}
+function open(id,full){
+ const a=A(),it=find(id);
+ if(!a||!it){return _oc(id)}
+ cur={id,full};replyTo=null;
+ const who=it.u?(P[it.u]?`<div class="cxauth"><span data-xp="person" data-u="${it.u}" role="button" tabindex="0" class="cxwho">${av(it.u,40)}<span><b>${esc(P[it.u].n)}</b><small>@${esc(P[it.u].h)} · ${esc(it.t||'')}</small></span></span></div>`:''):'';
+ const body=full?`${who}${it.text||it.cap?`<div class="cxtxt">${tagify(it.text||it.cap)}</div>`:''}${mediaHTML(it)}`:'';
+ openSheet(`<div class="cxs"><div class="cxscroll" id="cxscroll">${body}<div id="cxhead">${head(it)}</div><h3 class="cxtitle">Comments</h3><div id="cxl">${listHTML(a,it)}</div></div>
+ <div class="cxdock"><div class="cxreply" id="cxreply" hidden></div><div class="cxsug" id="cxsug" hidden></div>
+ <form class="cxf" data-cx="form">${av('me',34)}<input id="cxin" placeholder="Write a comment. Use @ to tag someone" autocomplete="off" autocapitalize="sentences" aria-label="Write a comment"><button class="send" aria-label="Post comment">${I('send',18)}</button></form></div></div>`);
+ const sh=q('#scrim .sheet');if(sh)sh.classList.add('cxsheet');
+}
+window.openComments=function(id){open(id,false)};
+window.openPost=function(id){open(id,true)};
+/* tapping the picture or text of a post opens the full view */
+document.addEventListener('click',e=>{
+ const t=e.target.closest('.post .art,.post .ptext,.post .cxtap,.post img');
+ if(!t||e.target.closest('button,a,[data-a],[data-xp],.tag'))return;
+ const art=t.closest('.post');if(!art)return;
+ const it=find(art.dataset.pid);if(!it||it.type==='video'||it.type==='capsule'||it.type==='group')return;
+ e.stopPropagation();open(it.id,true);
+},true);
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('[data-cx]');if(!b)return;const a=A();if(!a)return;
+ const k=b.dataset.cx,cid=b.dataset.cid;
+ if(k==='focus'){const i=q('#cxin');i&&i.focus();return}
+ if(k==='clike'){const key=cid+'_'+a.uid(),had=iLiked(a,cid),c=a.st.comments.find(x=>x.id===cid);
+  if(had){a.st.clikes=a.st.clikes.filter(x=>!(x.c===cid&&x.u===a.uid()));paint();await a.guard(()=>a.col('clikes').doc(key).delete())}
+  else{a.st.clikes.push({c:cid,u:a.uid(),ts:a.now()});paint();await a.guard(()=>a.col('clikes').doc(key).set({c:cid,u:a.uid(),ts:a.now()}));if(c&&c.uid!==a.uid())a.notify(c.uid,'like',c.pid)}return}
+ if(k==='reply'){replyTo={cid,h:b.dataset.h};const r=q('#cxreply');r.hidden=false;r.innerHTML=`Replying to <b>@${esc(b.dataset.h)}</b> <button data-cx="noreply" aria-label="Cancel reply">${I('close',14)}</button>`;const i=q('#cxin');i.value='@'+b.dataset.h+' ';i.focus();return}
+ if(k==='noreply'){replyTo=null;q('#cxreply').hidden=true;return}
+ if(k==='cdel'){await a.guard(()=>a.col('comments').doc(cid).delete());a.st.comments=a.st.comments.filter(x=>x.id!==cid);paint();a.toast('Comment deleted');return}
+ if(k==='crep'){window.__BK&&document.querySelector('.cxrep')||0;a.toast('Thanks. We will review this comment.');a.guard(()=>a.col('reports').doc(a.uid()).set({items:[...(window.__cxrep||[]),{id:cid,t:'comment',r:'other',ts:a.now()}]}));return}
+ if(k==='sug'){const i=q('#cxin'),v=i.value,at=v.lastIndexOf('@');i.value=v.slice(0,at)+'@'+b.dataset.h+' ';q('#cxsug').hidden=true;i.focus();return}
+});
+/* @ suggestions */
+document.addEventListener('input',e=>{
+ if(e.target.id!=='cxin')return;const a=A();if(!a)return;
+ const v=e.target.value,at=v.lastIndexOf('@'),sg=q('#cxsug');
+ if(at<0||/\s/.test(v.slice(at+1))){sg.hidden=true;return}
+ const w=v.slice(at+1).toLowerCase(),it=find(cur.id),pid=pidOf(it);
+ const seen=new Set(a.st.comments.filter(c=>c.pid===pid).map(c=>c.uid));
+ if(it.remote&&it.doc){const o=a.st.posts.find(p=>p.id===it.doc);o&&seen.add(o.uid)}
+ const all=Object.keys(a.st.users).filter(u=>u!==a.uid()&&(a.st.users[u].h||'').toLowerCase().includes(w)||(a.st.users[u].n||'').toLowerCase().includes(w));
+ const list=[...new Set(all)].sort((x,y)=>(seen.has(y)?1:0)-(seen.has(x)?1:0)).slice(0,5);
+ sg.hidden=!list.length;sg.innerHTML=list.map(u=>`<button type="button" data-cx="sug" data-h="${esc(a.st.users[u].h)}">${avFor(a,u)}<span><b>${esc(a.st.users[u].n)}</b><small>@${esc(a.st.users[u].h)}</small></span></button>`).join('');
+});
+document.addEventListener('submit',async e=>{
+ const f=e.target.closest('[data-cx=form]');if(!f)return;e.preventDefault();e.stopPropagation();
+ const a=A(),i=q('#cxin'),v=i.value.trim();if(!a||!v||!cur)return;
+ const it=find(cur.id),pid=pidOf(it),hm=handleMap(a);
+ const men=[...new Set((v.match(/@([a-z0-9_.]{3,20})/gi)||[]).map(x=>hm[x.slice(1).toLowerCase()]).filter(Boolean))];
+ const doc={pid,uid:a.uid(),text:v.slice(0,1000),ts:a.now(),parent:replyTo?replyTo.cid:null,men};
+ i.value='';const rt=replyTo;replyTo=null;q('#cxreply').hidden=true;q('#cxsug').hidden=true;
+ const ref=a.col('comments').doc();doc.id=ref.id;a.st.comments.push(doc);paint();setTimeout(()=>{const l=q('#cxscroll');l&&(l.scrollTop=l.scrollHeight)},30);
+ const ok=await a.guard(async()=>{const d={...doc};delete d.id;await ref.set(d);return true});
+ if(!ok){a.st.comments=a.st.comments.filter(x=>x.id!==doc.id);paint();return}
+ const told=new Set([a.uid()]);
+ const tell=(to,kind)=>{if(to&&!told.has(to)){told.add(to);a.notify(to,kind,pid)}};
+ men.forEach(u=>tell(u,'mention'));
+ if(rt){const pc=a.st.comments.find(x=>x.id===rt.cid);pc&&tell(pc.uid,'reply')}
+ if(it.remote&&it.doc){const o=a.st.posts.find(p=>p.id===it.doc);o&&tell(o.uid,'comment')}
+},true);
+/* keep the action row fresh after like, repost, save */
+document.addEventListener('click',e=>{if(cur&&e.target.closest('#cxhead [data-a]'))setTimeout(paint,80)});
+window.__CX={refresh:paint,open};
 })();
 
 </script>
