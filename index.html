@@ -1,5 +1,19 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Blend</title><style>[hidden]{display:none!important}html,body{margin:0;height:100%}</style></head><body><title>Blend Mono</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Blend</title><style>[hidden]{display:none!important}html,body{margin:0;height:100%}#splash{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;overflow:hidden;background:radial-gradient(120% 90% at 50% 45%,#12143a 0%,#070816 55%,#02030a 100%);transition:opacity .5s ease,visibility .5s}
+#splash.out{opacity:0;visibility:hidden}
+#splash .spstars{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 72%,#cfd4ff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 44% 34%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 63% 82%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 78% 22%,#cfd4ff 50%,transparent 51%),radial-gradient(1px 1px at 88% 58%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 8% 52%,#cfd4ff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 55% 8%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 36% 92%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 94% 90%,#cfd4ff 50%,transparent 51%);opacity:.0;animation:spstar 1.1s ease-out .05s forwards}
+#splash .splogo{position:relative;font:800 64px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;letter-spacing:-.04em;color:#fff;transform:scale(.02);opacity:0;filter:blur(18px);animation:sppop 1s cubic-bezier(.2,1.25,.3,1) .12s forwards;text-shadow:0 0 38px rgba(142,124,255,.85),0 0 90px rgba(90,70,255,.55)}
+#splash .splogo i{font-style:normal;color:#8e7cff}
+#splash .springs i{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:2px solid rgba(160,146,255,.85);opacity:0;transform:scale(.1);animation:spring 1.15s cubic-bezier(.1,.7,.3,1) .12s forwards}
+#splash .springs i:nth-child(2){animation-delay:.28s;border-color:rgba(255,255,255,.6)}
+#splash .springs i:nth-child(3){animation-delay:.44s;border-color:rgba(110,90,255,.6)}
+#splash .spbits i{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);border-radius:50%;background:#fff;box-shadow:0 0 12px #8e7cff;opacity:0;animation:spbit 1s ease-out .15s forwards}
+@keyframes sppop{0%{transform:scale(.02);opacity:0;filter:blur(18px)}45%{opacity:1;filter:blur(2px)}70%{transform:scale(1.14);filter:blur(0)}100%{transform:scale(1);opacity:1;filter:blur(0)}}
+@keyframes spring{0%{transform:scale(.1);opacity:.95}100%{transform:scale(14);opacity:0}}
+@keyframes spbit{0%{opacity:1;transform:rotate(var(--a)) translateX(0)}100%{opacity:0;transform:rotate(var(--a)) translateX(var(--d))}}
+@keyframes spstar{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){#splash .splogo{animation:none;transform:none;opacity:1;filter:none}#splash .springs,#splash .spbits{display:none}#splash .spstars{animation:none;opacity:1}}
+#splash .springs,#splash .spbits{position:absolute;inset:0;pointer-events:none}
+</style></head><body><div id="splash" aria-hidden="true"><div class="spstars"></div><div class="springs"><i></i><i></i><i></i></div><div class="spbits"><i style="--a:0.0deg;--d:120px;--s:5px"></i><i style="--a:22.5deg;--d:160px;--s:7px"></i><i style="--a:45.0deg;--d:200px;--s:4px"></i><i style="--a:67.5deg;--d:140px;--s:6px"></i><i style="--a:90.0deg;--d:120px;--s:5px"></i><i style="--a:112.5deg;--d:160px;--s:7px"></i><i style="--a:135.0deg;--d:200px;--s:4px"></i><i style="--a:157.5deg;--d:140px;--s:6px"></i><i style="--a:180.0deg;--d:120px;--s:5px"></i><i style="--a:202.5deg;--d:160px;--s:7px"></i><i style="--a:225.0deg;--d:200px;--s:4px"></i><i style="--a:247.5deg;--d:140px;--s:6px"></i><i style="--a:270.0deg;--d:120px;--s:5px"></i><i style="--a:292.5deg;--d:160px;--s:7px"></i><i style="--a:315.0deg;--d:200px;--s:4px"></i><i style="--a:337.5deg;--d:140px;--s:6px"></i></div><div class="splogo">Blend<i>.</i></div></div><script>window.__SPT=Date.now()</script><title>Blend Mono</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -1512,94 +1526,21 @@ html[data-halo] .mkfab{box-shadow:0 10px 24px rgba(91,75,255,.35)}
 .cxsug{position:absolute;left:0;right:0;bottom:100%;background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.1);max-height:220px;overflow-y:auto}
 .cxsug button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px 14px}.cxsug small{display:block;color:var(--muted);font-size:12px}
 
-/* ===== Halo refinements ===== */
-html[data-halo]{--font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif;--font-display:var(--font-body);--font-mono:var(--font-body);--grad:linear-gradient(135deg,#8E7CFF,#3B2FC9)}
-html[data-halo][data-theme="dark"]{--grad:linear-gradient(135deg,#9A8DFF,#4B3FE0)}
-/* 1. bar docked at the very bottom, opaque */
-html[data-halo] nav#nav{left:12px;right:12px;bottom:4mm;border:1px solid var(--line);border-radius:999px;padding:2px 4px;background:var(--surface);box-shadow:0 10px 30px rgba(16,19,34,.16),0 1px 3px rgba(16,19,34,.08);-webkit-backdrop-filter:none;backdrop-filter:none;transition:transform .32s cubic-bezier(.3,.8,.3,1),opacity .25s;will-change:transform}
-html[data-halo] nav#nav.hide{transform:translateY(calc(100% + 28px));opacity:0;pointer-events:none}
-html[data-halo] nav#nav button{border-radius:999px}
-@media (prefers-reduced-motion:reduce){html[data-halo] nav#nav{transition:none}}
-/* top bar: even, close spacing */
-html[data-halo] .topbar .icons{display:flex;align-items:center;gap:6px}
-html[data-halo] .topbar .icons>*{margin:0}
-html[data-halo] .topbar .icons .theme{margin:0}
-html[data-halo]{--emnav:76px}
-html[data-halo] .scroll{padding-bottom:76px}
-html[data-halo] #homeScroll{padding-bottom:76px}
-html[data-halo] .reel .rcap{bottom:96px}
-html[data-halo] .reel .rail{bottom:96px}
-/* 2. rounded squares for every avatar and placeholder */
-html[data-halo] .av{border-radius:30%;overflow:hidden;background-size:cover;background-position:center}
-html[data-halo] .av img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}
-html[data-halo] .ring{border-radius:32%}
-html[data-halo] .ring>.in{border-radius:28%}
-html[data-halo] .ring>.in .av,html[data-halo] .ring>.in img{border-radius:26%}
-html[data-halo] .plus{border-radius:9px}
-html[data-halo] .fbav,html[data-halo] .fbhead .av,html[data-halo] .tpav,html[data-halo] .tpme{border-radius:30%}
-html[data-halo] .ph .av{border-radius:30%}
-/* 3. header: plus menu */
-html[data-halo] .topbar .icons .bkbtn,html[data-halo] .topbar .icons .palbtn{display:none}
-html[data-halo] .topbar .icons .haplus{display:grid}
-.haplus{display:none;width:30px;height:30px;place-items:center;border-radius:50%;background:var(--grad);color:#fff;border:0;padding:0;box-shadow:0 4px 10px rgba(91,75,255,.3)}
-.haplus svg{width:16px;height:16px}
-.hamenu{position:absolute;z-index:60;right:14px;top:62px;width:250px;padding:8px;border-radius:20px;background:var(--surface);border:1px solid var(--line);box-shadow:0 18px 40px rgba(16,19,34,.18)}
-.hamenu button{display:flex;align-items:center;gap:12px;width:100%;padding:11px 10px;border:0;background:none;border-radius:14px;color:var(--ink);font:700 14.5px var(--font-body);text-align:left}
-.hamenu button:hover,.hamenu button:focus-visible{background:var(--surface2)}
-.hamenu .hi{flex:none;width:36px;height:36px;border-radius:12px;background:var(--surface2);color:var(--accent);display:grid;place-items:center}
-.hamenu small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:1px}
-.hamenu .pdot{width:18px;height:18px;border-radius:50%;background:conic-gradient(#ff3d8b,#ffc933,#12b886,#2b8cff,#8a5cff,#ff3d8b)}
-/* 4. floating + matches the profile button */
-html[data-halo] .mkfab{width:56px;height:56px;border-radius:50%;background:var(--grad);color:#fff;border:0;box-shadow:0 10px 24px rgba(91,75,255,.38)}
-html[data-halo] .mkfab.on{background:var(--surface);color:var(--accent);box-shadow:0 10px 24px rgba(16,19,34,.18)}
-/* 5/6. smooth, soft controls everywhere */
-html[data-halo] button,html[data-halo] input,html[data-halo] select,html[data-halo] textarea{font-family:var(--font-body)}
-html[data-halo] .mkbtn,html[data-halo] .dmbtn,html[data-halo] .wgo,html[data-halo] .rtgo,html[data-halo] .fbdone,html[data-halo] .mkpill.fill,html[data-halo] .dmreq button.p,html[data-halo] .dmib.fill,html[data-halo] .mkok{background:var(--grad);color:#fff;border:0;border-radius:99px;font-weight:700;box-shadow:0 6px 16px rgba(91,75,255,.25)}
-html[data-halo] .mkbtn.ghost,html[data-halo] .dmbtn.ghost,html[data-halo] .mkloc,html[data-halo] .fbtn,html[data-halo] .edbtn,html[data-halo] .prof .btns button,html[data-halo] .wlacts button,html[data-halo] .mcall button,html[data-halo] .xpnewpin{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:99px;font-weight:700;box-shadow:none}
-html[data-halo] .chip,html[data-halo] .tool,html[data-halo] .pill,html[data-halo] .mkpill{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;font-weight:600}
-html[data-halo] .chip[aria-pressed="true"],html[data-halo] .tool.on,html[data-halo] .tool.live,html[data-halo] .pill.on,html[data-halo] .mksort button[aria-pressed="true"],html[data-halo] .mkopts button[aria-pressed="true"],html[data-halo] .srch .kinds button[aria-pressed="true"],html[data-halo] .ptseg button[aria-pressed="true"],html[data-halo] .rtseg button[aria-pressed="true"],html[data-halo] .dmseg button[aria-pressed="true"],html[data-halo] .tpseg button[aria-pressed="true"],html[data-halo] .acct button[aria-pressed="true"],html[data-halo] .fbfl button[aria-selected=true]{background:var(--surface2);color:var(--accent);border-color:transparent;font-weight:800}
-html[data-halo] .mkseg,html[data-halo] .dmtabs,html[data-halo] .ptseg,html[data-halo] .rtseg,html[data-halo] .dmseg,html[data-halo] .tpseg{background:var(--surface2);border:1px solid var(--line);border-radius:22px;padding:4px;gap:2px;overflow:hidden}
-html[data-halo] .mkseg button,html[data-halo] .dmtabs button{border-radius:18px;color:var(--muted);font-weight:700}
-html[data-halo] .mkseg button[aria-selected="true"],html[data-halo] .dmtabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(16,19,34,.1)}
-html[data-halo] .acct,html[data-halo] .mksafe,html[data-halo] .mkstrip,html[data-halo] .mkdock,html[data-halo] .wxabout,html[data-halo] .tpbanner,html[data-halo] .mkpref{border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:none}
-html[data-halo] .search,html[data-halo] .srch .sbox,html[data-halo] .mkmap{border:1px solid var(--line);border-radius:24px;background:var(--surface)}
-html[data-halo] .srch .sbox:focus-within,html[data-halo] .aip .af textarea:focus{border-color:var(--accent)}
-html[data-halo] .sheet,html[data-halo] .dmsheet{border-radius:26px 26px 0 0}
-html[data-halo] .post,html[data-halo] .mkcard,html[data-halo] .mkc{border-radius:24px}
-html[data-halo] .mkc,html[data-halo] .mkcard{border:1px solid var(--line);background:var(--surface);overflow:hidden}
-html[data-halo] .toast{border-radius:16px;background:var(--ink)}
-html[data-halo] input:focus,html[data-halo] select:focus,html[data-halo] textarea:focus{outline:2px solid color-mix(in srgb,var(--accent) 45%,transparent);outline-offset:1px}
-html[data-halo] .wlmini{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:20px}
-html[data-halo] .wlbal{background:var(--grad);color:#fff;border-radius:24px;box-shadow:0 12px 28px rgba(91,75,255,.3)}
-html[data-halo] .mksort button{border-radius:99px;padding:5px 10px}
-html[data-halo] .mksort button[aria-pressed="true"]{background:var(--surface2);color:var(--accent);border-bottom:0}
-html[data-halo] .dmtabs button,html[data-halo] .dmseg button{border-color:transparent}
-html[data-halo] .dmtabs button[aria-selected="true"]{border-color:transparent}
-html[data-halo] .aip .achips button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;font-weight:600}
-html[data-halo] .aip .af button{background:var(--grad);color:#fff;border:0;border-radius:30%;box-shadow:0 6px 16px rgba(91,75,255,.28)}
-html[data-halo] .aip .ah{border-bottom:1px solid var(--line)}
-html[data-halo] .aip .af textarea,html[data-halo] .aip .af input{border:1px solid var(--line);border-radius:24px;background:var(--surface2)}
-html[data-halo] .aip .am.u{background:var(--grad);color:#fff;border-radius:18px}
-html[data-halo] nav#nav button{height:52px;border-radius:26px}
-html[data-halo] nav#nav button[aria-current="page"],html[data-halo] nav#nav .emask[aria-current="page"]{background:var(--surface2);color:var(--accent)}
-html[data-halo]{--emnav:84px}
-html[data-halo] .scroll,html[data-halo] #homeScroll{padding-bottom:108px}
-html[data-halo] .reel .rcap{bottom:104px}
-html[data-halo] .reel .rail{bottom:104px}
-/* top bar: even, close spacing */
-html[data-halo] .topbar .icons{display:flex;align-items:center;justify-content:flex-end;gap:10px}
-html[data-halo] .topbar .icons>*{margin:0}
-html[data-halo] .topbar .icons .ib{width:34px;height:34px;display:grid;place-items:center;padding:0}
-html[data-halo] .topbar .icons .theme{width:58px;height:34px}
-html[data-halo] .topbar .icons .ib.bkbtn,html[data-halo] .topbar .icons .palbtn{display:none}
-html[data-halo] nav#nav::before,html[data-halo] nav#nav::after{content:none!important;display:none!important}
-
-html[data-halo]{--font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Helvetica,Arial,sans-serif;--font-display:var(--font-body);--font-mono:var(--font-body)}
-html[data-halo] nav#nav .hn{display:block;overflow:visible;transition:transform .4s cubic-bezier(.3,1.4,.4,1)}
-html[data-halo] nav#nav .hn .d{fill:currentColor;opacity:.12;transition:opacity .3s}
-html[data-halo] nav#nav button[aria-current="page"] .hn .d{opacity:.28}
-html[data-halo] nav#nav button[aria-current="page"] .hn{transform:scale(1.06)}
-html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:scale(.88)}
+#splash{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;overflow:hidden;background:radial-gradient(120% 90% at 50% 45%,#12143a 0%,#070816 55%,#02030a 100%);transition:opacity .5s ease,visibility .5s}
+#splash.out{opacity:0;visibility:hidden}
+#splash .spstars{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 72%,#cfd4ff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 44% 34%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 63% 82%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 78% 22%,#cfd4ff 50%,transparent 51%),radial-gradient(1px 1px at 88% 58%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 8% 52%,#cfd4ff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 55% 8%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 36% 92%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 94% 90%,#cfd4ff 50%,transparent 51%);opacity:.0;animation:spstar 1.1s ease-out .05s forwards}
+#splash .splogo{position:relative;font:800 64px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;letter-spacing:-.04em;color:#fff;transform:scale(.02);opacity:0;filter:blur(18px);animation:sppop 1s cubic-bezier(.2,1.25,.3,1) .12s forwards;text-shadow:0 0 38px rgba(142,124,255,.85),0 0 90px rgba(90,70,255,.55)}
+#splash .splogo i{font-style:normal;color:#8e7cff}
+#splash .springs i{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:2px solid rgba(160,146,255,.85);opacity:0;transform:scale(.1);animation:spring 1.15s cubic-bezier(.1,.7,.3,1) .12s forwards}
+#splash .springs i:nth-child(2){animation-delay:.28s;border-color:rgba(255,255,255,.6)}
+#splash .springs i:nth-child(3){animation-delay:.44s;border-color:rgba(110,90,255,.6)}
+#splash .spbits i{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);border-radius:50%;background:#fff;box-shadow:0 0 12px #8e7cff;opacity:0;animation:spbit 1s ease-out .15s forwards}
+@keyframes sppop{0%{transform:scale(.02);opacity:0;filter:blur(18px)}45%{opacity:1;filter:blur(2px)}70%{transform:scale(1.14);filter:blur(0)}100%{transform:scale(1);opacity:1;filter:blur(0)}}
+@keyframes spring{0%{transform:scale(.1);opacity:.95}100%{transform:scale(14);opacity:0}}
+@keyframes spbit{0%{opacity:1;transform:rotate(var(--a)) translateX(0)}100%{opacity:0;transform:rotate(var(--a)) translateX(var(--d))}}
+@keyframes spstar{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){#splash .splogo{animation:none;transform:none;opacity:1;filter:none}#splash .springs,#splash .spbits{display:none}#splash .spstars{animation:none;opacity:1}}
+#splash .springs,#splash .spbits{position:absolute;inset:0;pointer-events:none}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -1643,14 +1584,17 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 const CFG=window.BLEND_CFG;
 if(!CFG||!CFG.url||!CFG.key||window.claude)return;
 const LIB=CFG.lib||'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js';
-let sb=null,session=null,gate=null,isAdmin=null;
+try{const has=Object.keys(localStorage).some(k=>/^sb-.*-auth-token$/.test(k));if(!has)localStorage.removeItem('blend-acct');else if(!localStorage.getItem('blend-acct'))localStorage.setItem('blend-acct',JSON.stringify({type:'personal',active:'pers',pers:{n:'You',h:'me'},chan:null,hidden:false}))}catch(e){}
+let sb=null,session=null,gate=null,isAdmin=null,waiters=[],authOpen=null;
+const signedIn=()=>session?Promise.resolve(session):new Promise(r=>waiters.push(r));
+const gotSession=s=>{session=s;waiters.splice(0).forEach(r=>r(s));try{document.dispatchEvent(new CustomEvent('blend-signed-in'))}catch(e){}};
 
 function loadLib(){return new Promise((res,rej)=>{
  if(window.supabase&&window.supabase.createClient)return res();
  const s=document.createElement('script');s.src=LIB;s.onload=res;s.onerror=()=>rej(new Error('Could not load the sign-in library. Check your connection.'));document.head.appendChild(s)})}
 
 /* ---------- sign-in screen ---------- */
-function authUI(){return new Promise(async resolve=>{
+function authUI(why){if(authOpen)return authOpen;authOpen=new Promise(async resolve=>{
  const css=document.createElement('style');
  css.textContent=`#sbAuth{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;background:var(--bg,#f4f5f7);font-family:var(--font-body,system-ui,sans-serif);color:var(--ink,#101322)}
 #sbAuth .card{width:100%;max-width:380px;background:var(--surface,#fff);border:1px solid var(--line,#e4e7ec);border-radius:28px;padding:28px 22px;box-shadow:0 18px 50px rgba(16,19,34,.12)}
@@ -1662,21 +1606,23 @@ function authUI(){return new Promise(async resolve=>{
 #sbAuth .go{width:100%;height:52px;margin-top:20px;border:0;border-radius:99px;background:linear-gradient(135deg,#8e7cff,#3b2fc9);color:#fff;font:inherit;font-weight:800;font-size:16px}
 #sbAuth .go[disabled]{opacity:.6}
 #sbAuth .alt{display:block;width:100%;margin-top:14px;background:none;border:0;color:var(--accent,#5b4bff);font:inherit;font-weight:700;font-size:14.5px;padding:8px}
-#sbAuth .err{min-height:20px;margin-top:12px;color:#d6336c;font-size:13.5px;font-weight:600}`;
+#sbAuth .later{color:var(--muted,#667085);font-weight:600}#sbAuth .err{min-height:20px;margin-top:12px;color:#d6336c;font-size:13.5px;font-weight:600}`;
  document.head.appendChild(css);
  const el=document.createElement('div');el.id='sbAuth';
  let mode='in';
  const paint=()=>{el.innerHTML=`<form class="card" novalidate>
   <h1>Blend<i>.</i></h1>
-  <p>${mode==='in'?'Welcome back. Sign in to continue.':'Create your account. It takes a minute.'}</p>
+  <p>${why?esc0(why):mode==='in'?'Welcome back. Sign in to continue.':'Create your account. It takes a minute.'}</p>
   <label for="sbE">Email</label><input id="sbE" type="email" autocomplete="email" inputmode="email" autocapitalize="none" required>
   <label for="sbP">Password</label><input id="sbP" type="password" autocomplete="${mode==='in'?'current-password':'new-password'}" ${mode==='up'?'minlength="8"':''} required>
   ${mode==='up'?'<p style="margin:8px 0 0;font-size:12.5px">At least 8 characters.</p>':''}
   <div class="err" role="alert" aria-live="polite"></div>
   <button class="go" type="submit">${mode==='in'?'Sign in':'Create account'}</button>
-  <button class="alt" type="button" data-alt>${mode==='in'?'New here? Create an account':'Already have an account? Sign in'}</button></form>`;
+  <button class="alt" type="button" data-alt>${mode==='in'?'New here? Create an account':'Already have an account? Sign in'}</button>
+  <button class="alt later" type="button" data-notnow>Not now</button></form>`;
   const f=el.querySelector('form'),err=el.querySelector('.err'),go=el.querySelector('.go');
   el.querySelector('[data-alt]').onclick=()=>{mode=mode==='in'?'up':'in';paint()};
+  el.querySelector('[data-notnow]').onclick=()=>{el.remove();authOpen=null;resolve(null)};
   f.onsubmit=async ev=>{ev.preventDefault();
    const email=f.querySelector('#sbE').value.trim(),pw=f.querySelector('#sbP').value;
    if(!/^\S+@\S+\.\S+$/.test(email)){err.textContent='Enter a valid email address.';return}
@@ -1689,30 +1635,31 @@ function authUI(){return new Promise(async resolve=>{
     else r=await sb.auth.signUp({email,password:pw});
     if(r.error)throw r.error;
     if(!r.data.session){err.textContent='Check your email to confirm your account, then sign in.';mode='in';go.disabled=false;return}
-    session=r.data.session;el.remove();resolve(session)
+    el.remove();authOpen=null;gotSession(r.data.session);resolve(r.data.session)
    }catch(e){
     const m=String(e&&e.message||e);
     err.textContent=/invalid login/i.test(m)?'That email or password is not right.':/already registered|already been registered/i.test(m)?'That email already has an account. Try signing in.':/rate limit/i.test(m)?'Too many tries. Wait a minute and try again.':m;
     go.disabled=false}
   }};
- paint();document.body.appendChild(el)})}
+ paint();document.body.appendChild(el)});return authOpen}
+const esc0=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ---------- start: library, client, session ---------- */
 async function start(){
  await loadLib();
  sb=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
  const {data}=await sb.auth.getSession();
- session=data&&data.session;
- if(!session)session=await authUI();
+ if(data&&data.session)gotSession(data.session);
  sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_OUT')location.reload()});
+ if(!session&&/[?&]signin\b/.test(location.search))authUI();
  return session}
 const ready=()=>gate||(gate=start());
 
 /* ---------- user ---------- */
 const user={
- id:async()=>{await ready();return session.user.id},
- me:async()=>{await ready();const e=session.user.email||'';return{id:session.user.id,name:e.split('@')[0]}},
- canEdit:async()=>{await ready();if(isAdmin===null){const r=await sb.from('admins').select('user_id').eq('user_id',session.user.id).maybeSingle();isAdmin=!!(r.data)}return isAdmin},
+ id:async()=>{await ready();await signedIn();return session.user.id},
+ me:async()=>{await ready();await signedIn();const e=session.user.email||'';return{id:session.user.id,name:e.split('@')[0]}},
+ canEdit:async()=>{await ready();await signedIn();if(isAdmin===null){const r=await sb.from('admins').select('user_id').eq('user_id',session.user.id).maybeSingle();isAdmin=!!(r.data)}return isAdmin},
  isOwner:async()=>user.canEdit(),can:async()=>true,profiles:async()=>({})};
 
 /* ---------- database (document style) ---------- */
@@ -1775,7 +1722,11 @@ const db={doc:docRef,collection:n=>colRef(n)};
 const downloads={save:async({filename,data})=>{const b=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}};
 
 window.claude={use:async n=>n==='user'?user:n==='db'?(await ready(),db):n==='downloads'?downloads:null};
-window.__SB={signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}location.reload()},ready};
+window.__SB={signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
+/* visitors can look around; liking, commenting, following, posting and messages ask them to sign in */
+const WALL='[data-a="like"],[data-a="comments"],[data-a="follow"],[data-a="repost"],[data-a="save"],[data-a="create"],[data-a="notif"],[data-a="msgs"],[data-a="vlike"],[data-a="vdis"],[data-a="vsub"],[data-a="vbell"],[data-a="join"],[data-a="gift"],[data-a="sendgift"],[data-a="golive"],[data-a="livetab"],[data-a="liveopen"],[data-a="startlive"],[data-a="heart"],[data-a="going"],[data-a="vlater"],[data-a="coins"],[data-a="buycoins"],[data-a="revive"],[data-cx="clike"],[data-cx="reply"],[data-cx="cdel"],[data-cx="crep"],[data-a="cform"],[data-a="cform2"],[data-a="post"],[data-a="post2"],.bkbtn';
+document.addEventListener('submit',e=>{if(session)return;const f=e.target;if(f&&f.dataset&&['cform','cform2','lvform','mform'].includes(f.dataset.a)||f.dataset.cx==='form'){e.preventDefault();e.stopImmediatePropagation();ready().then(()=>authUI('Sign in or create an account to comment.'))}},true);
+document.addEventListener('click',e=>{if(session)return;const b=e.target.closest(WALL);if(!b)return;e.preventDefault();e.stopImmediatePropagation();const a=b.dataset.a;const why=(a==='like'||a==='vlike'||a==='vdis')?'Sign in or create an account to like.':(a==='comments'||a==='cform'||a==='cform2')?'Sign in or create an account to comment.':(a==='follow'||a==='vsub'||a==='vbell')?'Sign in or create an account to follow.':'Sign in or create an account to continue.';ready().then(()=>authUI(why))},true);
 })();
 
 </script>
@@ -3451,7 +3402,7 @@ document.addEventListener('click',e=>{
 const _om=openMsgs;
 openMsgs=function(){if(A&&A.active==='channel'){toast('Messages are off while posting as a channel. Switch to your account to chat.');return}_om()};
 if(A)applyAcct();
-window.__ACCT={get:()=>A,welcome,gate:gateSheet,isIn};
+window.__ACCT={get:()=>A,set:o=>{A=o;save();applyAcct()},clear:()=>{A=null;try{localStorage.removeItem(KEY)}catch(_){}},welcome,gate:gateSheet,isIn};
 })();
 
 </script>
@@ -5615,12 +5566,22 @@ const hOf=u=>{const r=st.users[u];return r?r.h:'user'};
 /* ---------- boot ---------- */
 async function boot(){
  try{user=await claude.use('user');db=await claude.use('db')}catch(e){}
- if(user){try{uid=await user.id();admin=!!(await user.canEdit())}catch(e){}}
+ if(user&&db&&window.__SB&&!window.__SB.isIn()){B.guest=true;startPublic()}
+ if(user){try{uid=await user.id();if(B.guest){unsubs.forEach(f=>{try{f()}catch(e){}});unsubs.length=0;B.guest=false}admin=!!(await user.canEdit())}catch(e){}}
  B.uid=uid;B.ok=!!(db&&uid);B.ready=true;
  if(!B.ok){mountBtn();return}
  try{const my=await db.doc('users/'+uid).get();me=my.exists?my.data():null}catch(e){}
  listen();mountBtn();
  if(!me)setTimeout(()=>{if(!$('#bko')&&!me)onboard()},600);
+}
+/* visitors who have not signed in can read the public feed */
+function startPublic(){
+ sub(col('users'),s=>{st.users={};s.docs.forEach(d=>{st.users[d.id]=d.data()});feedSync()});
+ sub(col('posts').orderBy('ts','desc').limit(100),s=>{st.posts=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
+ sub(col('likes'),s=>{st.likes=s.docs.map(d=>d.data());feedSync()});
+ sub(col('comments'),s=>{st.comments=s.docs.map(d=>({id:d.id,...d.data()}));feedSync();if(window.__CX)window.__CX.refresh()});
+ sub(col('clikes'),s=>{st.clikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
+ sub(col('follows'),s=>{st.follows=s.docs.map(d=>d.data());feedSync()});
 }
 function sub(q,fn){let t=setTimeout(()=>{},10);try{unsubs.push(q.onSnapshot(fn,e=>console.warn('sub',e&&e.code)))}catch(e){console.warn(e)}}
 function listen(){
@@ -5647,7 +5608,13 @@ function pushLocal(n){try{if(window.Notification&&Notification.permission==='gra
 
 /* ---------- feed integration: shared posts shown in For you / Following ---------- */
 function score(p,likes,fol){const age=(now()-p.ts)/3600000;return Math.log2(2+likes)*2+(fol?3:0)-Math.pow(age,.55)}
+/* a signed-in person is a real account, not a guest */
+function syncAcct(){
+ if(!me||!window.__ACCT)return;const a=__ACCT.get(),n=me.n||'You',h=me.h||'me';
+ if(!a||a.type==='guest'||!a.pers||a.pers.n!==n||a.pers.h!==h)__ACCT.set({type:'personal',active:'pers',pers:{n,h},chan:null,hidden:false});
+}
 function feedSync(){
+ syncAcct();
  if(typeof POSTS==='undefined')return;
  const fol=myFollows(),lk={},mine=new Set();
  st.likes.forEach(l=>{lk[l.p]=(lk[l.p]||0)+1;if(l.u===uid)mine.add(l.p)});
@@ -5917,8 +5884,8 @@ async function onSave(){
  let r=await guard(()=>hd.acquire({holder:uid,ttlMs:5000}));if(!r)return;
  if(!r.acquired)return err('Someone is taking that handle. Try again.');
  const ex=await hd.get();if(ex.exists&&ex.data().uid&&ex.data().uid!==uid)return err('That handle is taken.');
- const age=yr-y,prof={n,h,by:y,minor:age<18,consent:{v:TV,at:now()},ts:now()};
- const ok=await guard(async()=>{await hd.set({uid});await db.doc('users/'+uid).set(prof);return true});
+ const age=yr-y,prof={n,h,minor:age<18,ts:now()},priv={by:y,consent:{v:TV,at:now()}};
+ const ok=await guard(async()=>{await hd.set({uid});await db.doc('users/'+uid).set(prof);await db.doc('data/users/'+uid+'/private/profile').set(priv);return true});
  if(!ok)return;
  me=prof;st.users[uid]=prof;$('#bko').remove();toast('Welcome, '+n);open('people');
 }
@@ -6010,7 +5977,7 @@ document.addEventListener('click',e=>{
  document.addEventListener('click',e=>{if(did){e.stopPropagation();e.preventDefault();did=false}else if(moved&&e.target.closest('.nrow')){e.stopPropagation();e.preventDefault();moved=false}},true);
  document.addEventListener('contextmenu',e=>{if(e.target.closest('.nrow'))e.preventDefault()});
 })();
-B.api={on:()=>!!(B.ok&&me),col:n=>col(n),uid:()=>uid,st,nameOf,hOf,pe,guard,notify,rid,hue,rel,now,av2,vbadge,admin:()=>admin,toast:m=>toast(m)};
+B.api={guest:()=>!!B.guest,on:()=>!!(B.ok&&me),col:n=>col(n),uid:()=>uid,st,nameOf,hOf,pe,guard,notify,rid,hue,rel,now,av2,vbadge,admin:()=>admin,toast:m=>toast(m)};
 })();
 
 </script>
@@ -6626,7 +6593,7 @@ window.__HV={isWatchVideo};
 <script>
 /* Comments that everyone can see: replies, @mentions, likes on comments, and a full post view. */
 (function(){
-const A=()=>window.__BK&&window.__BK.api&&window.__BK.api.on()?window.__BK.api:null;
+const A=()=>window.__BK&&window.__BK.api&&(window.__BK.api.on()||window.__BK.api.guest())?window.__BK.api:null;
 const _oc=openComments;
 let cur=null,replyTo=null;
 const q=s=>document.querySelector(s);
@@ -6741,68 +6708,16 @@ window.__CX={refresh:paint,open};
 
 </script>
 <script>
-/* ===== Halo refinements: header plus menu ===== */
+/* Opening animation: the logo bursts in, stays two seconds, then the app shows. */
 (function(){
-const ic=document.querySelector('#s-home .topbar .icons');if(!ic)return;
-const root=document.documentElement;
-const b=document.createElement('button');b.className='haplus';b.id='haPlus';b.setAttribute('aria-label','More: colours, background and community');b.setAttribute('aria-haspopup','menu');b.setAttribute('aria-expanded','false');
-b.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
-const th=document.getElementById('themeSw');if(th&&th.parentNode===ic)ic.insertBefore(b,th);else ic.appendChild(b);
-let menu=null,cur=null;
-const close=()=>{if(menu){menu.remove();menu=null;b.setAttribute('aria-expanded','false')}};
-const items=[
- ['pdot','Colours and background','Custom colour, fonts, transparency',()=>{const x=document.getElementById('palSw');x&&x.click()}],
- ['people','Community','Groups and shared spaces',()=>{const x=document.querySelector('#s-home .bkbtn');x&&x.click()}],
- ['share','Invite friends','Share Blend with someone',()=>{const u=location.href.split('#')[0];if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).catch(()=>{})}]
-];
-const svg=(p)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
-const icon={out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
-b.addEventListener('click',e=>{
- e.stopPropagation();
- if(menu){close();return}
- menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat([['out','Sign out','Leave this account on this device',()=>window.__SB.signOut()]]):items;cur=all;
- menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
- document.getElementById('s-home').appendChild(menu);
- b.setAttribute('aria-expanded','true');
- menu.querySelector('button').focus();
-});
-document.addEventListener('click',e=>{
- const m=e.target.closest('.hamenu [data-hi]');
- if(m){const f=cur[+m.dataset.hi][3];close();setTimeout(f,0);return}
- if(menu&&!e.target.closest('.hamenu'))close();
-});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-})();
-
-/* ===== bottom bar hides on swipe up (scroll down), returns on swipe down ===== */
-(function(){
-const nav=document.getElementById('nav');if(!nav)return;
-const last=new WeakMap();let ticking=false;
-document.addEventListener('scroll',e=>{
- const t=e.target===document?document.scrollingElement:e.target;if(!t||t.nodeType!==1)return;
- const y=t.scrollTop,p=last.get(t)||0;last.set(t,y);
- const d=y-p;
- if(Math.abs(d)<6)return;
- if(y<24||d<0)nav.classList.remove('hide');
- else if(d>0&&y>60)nav.classList.add('hide');
-},true);
-nav.addEventListener('click',()=>nav.classList.remove('hide'));
-})();
-
-/* ===== refined duotone navigation icons ===== */
-(function(){
-const A='fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"';
-const wrap=b=>`<svg class="hn" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">${b}</svg>`;
-const IC={
- home:wrap(`<path class="d" d="M4.5 10.9 12 4.2l7.5 6.7V18a2.5 2.5 0 0 1-2.5 2.5H7A2.5 2.5 0 0 1 4.5 18z"/><path ${A} d="M4.5 10.9 12 4.2l7.5 6.7V18a2.5 2.5 0 0 1-2.5 2.5H7A2.5 2.5 0 0 1 4.5 18z"/><path ${A} d="M9.6 20.5v-3.6a2.4 2.4 0 0 1 4.8 0v3.6"/>`),
- videos:wrap(`<rect class="d" x="3.5" y="4.8" width="17" height="14.4" rx="5"/><rect ${A} x="3.5" y="4.8" width="17" height="14.4" rx="5"/><path d="M10.4 9.5v5a.7.7 0 0 0 1.05.6l4.1-2.5a.7.7 0 0 0 0-1.2l-4.1-2.5a.7.7 0 0 0-1.05.6z" fill="currentColor"/>`),
- ask:wrap(`<path class="d" d="M10.5 3.6c.7 4.4 2.5 6.2 6.9 6.9-4.4.7-6.2 2.5-6.9 6.9-.7-4.4-2.5-6.2-6.9-6.9 4.4-.7 6.2-2.5 6.9-6.9z"/><path ${A} d="M10.5 3.6c.7 4.4 2.5 6.2 6.9 6.9-4.4.7-6.2 2.5-6.9 6.9-.7-4.4-2.5-6.2-6.9-6.9 4.4-.7 6.2-2.5 6.9-6.9z"/><path d="M18.2 15.2c.25 1.7.9 2.35 2.6 2.6-1.7.25-2.35.9-2.6 2.6-.25-1.7-.9-2.35-2.6-2.6 1.7-.25 2.35-.9 2.6-2.6z" fill="currentColor"/>`),
- market:wrap(`<path class="d" d="M5.4 8.6h13.2l-.9 9.7a2.5 2.5 0 0 1-2.5 2.2H8.8a2.5 2.5 0 0 1-2.5-2.2z"/><path ${A} d="M5.4 8.6h13.2l-.9 9.7a2.5 2.5 0 0 1-2.5 2.2H8.8a2.5 2.5 0 0 1-2.5-2.2z"/><path ${A} d="M8.9 8.6V7.4a3.1 3.1 0 0 1 6.2 0v1.2"/><path ${A} d="M9.6 12.6a2.4 2.4 0 0 0 4.8 0"/>`)
-};
-function apply(){document.querySelectorAll('#nav button[data-k]').forEach(b=>{const k=b.dataset.k,e=b.querySelector('.ei');if(e&&IC[k]&&!e.querySelector('.hn'))e.innerHTML=IC[k]})}
-apply();
-new MutationObserver(apply).observe(document.getElementById('nav'),{childList:true,subtree:true});
+let el=document.getElementById('splash');
+if(!el){const d=document.createElement('div');d.innerHTML='<div id="splash" aria-hidden="true"><div class="spstars"></div><div class="springs"><i></i><i></i><i></i></div><div class="spbits"><i style="--a:0.0deg;--d:120px;--s:5px"></i><i style="--a:22.5deg;--d:160px;--s:7px"></i><i style="--a:45.0deg;--d:200px;--s:4px"></i><i style="--a:67.5deg;--d:140px;--s:6px"></i><i style="--a:90.0deg;--d:120px;--s:5px"></i><i style="--a:112.5deg;--d:160px;--s:7px"></i><i style="--a:135.0deg;--d:200px;--s:4px"></i><i style="--a:157.5deg;--d:140px;--s:6px"></i><i style="--a:180.0deg;--d:120px;--s:5px"></i><i style="--a:202.5deg;--d:160px;--s:7px"></i><i style="--a:225.0deg;--d:200px;--s:4px"></i><i style="--a:247.5deg;--d:140px;--s:6px"></i><i style="--a:270.0deg;--d:120px;--s:5px"></i><i style="--a:292.5deg;--d:160px;--s:7px"></i><i style="--a:315.0deg;--d:200px;--s:4px"></i><i style="--a:337.5deg;--d:140px;--s:6px"></i></div><div class="splogo">Blend<i>.</i></div></div>';el=d.firstChild;document.body.appendChild(el)}
+let done=false;const t0=Date.now();
+const finish=()=>{if(done)return;done=true;el.classList.add('out');setTimeout(()=>el.remove(),600)};
+const hold=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches?2000:1100+2000;
+let started=false;const go=()=>{if(started)return;started=true;setTimeout(finish,hold)};
+const logo=el.querySelector('.splogo');logo&&logo.addEventListener('animationstart',go);
+setTimeout(go,900);setTimeout(finish,9000);
 })();
 
 </script>
