@@ -1239,6 +1239,13 @@ html.lowdata .post .art{background-image:none!important;background:var(--surface
 .nrow{touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:background .2s}
 .nrow.hold{background:color-mix(in srgb,#d6336c 14%,var(--surface2))}
 
+.bkcomp .ib{flex:none;color:var(--muted)}
+.bkmed{display:flex;flex-direction:column;gap:6px;max-width:100%}
+.bkmed img,.bkmed video{max-width:min(240px,100%);border-radius:14px;display:block;background:var(--surface2)}
+.bkmed audio{max-width:100%;height:40px}
+.bkrec{align-items:center}.bkrec i{width:10px;height:10px;border-radius:50%;background:#e5484d;animation:bkpulse 1s infinite}.bkrec span{flex:1;color:var(--muted);font-size:13px}
+@keyframes bkpulse{50%{opacity:.25}}
+
 /* ===== new post media tabs ===== */
 .ptbox:empty{display:none}
 .ptc{display:flex;flex-direction:column;gap:10px;padding:12px;border:1.5px solid var(--ink);border-radius:14px;margin:4px 0}
@@ -1636,6 +1643,41 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 @media (max-width:400px){#s-home .topbar .icons,.topbar .icons{zoom:.88}}
 @media (max-width:345px){#s-home .topbar .icons,.topbar .icons{zoom:.78}}
 
+.syopts{display:flex;flex-direction:column;gap:10px}
+.syopts button{display:flex;gap:14px;align-items:center;text-align:left;padding:14px;border-radius:18px;background:var(--surface2)}
+.syopts .syo{width:46px;height:46px;border-radius:14px;background:var(--ink);color:var(--surface);display:grid;place-items:center;flex:none}
+.syopts b{display:block;font-size:16px}.syopts small{color:var(--muted)}
+.syed{position:absolute;inset:0;z-index:47;background:#0b0b0d;color:#fff;display:flex;flex-direction:column}
+.syed[hidden]{display:none}
+.sytop{display:flex;align-items:center;gap:10px;padding:max(10px,env(safe-area-inset-top,0px)) 12px 8px}.sytop b{flex:1;font-family:var(--font-display)}
+.sytop .ib{color:#fff}
+.sywrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:4px 12px}
+.sy-stage{position:relative;aspect-ratio:9/16;max-height:100%;max-width:100%;height:100%;overflow:hidden;background:#222;border-radius:16px;--u:4px}
+.sywrap.sv{position:absolute;inset:0;padding:0}.sywrap.sv .sy-stage{border-radius:0;height:100%}
+.symed{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.syta{position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;color:#fff;text-align:center;font-size:calc(var(--u)*8);line-height:1.25;padding:20% 8%;resize:none;outline:none;display:block}
+.syta::placeholder{color:rgba(255,255,255,.6)}
+.sytxt{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:10%;font-size:calc(var(--u)*8);line-height:1.25;color:#fff;overflow-wrap:anywhere;white-space:pre-wrap}
+.syov{position:absolute;transform:translate(-50%,-50%);max-width:90%;text-align:center;font-weight:700;line-height:1.15;text-shadow:0 1px 6px rgba(0,0,0,.45);touch-action:none;cursor:grab;padding:2px 6px;overflow-wrap:anywhere}
+.syov.sel{outline:2px dashed rgba(255,255,255,.9);outline-offset:3px;border-radius:6px}
+.systrip{display:flex;gap:8px;padding:6px 12px;overflow-x:auto;scrollbar-width:none}
+.systrip button{flex:none;width:44px;height:58px;border-radius:10px;overflow:hidden;border:2px solid transparent;background:#222;display:grid;place-items:center;color:#fff}
+.systrip button.on{border-color:#fff}.systrip img{width:100%;height:100%;object-fit:cover}.systrip .rm{margin-left:auto;background:rgba(255,255,255,.12)}
+.sypanel{background:#17171a;margin:0;padding:12px;display:flex;flex-direction:column;gap:10px;border-top:1px solid rgba(255,255,255,.1);max-height:40%;overflow-y:auto}
+.sypanel input[type=text],.sypanel #syti{width:100%;padding:10px 12px;border-radius:12px;background:#26262b;color:#fff;border:0;font-size:16px}
+.sycols{display:flex;gap:8px;flex-wrap:wrap}.sycols button{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.35)}
+.sycols button[aria-pressed=true]{border-color:#fff;box-shadow:0 0 0 2px #17171a,0 0 0 4px #fff}
+.syfonts,.symus{display:flex;gap:8px;flex-wrap:wrap}
+.syfonts button,.symus button{padding:8px 12px;border-radius:99px;background:#26262b;color:#fff;font-size:14px}
+.syfonts button[aria-pressed=true],.symus button[aria-pressed=true]{background:#fff;color:#111}
+.syh{font-family:var(--font-display)}
+.syrange{display:flex;align-items:center;gap:10px;font-size:13px}.syrange input{flex:1}
+.syrow{display:flex;gap:8px}.syrow .mkbtn{justify-content:center}
+.sytools{display:flex;gap:6px;padding:8px 12px calc(10px + env(safe-area-inset-bottom,0px));justify-content:center}
+.sytools button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 18px;border-radius:14px;color:#fff;background:rgba(255,255,255,.08)}
+.sytools b{font-size:18px}.sytools small{font-size:11px;opacity:.8}
+#story .shead .ib{color:#fff}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -1816,7 +1858,8 @@ const db={doc:docRef,collection:n=>colRef(n)};
 const downloads={save:async({filename,data})=>{const b=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}};
 
 window.claude={use:async n=>n==='user'?user:n==='db'?(await ready(),db):n==='downloads'?downloads:null};
-window.__SB={signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
+async function upload(file,kind){await ready();if(!session)throw new Error('signin');const t=(file.type||'application/octet-stream').split(';')[0];const ext=({'image/jpeg':'jpg','video/quicktime':'mov','audio/mpeg':'mp3','audio/x-m4a':'m4a','audio/mp4':'m4a'})[t]||(t.split('/')[1]||'bin');const path=session.user.id+'/'+(kind||'f')+'/'+Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;const r=await sb.storage.from('media').upload(path,file,{contentType:t,cacheControl:'31536000'});if(r.error)throw r.error;return sb.storage.from('media').getPublicUrl(path).data.publicUrl}
+window.__SB={upload,signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
 /* visitors can look around; liking, commenting, following, posting and messages ask them to sign in */
 const WALL='[data-a="like"],[data-a="comments"],[data-a="follow"],[data-a="repost"],[data-a="save"],[data-a="create"],[data-a="notif"],[data-a="msgs"],[data-a="vlike"],[data-a="vdis"],[data-a="vsub"],[data-a="vbell"],[data-a="join"],[data-a="gift"],[data-a="sendgift"],[data-a="golive"],[data-a="livetab"],[data-a="liveopen"],[data-a="startlive"],[data-a="heart"],[data-a="going"],[data-a="vlater"],[data-a="coins"],[data-a="buycoins"],[data-a="revive"],[data-cx="clike"],[data-cx="reply"],[data-cx="cdel"],[data-cx="crep"],[data-a="cform"],[data-a="cform2"],[data-a="post"],[data-a="post2"],.bkbtn';
 document.addEventListener('submit',e=>{if(session)return;const f=e.target;if(f&&f.dataset&&['cform','cform2','lvform','mform'].includes(f.dataset.a)||f.dataset.cx==='form'){e.preventDefault();e.stopImmediatePropagation();ready().then(()=>authUI('Sign in or create an account to comment.'))}},true);
@@ -5642,7 +5685,7 @@ Object.assign(IC,{hub:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6
 const TV=1,MINAGE=13;
 const B=window.__BK={ready:false,uid:null,ok:false};
 let db=null,user=null,uid=null,me=null,admin=false,tab='people',thread=null,unsubs=[],mounted=false,synced=new Set(),known=new Map();
-const st={users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
+const st={stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
 const now=()=>Date.now();
 const rel=ts=>{const d=(now()-ts)/1000;return d<60?'now':d<3600?Math.floor(d/60)+'m':d<86400?Math.floor(d/3600)+'h':Math.floor(d/86400)+'d'};
 const rid=k=>'r_'+k;
@@ -5676,6 +5719,7 @@ function startPublic(){
  sub(col('comments'),s=>{st.comments=s.docs.map(d=>({id:d.id,...d.data()}));feedSync();if(window.__CX)window.__CX.refresh()});
  sub(col('clikes'),s=>{st.clikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
  sub(col('follows'),s=>{st.follows=s.docs.map(d=>d.data());feedSync()});
+ sub(col('stories').orderBy('ts','desc').limit(200),s=>{st.stories=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
 }
 function sub(q,fn){let t=setTimeout(()=>{},10);try{unsubs.push(q.onSnapshot(fn,e=>console.warn('sub',e&&e.code)))}catch(e){console.warn(e)}}
 function listen(){
@@ -5683,6 +5727,7 @@ function listen(){
  sub(col('posts').orderBy('ts','desc').limit(300),s=>{st.posts=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('likes'),s=>{st.likes=s.docs.map(d=>d.data());feedSync()});
  sub(col('follows'),s=>{st.follows=s.docs.map(d=>d.data());feedSync();refreshStats()});
+ sub(col('stories').orderBy('ts','desc').limit(200),s=>{st.stories=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('comments'),s=>{st.comments=s.docs.map(d=>({id:d.id,...d.data()}));feedSync();if(window.__CX)window.__CX.refresh()});
  sub(col('clikes'),s=>{st.clikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
  sub(col('dislikes'),s=>{st.dislikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
@@ -5707,8 +5752,27 @@ function syncAcct(){
  if(!me||!window.__ACCT)return;const a=__ACCT.get(),n=me.n||'You',h=me.h||'me';
  if(!a||a.type!=='personal'||a.active!=='pers'||a.chan||!a.pers||a.pers.n!==n||a.pers.h!==h)__ACCT.set({type:'personal',active:'pers',pers:{n,h},chan:null,hidden:false});
 }
+/* real stories (last 24 hours) join the story row */
+function storySync(){
+ if(typeof STORIES==='undefined')return;
+ const cut=now()-86400000;
+ for(let i=STORIES.length-1;i>=0;i--)if(STORIES[i].real)STORIES.splice(i,1);
+ const by=new Map();
+ st.stories.filter(d=>d.ts>cut&&d.slides&&d.slides.length&&!st.hide.has(d.id)&&!st.ban.has(d.uid)&&!st.blocks.has(d.uid)).sort((x,y)=>x.ts-y.ts).forEach(d=>{if(!by.has(d.uid))by.set(d.uid,[]);by.get(d.uid).push(d)});
+ const add=[];
+ by.forEach((docs,u)=>{
+  const mineP=u===uid,key=mineP?'me':rid(u);
+  if(!mineP){P[key]=P[key]||{n:nameOf(u),h:hOf(u),c:hue(u)};P[key].n=nameOf(u);P[key].h=hOf(u)}
+  const slides=[];docs.forEach(d=>d.slides.forEach(x=>slides.push({...x,music:d.music||null,doc:d.id,ts:d.ts})));
+  add.push({u:key,c:hue(u),t:'',real:true,uid:u,slides,last:docs[docs.length-1].ts})
+ });
+ add.sort((x,y)=>(y.u==='me')-(x.u==='me')||y.last-x.last);
+ STORIES.unshift(...add);
+}
+B.storySync=storySync;
 function feedSync(){
  syncAcct();
+ try{storySync()}catch(e){console.warn(e)}
  if(typeof POSTS==='undefined')return;
  const fol=myFollows(),lk={},mine=new Set();
  st.likes.forEach(l=>{lk[l.p]=(lk[l.p]||0)+1;if(l.u===uid)mine.add(l.p)});
@@ -5827,11 +5891,11 @@ function vPeople(){
 function threads(){const m=new Map();st.msgs.forEach(x=>{const o=x.a===uid?x.b:x.a;if(st.blocks.has(o))return;m.set(o,x)});return [...m.entries()].sort((a,b)=>b[1].ts-a[1].ts)}
 function vMsgs(){
  const t=threads();
- return `<div class="bkpad">`+(t.length?t.map(([o,x])=>`<button class="bkrow bkbtnrow" data-bk="chat" data-u="${o}">${av2(o)}<span class="t"><b>${esc(nameOf(o))}</b><small>${x.a===uid?'You: ':''}${esc(x.text.slice(0,60))}</small></span><small>${rel(x.ts)}</small>${x.b===uid&&!x.read?'<i class="dot2"></i>':''}</button>`).join(''):'<div class="empty">No messages yet. Open People and tap the chat icon.</div>')+'</div>'
+ return `<div class="bkpad">`+(t.length?t.map(([o,x])=>`<button class="bkrow bkbtnrow" data-bk="chat" data-u="${o}">${av2(o)}<span class="t"><b>${esc(nameOf(o))}</b><small>${x.a===uid?'You: ':''}${esc((x.text||(x.media&&x.media.length?(x.media[0].k==='audio'?'Voice note':x.media[0].k==='video'?'Video':'Photo'):'')).slice(0,60))}</small></span><small>${rel(x.ts)}</small>${x.b===uid&&!x.read?'<i class="dot2"></i>':''}</button>`).join(''):'<div class="empty">No messages yet. Open People and tap the chat icon.</div>')+'</div>'
 }
 function vChat(){
  const ms=st.msgs.filter(m=>(m.a===uid&&m.b===thread)||(m.a===thread&&m.b===uid));
- return `<div class="bkchat">`+ms.map(m=>`<div class="bkm ${m.a===uid?'me':'them'}"><span>${esc(m.text)}</span><small>${rel(m.ts)}${m.a!==uid?` · <button data-bk="report" data-id="${m.id}" data-t="msg">Report</button>`:''}</small></div>`).join('')+(ms.length?'':'<div class="empty">Say hello.</div>')+`</div><form class="bkcomp" data-bk="send"><input class="mkfield" data-bkf="m" placeholder="Message" maxlength="1000" aria-label="Message" autocomplete="off"><button class="mkbtn" type="submit">Send</button></form>`
+ return `<div class="bkchat">`+ms.map(m=>`<div class="bkm ${m.a===uid?'me':'them'}">${mediaHTML(m)}${m.text?`<span>${esc(m.text)}</span>`:''}<small>${rel(m.ts)}${m.a!==uid?` · <button data-bk="report" data-id="${m.id}" data-t="msg">Report</button>`:''}</small></div>`).join('')+(ms.length?'':'<div class="empty">Say hello.</div>')+`</div>${rec?`<div class="bkcomp bkrec"><i></i><b id="bkrt">${fmtT(recSecs())}</b><span>Recording, up to 2 minutes</span><button type="button" class="mkbtn ghost" data-bk="recx">Cancel</button><button type="button" class="mkbtn" data-bk="recok">Send</button></div>`:`<form class="bkcomp" data-bk="send"><button type="button" class="ib" data-bk="attach" aria-label="Photos and videos from your gallery">${I('image',22)}</button><button type="button" class="ib" data-bk="cam" aria-label="Camera">${I('camera',22)}</button><input class="mkfield" data-bkf="m" placeholder="Message" maxlength="1000" aria-label="Message" autocomplete="off"><button type="button" class="ib" data-bk="mic" aria-label="Voice note">${I('mic',22)}</button><button class="mkbtn" type="submit">Send</button></form>`}`
 }
 async function openChat(u){
  const them=st.users[u];if(!them)return;
@@ -5839,11 +5903,70 @@ async function openChat(u){
  thread=u;tab='chat';paint();
  st.msgs.filter(m=>m.b===uid&&m.a===u&&!m.read).forEach(m=>guard(()=>col('msgs').doc(m.id).update({read:true})));
 }
-async function sendMsg(txt){
- txt=txt.trim().slice(0,1000);if(!txt||!thread)return;
+async function sendMsg(txt,media){
+ txt=(txt||'').trim().slice(0,1000);media=media||[];if((!txt&&!media.length)||!thread)return;
  if(st.blocks.has(thread))return toast('You blocked this person.');
- await guard(async()=>{await col('msgs').add({a:uid,b:thread,text:txt,ts:now(),read:false});notify(thread,'dm','')});
+ await guard(async()=>{const d={a:uid,b:thread,text:txt,ts:now(),read:false};if(media.length)d.media=media;const r=await col('msgs').add(d);notify(thread,'dm','');if(media.length){if(!st.msgs.some(x=>r&&x.id===r.id))st.msgs.push({id:(r&&r.id)||'t'+d.ts,...d});paint()}});
 }
+/* pictures, videos and voice notes */
+const fmtT=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+function mediaHTML(m){
+ if(!m.media||!m.media.length)return '';
+ return '<div class="bkmed">'+m.media.map(x=>x.k==='image'?`<img src="${esc(x.u)}" alt="Photo" loading="lazy">`:x.k==='video'?`<video src="${esc(x.u)}" controls playsinline preload="metadata"></video>`:`<audio src="${esc(x.u)}" controls preload="metadata"></audio>`).join('')+'</div>'
+}
+function shrink(file){
+ return new Promise(res=>{
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)||file.size<400000)return res(file);
+  const im=new Image(),u=URL.createObjectURL(file);
+  im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>res(b&&b.size<file.size?new File([b],'p.jpg',{type:'image/jpeg'}):file),'image/jpeg',.85)};
+  im.onerror=()=>{URL.revokeObjectURL(u);res(file)};im.src=u})
+}
+async function sendFiles(files){
+ if(!thread)return;
+ const list=[...files].slice(0,10),out=[];
+ if(!window.__SB||!__SB.upload)return toast('Sending files is not available here.');
+ toast('Sending…');
+ for(const f0 of list){
+  const k=/^image\//.test(f0.type)?'image':/^video\//.test(f0.type)?'video':/^audio\//.test(f0.type)?'audio':'';
+  if(!k){toast('That file type can’t be sent.');continue}
+  if(f0.size>52428800){toast('That file is over 50 MB. Try a shorter one.');continue}
+  try{const f=k==='image'?await shrink(f0):f0;out.push({k,u:await __SB.upload(f,'dm')})}catch(e){toast('Could not send that file. Try again.')}
+ }
+ if(out.length)await sendMsg('',out)
+}
+let rec=null;
+const recSecs=()=>rec?Math.min(120,(Date.now()-rec.t0)/1000):0;
+async function recStart(){
+ if(!navigator.mediaDevices||!window.MediaRecorder)return toast('Voice notes are not supported on this browser.');
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  const mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
+  const mr=mt?new MediaRecorder(stream,{mimeType:mt}):new MediaRecorder(stream),chunks=[];
+  rec={mr,stream,t0:Date.now(),send:false,chunks};
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+  mr.onstop=async()=>{
+   const r=rec;stream.getTracks().forEach(t=>t.stop());clearInterval(r.timer);rec=null;paint();
+   if(!r.send||!chunks.length)return;
+   const type=(mr.mimeType||mt||'audio/mp4').split(';')[0];
+   await sendFiles([new File([new Blob(chunks,{type})],'voice',{type})]);
+  };
+  mr.start();
+  rec.timer=setInterval(()=>{const t=document.getElementById('bkrt');if(t)t.textContent=fmtT(recSecs());if(recSecs()>=120)recStop(true)},500);
+  paint();
+ }catch(e){rec=null;toast('Allow the microphone to record a voice note.')}
+}
+function recStop(send){if(!rec)return;rec.send=!!send;try{rec.mr.stop()}catch(e){rec.stream.getTracks().forEach(t=>t.stop());clearInterval(rec.timer);rec=null;paint()}}
+function pick(cam){
+ const i=document.createElement('input');i.type='file';i.accept='image/*,video/*';if(cam)i.setAttribute('capture','environment');else i.multiple=true;
+ i.style.display='none';document.body.appendChild(i);
+ i.onchange=()=>{const f=[...i.files];i.remove();if(f.length)sendFiles(f)};
+ i.click();
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-bk=attach],[data-bk=cam],[data-bk=mic],[data-bk=recx],[data-bk=recok]');if(!b)return;
+ const k=b.dataset.bk;
+ if(k==='attach')pick(false);else if(k==='cam')pick(true);else if(k==='mic')recStart();else if(k==='recx')recStop(false);else recStop(true);
+});
 
 /* ---------- alerts ---------- */
 function vAlerts(){
@@ -5987,6 +6110,8 @@ async function onSave(){
 }
 
 /* ---------- events ---------- */
+/* the paper-plane Messages button opens real messages for signed-in people */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a=msgs]');if(!b||!B.ok||!me)return;e.preventDefault();e.stopImmediatePropagation();thread=null;open('msgs')},true);
 document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.bkf==='q'){st._q=e.target.value;const pos=e.target.selectionStart;const o=$('#bkp .bkbody');if(o){o.innerHTML=vPeople();const i=o.querySelector('[data-bkf=q]');i.focus();i.setSelectionRange(pos,pos)}}});
 document.addEventListener('submit',e=>{const f=e.target.closest('[data-bk=send]');if(!f)return;e.preventDefault();const i=f.querySelector('input');const v=i.value;i.value='';sendMsg(v)});
 document.addEventListener('click',async e=>{
@@ -6917,6 +7042,225 @@ document.addEventListener('click',e=>{
  const t=e.target.closest('[data-w=tab][data-k=com]');if(!t)return;
  e.stopImmediatePropagation();openComments(W.id);
 },true);
+})();
+
+</script>
+<script>
+/* Story creator and viewer: video (up to 1:30), pictures, words, writing over media, music. */
+(function(){
+const $=s=>document.querySelector(s);
+const FONTS=[['Clean','system-ui,-apple-system,sans-serif'],['Serif','Georgia,serif'],['Mono','ui-monospace,Menlo,monospace'],['Hand','"Chalkboard SE","Comic Sans MS",cursive'],['Bold','Impact,"Arial Black",sans-serif']];
+const BGS=['#111111','#ff3d8b','#ff7a2f','#ffc933','#12b886','#2b8cff','#7c4dff','linear-gradient(135deg,#ff3d8b,#7c4dff)','linear-gradient(135deg,#ffc933,#ff3d8b)','linear-gradient(135deg,#12b886,#2b8cff)','linear-gradient(160deg,#0f2027,#2c5364)'];
+const COLS=['#ffffff','#111111','#ff3d8b','#ffc933','#12b886','#2b8cff'];
+const api=()=>window.__BK&&window.__BK.api&&window.__BK.api.on()?window.__BK.api:null;
+const MAXV=90,MAXMB=52428800;
+let SY=null,aud=null,drag=null;
+const uidn=()=>Math.random().toString(36).slice(2,8);
+
+/* ---- music helpers ---- */
+function mstop(){try{const M=window.__PS&&__PS.Mus;if(M&&M.cur&&(M.cur.tag==='story'||M.cur.tag==='sydraft'))M.stop(.2)}catch(e){}if(aud){try{aud.pause()}catch(e){}aud=null}}
+function mstart(m,tag){
+ mstop();if(!m)return;
+ if(m.k==='s'&&window.__PS){try{__PS.Mus.start({k:'s',id:m.id},.5,.5,tag||'story')}catch(e){}}
+ else if(m.url||m.blobUrl){aud=new Audio(m.url||m.blobUrl);aud.loop=true;aud.volume=.5;aud.play().catch(()=>{})}
+}
+
+/* ---- pick and open ---- */
+function chooser(){
+ if(!api())return toast('Finish setting up your profile first.');
+ openSheet(`<h3>Add to your story</h3><div class="lb"><div class="syopts">
+ <button data-sy="vid"><span class="syo">${I('video',26)}</span><span><b>Video</b><small>Up to 1 minute 30 seconds</small></span></button>
+ <button data-sy="pic"><span class="syo">${I('image',26)}</span><span><b>Pictures</b><small>One or more, with writing and music</small></span></button>
+ <button data-sy="txt"><span class="syo"><b style="font-size:20px">Aa</b></span><span><b>Words</b><small>Write it, pick a font and background</small></span></button>
+ </div></div>`);
+}
+function pick(accept,multi,cb){
+ const i=document.createElement('input');i.type='file';i.accept=accept;if(multi)i.multiple=true;i.style.display='none';document.body.appendChild(i);
+ i.onchange=()=>{const f=[...i.files];i.remove();if(f.length)cb(f)};i.click();
+}
+function startVideo(){
+ pick('video/*',false,async f=>{
+  const file=f[0];
+  if(file.size>MAXMB)return toast('That video is over 50 MB. Choose a shorter one.');
+  const url=URL.createObjectURL(file),v=document.createElement('video');v.preload='metadata';
+  v.onloadedmetadata=()=>{
+   if(isFinite(v.duration)&&v.duration>MAXV+.5){URL.revokeObjectURL(url);return toast('Story videos can be up to 1 minute 30 seconds. Choose a shorter one.')}
+   openEditor([{k:'video',blob:file,url,ov:[],mute:false}])
+  };
+  v.onerror=()=>{URL.revokeObjectURL(url);openEditor([{k:'video',blob:file,url,ov:[],mute:false}])};
+  v.src=url;
+ });
+}
+function startPics(){pick('image/*',true,f=>{openEditor(f.slice(0,10).map(file=>({k:'image',blob:file,url:URL.createObjectURL(file),ov:[]})))})}
+function startText(){openEditor([{k:'text',text:'',bg:BGS[7],font:FONTS[0][1],ov:[]}])}
+
+/* ---- editor ---- */
+function openEditor(slides){
+ if(typeof closeSheet==='function')closeSheet();
+ SY={slides,i:0,music:null,sel:null,panel:null,busy:false};
+ let el=$('#syed');if(!el){el=document.createElement('div');el.id='syed';el.className='syed';el.setAttribute('role','dialog');el.setAttribute('aria-label','Create a story');$('#app').appendChild(el)}
+ el.hidden=false;ed();
+}
+function closeEditor(){
+ mstop();if(SY)SY.slides.forEach(s=>{if(s.url)try{URL.revokeObjectURL(s.url)}catch(e){}});
+ SY=null;const el=$('#syed');if(el){el.hidden=true;el.innerHTML=''}
+}
+function ovHTML(o,edit){return `<div class="syov ${edit&&SY.sel===o.id?'sel':''}" data-oid="${o.id}" style="left:${o.x}%;top:${o.y}%;color:${o.c};font-family:${o.f};font-size:calc(var(--u,4px)*${o.s})">${esc(o.t)}</div>`}
+function inner(s,edit){
+ if(s.k==='image')return `<img class="symed" src="${esc(s.url)}" alt="">`;
+ if(s.k==='video')return edit?`<video class="symed" src="${esc(s.url)}" autoplay muted loop playsinline></video>`:'';
+ return edit?`<textarea class="syta" id="syta" maxlength="300" placeholder="Type your story" style="font-family:${s.font}" aria-label="Story text">${esc(s.text||'')}</textarea>`:'';
+}
+function setU(){const st=$('#sySt');if(st)st.style.setProperty('--u',(st.clientWidth/100)+'px')}
+function ed(){
+ const el=$('#syed');if(!el||!SY)return;
+ const s=SY.slides[SY.i],o=SY.panel==='text'&&SY.sel?s.ov.find(x=>x.id===SY.sel):null;
+ const strip=SY.slides.length>1||s.k==='image'?`<div class="systrip">${SY.slides.map((x,k)=>`<button class="${k===SY.i?'on':''}" data-sy="go" data-k="${k}" aria-label="Picture ${k+1}"><img src="${esc(x.url)}" alt=""></button>`).join('')}${SY.slides.length<10&&s.k==='image'?`<button class="add" data-sy="more" aria-label="Add more pictures">${I('plus',20)}</button>`:''}${SY.slides.length>1?`<button class="rm" data-sy="rmslide" aria-label="Remove this picture">${I('trash',18)}</button>`:''}</div>`:'';
+ let panel='';
+ if(SY.panel==='text'){
+  panel=`<div class="sypanel"><input id="syti" maxlength="80" placeholder="Type something" value="${o?esc(o.t):''}" aria-label="Text over the story"><div class="sycols">${COLS.map(c=>`<button style="background:${c}" data-sy="ocol" data-c="${c}" aria-label="Colour" ${o&&o.c===c?'aria-pressed="true"':''}></button>`).join('')}</div><div class="syfonts">${FONTS.map(([n,f])=>`<button style="font-family:${f}" data-sy="ofont" data-f="${esc(f)}" ${o&&o.f===f?'aria-pressed="true"':''}>${n}</button>`).join('')}</div><label class="syrange"><span>Size</span><input type="range" id="syos" min="4" max="14" value="${o?o.s:7}"></label><div class="syrow"><button class="mkbtn ghost" data-sy="orm">Remove</button><button class="mkbtn" data-sy="odone">Done</button></div></div>`;
+ }else if(SY.panel==='music'){
+  const TR=window.__PS?__PS.TR:{};
+  panel=`<div class="sypanel"><b class="syh">Background music</b><div class="symus"><button data-sy="mus" data-id="" ${!SY.music?'aria-pressed="true"':''}>No music</button>${Object.keys(TR).map(id=>`<button data-sy="mus" data-id="${id}" ${SY.music&&SY.music.k==='s'&&SY.music.id===id?'aria-pressed="true"':''}>♪ ${esc(TR[id].n)}</button>`).join('')}<button data-sy="musfile" ${SY.music&&SY.music.k==='f'?'aria-pressed="true"':''}>From my device${SY.music&&SY.music.k==='f'?': '+esc(SY.music.name):''}</button></div><div class="syrow"><button class="mkbtn" data-sy="pdone" style="flex:1">Done</button></div></div>`;
+ }else if(s.k==='text'){
+  panel=`<div class="sypanel"><div class="sycols bgs">${BGS.map(b=>`<button style="background:${b}" data-sy="bg" data-b="${esc(b)}" aria-label="Background" ${s.bg===b?'aria-pressed="true"':''}></button>`).join('')}</div><div class="syfonts">${FONTS.map(([n,f])=>`<button style="font-family:${f}" data-sy="tfont" data-f="${esc(f)}" ${s.font===f?'aria-pressed="true"':''}>${n}</button>`).join('')}</div></div>`;
+ }
+ el.innerHTML=`<div class="sytop"><button class="ib" data-sy="close" aria-label="Close">${I('close')}</button><b>New story</b><button class="mkbtn" data-sy="share" id="syshare">${SY.busy?'Sharing…':'Share'}</button></div>
+ <div class="sywrap"><div class="sy-stage" id="sySt" style="${s.k==='text'?'background:'+s.bg:''}">${inner(s,true)}${s.ov.map(x=>ovHTML(x,true)).join('')}</div></div>
+ ${strip}${panel}
+ <div class="sytools"><button data-sy="addtext"><b>Aa</b><small>Text</small></button><button data-sy="music"><b>♪</b><small>${SY.music?esc(SY.music.name).slice(0,12):'Music'}</small></button>${s.k==='video'?`<button data-sy="mute"><b>${s.mute?'🔇':'🔊'}</b><small>${s.mute?'Muted':'Sound'}</small></button>`:''}</div>`;
+ setU();
+ const ta=$('#syta');if(ta)ta.addEventListener('input',()=>{s.text=ta.value});
+}
+function shrinkImg(file,max){
+ return new Promise(res=>{
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type))return res(file);
+  const im=new Image(),u=URL.createObjectURL(file);
+  im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>res(b?new File([b],'s.jpg',{type:'image/jpeg'}):file),'image/jpeg',.86)};
+  im.onerror=()=>{URL.revokeObjectURL(u);res(file)};im.src=u});
+}
+async function share(){
+ const a=api();if(!a||!SY||SY.busy)return;
+ if(SY.slides.some(s=>s.k==='text'&&!(s.text||'').trim()))return toast('Write something first.');
+ if(!window.__SB||!__SB.upload)return toast('Sharing is not available here.');
+ SY.busy=true;ed();
+ try{
+  const out=[];
+  for(const s of SY.slides){
+   const ov=s.ov.map(x=>({t:x.t.slice(0,80),x:+x.x.toFixed(1),y:+x.y.toFixed(1),c:x.c,f:x.f,s:x.s}));
+   if(s.k==='text')out.push({k:'text',text:s.text.trim().slice(0,300),bg:s.bg,font:s.font,ov});
+   else{const f=s.k==='image'?await shrinkImg(s.blob,1080):s.blob;const u=await __SB.upload(f,'story');out.push({k:s.k,u,ov,mute:!!s.mute})}
+  }
+  let music=null;
+  if(SY.music){if(SY.music.k==='s')music={k:'s',id:SY.music.id,name:SY.music.name};else music={k:'f',url:await __SB.upload(SY.music.file,'story'),name:SY.music.name}}
+  await a.col('stories').add({uid:a.uid(),slides:out,music,ts:a.now()});
+  closeEditor();toast('Story shared');
+  if(window.__BK&&__BK.storySync)__BK.storySync();
+ }catch(e){if(SY){SY.busy=false;ed()}toast('Could not share your story. Try again.')}
+}
+
+/* ---- viewer ---- */
+const _os=openStory;
+function ago(ts){const m=Math.max(1,Math.round((Date.now()-ts)/60000));return m<60?m+'m':Math.round(m/60)+'h'}
+function slideHTML(s){
+ if(s.k==='image')return `<img class="symed" src="${esc(s.u)}" alt="">`;
+ if(s.k==='video')return `<video class="symed" id="syvid" src="${esc(s.u)}" autoplay playsinline ${s.mute?'muted':''}></video>`;
+ return `<div class="sytxt" style="font-family:${s.font}">${esc(s.text||'')}</div>`;
+}
+function openReal(i,j){
+ const el=$('#story'),g=STORIES[i];
+ if(!g||!g.slides||!g.slides[j]){openStory(i+1);return}
+ const s=g.slides[j];
+ S.story=i;clearTimeout(S.timer);
+ el.hidden=false;
+ const own=g.u==='me';
+ el.innerHTML=`<div class="sywrap sv"><div class="sy-stage" id="syv" style="${s.k==='text'?'background:'+s.bg:''}">${slideHTML(s)}${(s.ov||[]).map(x=>ovHTML(x,false)).join('')}</div></div>
+ <div class="sbars">${g.slides.map((_,k)=>`<i class="${k<j?'done':k===j?'cur':''}"><b ${k===j?'id="sybar"':''}></b></i>`).join('')}</div>
+ <div class="shead">${av(g.u,36)}<b>${esc(P[g.u]?P[g.u].h:'')}</b><small style="opacity:.8">${ago(s.ts||Date.now())}</small>${own?`<button class="ib" data-sy="del" data-doc="${esc(s.doc||'')}" aria-label="Delete this story">${I('trash')}</button>`:''}<button class="ib" data-a="storyclose" aria-label="Close">${I('close')}</button></div>
+ <div class="szones"><button style="width:33%" data-sy="vprev" data-i="${i}" data-j="${j}" aria-label="Previous"></button><button style="width:67%" data-sy="vnext" data-i="${i}" data-j="${j}" aria-label="Next"></button></div>`;
+ const st=$('#syv');if(st)st.style.setProperty('--u',(st.clientWidth/100)+'px');
+ const bar=$('#sybar'),go=()=>{if(S.story===i)openReal(i,j+1)};
+ const key=s.music?(s.music.k+(s.music.id||s.music.url||'')):'';
+ if(key!==SY_KEY){SY_KEY=key;mstart(s.music,'story')}
+ if(s.k==='video'){
+  const v=$('#syvid');
+  if(bar)bar.style.animationDuration='20s';
+  if(v){v.onloadedmetadata=()=>{if(bar)bar.style.animationDuration=Math.min(MAXV,v.duration||20)+'s'};v.onended=go;v.play&&v.play().catch(()=>{});S.timer=setTimeout(go,(MAXV+2)*1000)}
+ }else{if(bar)bar.style.animationDuration='5s';S.timer=setTimeout(go,5000)}
+}
+let SY_KEY='';
+openStory=function(i){
+ clearTimeout(S.timer);
+ const g=STORIES[i];
+ if(i>=0&&g&&g.real){openReal(i,0);return}
+ if(i<0||!g){SY_KEY='';mstop()}else{if(SY_KEY){SY_KEY='';mstop()}}
+ _os(i);
+};
+
+/* ---- events ---- */
+document.addEventListener('click',e=>{
+ const pl=e.target.closest('.stories .story[data-a=create]');
+ if(pl){e.preventDefault();e.stopImmediatePropagation();chooser();return}
+ const b=e.target.closest('[data-sy]');if(!b)return;
+ const k=b.dataset.sy;
+ if(k==='vid'){closeSheet();startVideo();return}
+ if(k==='pic'){closeSheet();startPics();return}
+ if(k==='txt'){closeSheet();startText();return}
+ if(k==='vnext'){openReal(+b.dataset.i,+b.dataset.j+1);return}
+ if(k==='vprev'){const i=+b.dataset.i,j=+b.dataset.j;if(j>0)openReal(i,j-1);else if(i>0)openStory(i-1);else openReal(i,0);return}
+ if(k==='del'){
+  if(!confirm('Delete this part of your story?'))return;
+  const a=api(),id=b.dataset.doc;if(a&&id){a.guard(()=>a.col('stories').doc(id).delete()).then(()=>{toast('Story deleted');openStory(-1)})}
+  return;
+ }
+ if(!SY)return;
+ const s=SY.slides[SY.i];
+ if(k==='close'){if(!SY.busy)closeEditor()}
+ else if(k==='share')share();
+ else if(k==='go'){SY.i=+b.dataset.k;SY.sel=null;SY.panel=null;ed()}
+ else if(k==='more'){pick('image/*',true,f=>{f.slice(0,10-SY.slides.length).forEach(file=>SY.slides.push({k:'image',blob:file,url:URL.createObjectURL(file),ov:[]}));SY.i=SY.slides.length-1;ed()})}
+ else if(k==='rmslide'){try{URL.revokeObjectURL(s.url)}catch(e){}SY.slides.splice(SY.i,1);SY.i=Math.max(0,SY.i-1);SY.sel=null;ed()}
+ else if(k==='addtext'){const o={id:uidn(),t:'Your text',x:50,y:45,c:'#ffffff',f:FONTS[0][1],s:7};s.ov.push(o);SY.sel=o.id;SY.panel='text';ed();const t=$('#syti');if(t){t.focus();t.select()}}
+ else if(k==='ocol'){const o=s.ov.find(x=>x.id===SY.sel);if(o){o.c=b.dataset.c;ed()}}
+ else if(k==='ofont'){const o=s.ov.find(x=>x.id===SY.sel);if(o){o.f=b.dataset.f;ed()}}
+ else if(k==='orm'){s.ov=s.ov.filter(x=>x.id!==SY.sel);SY.sel=null;SY.panel=null;ed()}
+ else if(k==='odone'){SY.panel=null;SY.sel=null;ed()}
+ else if(k==='bg'){s.bg=b.dataset.b;ed()}
+ else if(k==='tfont'){s.font=b.dataset.f;ed()}
+ else if(k==='mute'){s.mute=!s.mute;ed()}
+ else if(k==='music'){SY.panel='music';SY.sel=null;ed()}
+ else if(k==='pdone'){mstop();SY.panel=null;ed()}
+ else if(k==='mus'){const id=b.dataset.id;if(!id){SY.music=null;mstop()}else{SY.music={k:'s',id,name:window.__PS.TR[id].n};mstart(SY.music,'sydraft')}ed()}
+ else if(k==='musfile'){pick('audio/*',false,f=>{const file=f[0];if(file.size>MAXMB)return toast('That audio file is over 50 MB.');SY.music={k:'f',file,name:(file.name||'My music').replace(/\.[a-z0-9]+$/i,''),blobUrl:URL.createObjectURL(file)};mstart(SY.music,'sydraft');ed()})}
+});
+document.addEventListener('input',e=>{
+ if(!SY)return;
+ const s=SY.slides[SY.i];
+ if(e.target.id==='syti'){const o=s.ov.find(x=>x.id===SY.sel);if(o){o.t=e.target.value||' ';const n=document.querySelector('.syov[data-oid="'+o.id+'"]');if(n)n.textContent=o.t}}
+ else if(e.target.id==='syos'){const o=s.ov.find(x=>x.id===SY.sel);if(o){o.s=+e.target.value;const n=document.querySelector('.syov[data-oid="'+o.id+'"]');if(n)n.style.fontSize='calc(var(--u,4px)*'+o.s+')'}}
+});
+/* drag text around the picture */
+document.addEventListener('pointerdown',e=>{
+ const n=e.target.closest('.syov');if(!n||!SY||!$('#syed')||$('#syed').hidden)return;
+ const s=SY.slides[SY.i],o=s.ov.find(x=>x.id===n.dataset.oid);if(!o)return;
+ const r=$('#sySt').getBoundingClientRect();
+ drag={o,n,r,moved:false,sx:e.clientX,sy:e.clientY};try{n.setPointerCapture(e.pointerId)}catch(_){}
+ e.preventDefault();
+});
+document.addEventListener('pointermove',e=>{
+ if(!drag)return;
+ if(Math.abs(e.clientX-drag.sx)+Math.abs(e.clientY-drag.sy)>4)drag.moved=true;
+ if(!drag.moved)return;
+ drag.o.x=Math.max(5,Math.min(95,(e.clientX-drag.r.left)/drag.r.width*100));
+ drag.o.y=Math.max(4,Math.min(94,(e.clientY-drag.r.top)/drag.r.height*100));
+ drag.n.style.left=drag.o.x+'%';drag.n.style.top=drag.o.y+'%';
+});
+document.addEventListener('pointerup',()=>{
+ if(!drag)return;const d=drag;drag=null;
+ if(!d.moved){SY.sel=d.o.id;SY.panel='text';ed()}
+});
+window.addEventListener('resize',()=>{setU();const st=$('#syv');if(st)st.style.setProperty('--u',(st.clientWidth/100)+'px')});
+window.__SY={open:chooser};
 })();
 
 </script>
