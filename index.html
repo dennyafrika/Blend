@@ -1678,12 +1678,24 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 .sytools b{font-size:18px}.sytools small{font-size:11px;opacity:.8}
 #story .shead .ib{color:#fff}
 
-.story .in{position:relative}
-.sythumb{position:absolute;inset:0;border-radius:inherit;background-size:cover;background-position:center;overflow:hidden;display:grid;place-items:center;color:#fff}
-.sythumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
-.sythumb b{font-size:18px;text-shadow:0 1px 4px rgba(0,0,0,.4)}
-.syplay{position:absolute;right:3px;bottom:3px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;font-size:8px;font-style:normal;display:grid;place-items:center;padding-left:1px}
-.sycnt{position:absolute;left:3px;top:3px;min-width:16px;height:16px;border-radius:99px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-style:normal;display:grid;place-items:center;padding:0 4px}
+
+.stories.sycards{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:12px 14px;-webkit-overflow-scrolling:touch}
+.stories.sycards::-webkit-scrollbar{display:none}
+.sycard{flex:none;position:relative;width:112px;height:196px;border-radius:16px;overflow:hidden;background:var(--surface2);box-shadow:0 1px 4px rgba(0,0,0,.18);text-align:left;color:#fff;padding:0}
+.sycbg{position:absolute;inset:0;background-size:cover;background-position:center;display:grid;place-items:center}
+.sycbg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.sycbg.sytx{padding:10px;text-align:center;font-weight:700;font-size:15px;line-height:1.2;overflow:hidden;overflow-wrap:anywhere;color:#fff}
+.sycsh{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.28),rgba(0,0,0,0) 35%,rgba(0,0,0,0) 55%,rgba(0,0,0,.62))}
+.sycav{position:absolute;left:8px;top:8px;width:40px;height:40px;border-radius:50%;border:3px solid #5b4dff;background:var(--surface);display:grid;place-items:center;overflow:hidden}
+.sycav .av,.sycav span{--s:34px!important}
+.sycn{position:absolute;left:8px;right:8px;bottom:8px;font-size:13px;font-weight:700;line-height:1.2;text-shadow:0 1px 3px rgba(0,0,0,.55);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.syplay{position:absolute;right:8px;top:12px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:9px;font-style:normal;display:grid;place-items:center;padding-left:1px}
+.sycard.mk{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.sycmt{position:absolute;left:0;right:0;top:0;height:132px;background:linear-gradient(160deg,#dfe3ff,#f1e7ff);display:grid;place-items:center}
+.sycbig{display:grid;place-items:center}
+.sycplus{position:absolute;left:50%;top:116px;transform:translateX(-50%);width:32px;height:32px;border-radius:50%;background:#5b4dff;color:#fff;border:3px solid var(--surface);display:grid;place-items:center}
+.sycmb{position:absolute;left:0;right:0;bottom:10px;text-align:center;font-size:13px;font-weight:700}
+#story .shead .ib{color:#fff}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -6828,7 +6840,7 @@ const q=s=>document.querySelector(s);
 const pidOf=it=>it.doc||it.id;
 const own=it=>it&&it.u==='me';
 function userKey(a,u){return u===a.uid()?'me':a.pe(u)}
-function avFor(a,u){return a.av2(u)}
+function avFor(a,u){return `<span data-xp="person" data-u="${a.pe(u)}" role="button" tabindex="0" aria-label="Open profile" style="display:inline-flex">${a.av2(u)}</span>`}
 function handleMap(a){const m={};Object.keys(a.st.users).forEach(u=>{m[(a.st.users[u].h||'').toLowerCase()]=u});return m}
 function richText(a,t){
  const hm=handleMap(a);
@@ -6933,6 +6945,12 @@ document.addEventListener('submit',async e=>{
 document.addEventListener('click',e=>{if(cur&&e.target.closest('#cxhead [data-a]'))setTimeout(paint,80)});
 window.__CX={refresh:paint,open};
 })();
+/* tapping your own name or picture opens your own profile page */
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-xp=person][data-u=me]');if(!t)return;
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+ try{closeSheet()}catch(_){}try{closePanel()}catch(_){}setTab('me');
+},true);
 
 </script>
 <script>
@@ -6970,7 +6988,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 14',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 14',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 16',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 16',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7205,25 +7223,24 @@ openStory=function(i){
 };
 
 
-/* story row: show a thumbnail of what was shared */
-const _sh=storiesHTML;
+/* story row: tall cards like Facebook, with the shared picture behind the name */
 storiesHTML=function(){
- const h=_sh(),box=document.createElement('div');box.innerHTML=h;
- box.querySelectorAll('.story[data-a=story]').forEach(b=>{
-  const g=STORIES[+b.dataset.i];if(!g||!g.real)return;
-  const s=g.slides[g.slides.length-1],inn=b.querySelector('.in');if(!inn)return;
-  let t='';
-  if(s.k==='image')t=`<span class="sythumb" style="background-image:url('${esc(s.u)}')"></span>`;
-  else if(s.k==='video')t=`<span class="sythumb"><video src="${esc(s.u)}#t=0.1" muted playsinline preload="metadata"></video><i class="syplay">▶</i></span>`;
-  else t=`<span class="sythumb" style="background:${s.bg}"><b>Aa</b></span>`;
-  inn.innerHTML=t+(g.slides.length>1?`<i class="sycnt">${g.slides.length}</i>`:'');
- });
- return box.innerHTML;
+ const cards=STORIES.map((g,i)=>{
+  const s=g.real?g.slides[g.slides.length-1]:null;
+  let bg;
+  if(!s)bg=`<span class="sycbg" style="${art(g.c)}"></span>`;
+  else if(s.k==='image')bg=`<span class="sycbg" style="background-image:url('${esc(s.u)}')"></span>`;
+  else if(s.k==='video')bg=`<span class="sycbg"><video src="${esc(s.u)}#t=0.1" muted playsinline preload="metadata"></video></span>`;
+  else bg=`<span class="sycbg sytx" style="background:${s.bg};font-family:${s.font}">${esc((s.text||'').slice(0,40))}</span>`;
+  const nm=g.u==='me'?'Your story':(P[g.u]?P[g.u].n:'');
+  return `<button class="sycard" data-a="story" data-i="${i}" aria-label="Story by ${esc(nm)}">${bg}<span class="sycsh"></span><span class="sycav">${av(g.u,34)}</span>${s&&s.k==='video'?'<i class="syplay">▶</i>':''}<span class="sycn">${esc(nm)}</span></button>`;
+ }).join('');
+ return `<div class="stories sycards"><button class="sycard mk" data-a="create" aria-label="Create a story"><span class="sycmt"><span class="sycbig">${av('me',72)}</span></span><span class="sycplus">${I('plus',18,3)}</span><span class="sycmb">Create story</span></button>${cards}</div>`;
 };
 
 /* ---- events ---- */
 document.addEventListener('click',e=>{
- const pl=e.target.closest('.stories .story[data-a=create]');
+ const pl=e.target.closest('.stories .story[data-a=create],.sycard[data-a=create]');
  if(pl){e.preventDefault();e.stopImmediatePropagation();chooser();return}
  const b=e.target.closest('[data-sy]');if(!b)return;
  const k=b.dataset.sy;
