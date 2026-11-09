@@ -6721,4 +6721,41 @@ setTimeout(go,900);setTimeout(finish,9000);
 })();
 
 </script>
+<script>
+/* Watch: "Recent" and "Live" filters plus a Live-now strip. */
+(function(){
+const hrs=a=>{a=String(a||'');if(/now/.test(a))return 0;const n=parseInt(a)||1;return /month/.test(a)?n*720:/week/.test(a)?n*168:/day/.test(a)?n*24:n};
+const _rw=renderWatchList;
+renderWatchList=function(){
+ const rec=S.cat==='Recent';
+ if(rec)S.cat='All';
+ try{_rw.apply(this,arguments)}finally{if(rec)S.cat='Recent'}
+ const root=document.getElementById('s-videos');if(!root)return;
+ const cats=root.querySelector('.cats');if(!cats)return;
+ cats.querySelectorAll('.chip[data-c="All"]').forEach(c=>c.setAttribute('aria-pressed',String(S.cat==='All')));
+ const mk=(t,attrs,on)=>{const b=document.createElement('button');b.className='chip';b.textContent=t;for(const k in attrs)b.setAttribute(k,attrs[k]);b.setAttribute('aria-pressed',String(!!on));return b};
+ cats.insertBefore(mk('Recent',{'data-a':'cat','data-c':'Recent'},rec),cats.children[1]||null);
+ cats.insertBefore(mk('Live now',{'data-a':'vmode','data-m':'live'},false),cats.children[1]||null);
+ if(rec){
+  const vs=[...root.querySelectorAll('.vc')];
+  const byId=id=>VIDS.find(v=>v.id===id);
+  vs.sort((x,y)=>hrs(byId(x.dataset.vid)?.age)-hrs(byId(y.dataset.vid)?.age));
+  const par=vs[0]&&vs[0].parentNode;if(par)vs.forEach(e=>par.appendChild(e));
+ }
+};
+const _rm=renderWatchMeta;
+renderWatchMeta=function(){
+ _rm.apply(this,arguments);
+ const el=document.getElementById('wMeta');if(!el)return;
+ const lk=el.querySelector('.wxa [data-a=vlike]');if(!lk||el.querySelector('.wxa [data-a=vdis]'))return;
+ const D=S.dis.has(W.id);
+ lk.insertAdjacentHTML('afterend','<button class="wxb '+(D?'on':'')+'" data-a="vdis" data-id="'+W.id+'" aria-pressed="'+D+'" aria-label="Dislike"><span style="display:inline-flex;transform:rotate(180deg)">'+I('thumb',20)+'</span><small>Dislike</small></button>');
+};
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-w=tab][data-k=com]');if(!t)return;
+ e.stopImmediatePropagation();openComments(W.id);
+},true);
+})();
+
+</script>
 </body></html>
