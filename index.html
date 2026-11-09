@@ -5930,7 +5930,7 @@ async function sendFiles(files){
   const k=/^image\//.test(f0.type)?'image':/^video\//.test(f0.type)?'video':/^audio\//.test(f0.type)?'audio':'';
   if(!k){toast('That file type can’t be sent.');continue}
   if(f0.size>52428800){toast('That file is over 50 MB. Try a shorter one.');continue}
-  try{const f=k==='image'?await shrink(f0):f0;out.push({k,u:await __SB.upload(f,'dm')})}catch(e){toast('Could not send that file. Try again.')}
+  try{const f=k==='image'?await shrink(f0):f0;out.push({k,u:await __SB.upload(f,'dm')})}catch(e){toast('Could not send: '+((e&&(e.message||e.error))||'unknown error').toString().slice(0,90))}
  }
  if(out.length)await sendMsg('',out)
 }
@@ -6963,7 +6963,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 13',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 13',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7156,7 +7156,7 @@ async function share(){
   await a.col('stories').add({uid:a.uid(),slides:out,music,ts:a.now()});
   closeEditor();toast('Story shared');
   if(window.__BK&&__BK.storySync)__BK.storySync();
- }catch(e){if(SY){SY.busy=false;ed()}toast('Could not share your story. Try again.')}
+ }catch(e){if(SY){SY.busy=false;ed()}toast('Could not share: '+((e&&(e.message||e.error))||'unknown error').toString().slice(0,90))}
 }
 
 /* ---- viewer ---- */
