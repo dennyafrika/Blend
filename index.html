@@ -1701,6 +1701,7 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 .clnew{position:absolute;right:14px;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:6;display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:99px;background:rgba(0,0,0,.45);color:#fff;font-weight:700;font-size:14px;backdrop-filter:blur(8px)}
 .clvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
 .clmute{margin-left:8px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.4);color:#fff;font-size:15px}
+.clback{position:absolute;left:14px;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:6;padding:9px 14px;border-radius:99px;background:rgba(0,0,0,.45);color:#fff;font-weight:700;font-size:14px;backdrop-filter:blur(8px)}
 
 .nbbar{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin:6px 0 10px}
 .nbloc{display:inline-flex;align-items:center;gap:6px}
@@ -5828,6 +5829,11 @@ function clipSync(){
   if(!mineP){P[key]=P[key]||{n:nameOf(d.uid),h:hOf(d.uid),c:hue(d.uid)};P[key].n=nameOf(d.uid);P[key].h=hOf(d.uid)}
   add.push({id:'r_'+d.id,docid:d.id,uid:d.uid,u:key,c:hue(d.uid),cap:d.cap||'',snd:d.snd||('Original audio · '+hOf(d.uid)),likes:likeN('r_'+d.id,d.id),cc:st.comments.filter(c=>c.pid==='r_'+d.id).length,comments:[],real:true,url:d.u,thumb:d.thumb||null,ts:d.ts})
  });
+ st.posts.filter(p=>p.vid&&p.vid.u&&!st.hide.has(p.id)&&!st.ban.has(p.uid)&&!st.blocks.has(p.uid)).forEach(p=>{
+  const mineP=p.uid===uid,key=mineP?'me':rid(p.uid);
+  if(!mineP){P[key]=P[key]||{n:nameOf(p.uid),h:hOf(p.uid),c:hue(p.uid)};P[key].n=nameOf(p.uid);P[key].h=hOf(p.uid)}
+  add.push({id:'r_'+p.id,docid:p.id,uid:p.uid,u:key,c:hue(p.uid),cap:p.text||'',snd:'Original audio · '+hOf(p.uid),likes:likeN('r_'+p.id,p.id),cc:st.comments.filter(c=>c.pid===p.id).length,comments:[],real:true,post:true,url:p.vid.u,thumb:null,ts:p.ts})
+ });
  add.sort((x,y)=>y.ts-x.ts);
  REELS.unshift(...add);
  try{if(window.__CL)__CL.refresh(add.map(x=>x.id).join())}catch(e){}
@@ -5853,6 +5859,12 @@ function feedSync(){
   if(p.vid){o.vfile={url:p.vid.u,name:p.vid.name};o.len=p.vid.len||'';o.media=[{k:'v',url:p.vid.u,name:p.vid.name,trim:p.vid.trim||undefined,ovl:p.vid.ovl||undefined}];o.mix=p.vid.mix||p.mix||undefined}
   if(mineP)synced.add(p.id),known.set('p'+p.id,p.text);
   add.push(o)
+ });
+ st.clips.filter(d=>d.u&&!st.hide.has('r_'+d.id)&&!st.hide.has(d.id)&&!st.ban.has(d.uid)&&!st.blocks.has(d.uid)).forEach(d=>{
+  const mineP=d.uid===uid,key=mineP?'me':rid(d.uid);
+  if(!mineP){P[key]=P[key]||{n:nameOf(d.uid),h:hOf(d.uid),c:hue(d.uid)};P[key].n=nameOf(d.uid);P[key].h=hOf(d.uid)}
+  const idl='r_'+d.id;
+  add.push({id:idl,u:key,type:'video',t:rel(d.ts),text:d.cap||'',c:hue(d.uid),likes:lk[idl.slice(2)]||0,cc:st.comments.filter(c=>c.pid===d.id||c.pid===idl).length,rp:0,comments:[],remote:true,doc:d.id,isClip:true,vfile:{url:d.u,name:'clip'},len:d.len||'',media:[{k:'v',url:d.u,name:'clip'}]})
  });
  const own=POSTS.filter(p=>p.u==='me'&&!p.remote);
  /* the local copy of a post that now exists in the shared feed is dropped, so it shows once */
@@ -7049,7 +7061,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 20',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 20',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 21',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 21',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7537,7 +7549,7 @@ reelHTML=function(r){
  sec.querySelectorAll('.sample,.lowb').forEach(x=>x.remove());
  const tag=sec.querySelector('.reeltag');if(tag)tag.insertAdjacentHTML('beforeend','<button class="clmute" data-cl="mute" aria-label="Sound on or off">'+(muted?'🔇':'🔊')+'</button>');
  const a=api(),rail=sec.querySelector('.rail');
- if(rail&&a&&r.uid===a.uid())rail.insertAdjacentHTML('beforeend','<button class="rb" data-cl="del" data-id="'+esc(r.docid)+'" aria-label="Delete clip">'+I('trash',28)+'Delete</button>');
+ if(rail&&a&&!r.post&&r.uid===a.uid())rail.insertAdjacentHTML('beforeend','<button class="rb" data-cl="del" data-id="'+esc(r.docid)+'" aria-label="Delete clip">'+I('trash',28)+'Delete</button>');
  return sec.outerHTML;
 };
 function wire(){
@@ -7547,11 +7559,12 @@ function wire(){
  root.querySelectorAll('.reel').forEach(s=>io.observe(s));
 }
 let wt=0;
-new MutationObserver(()=>{if(wt)return;wt=requestAnimationFrame(()=>{wt=0;if(!$('#s-videos'))return;const root=$('#s-videos');if(S.vmode!=='watch'&&root.querySelector('#reels')&&!root.querySelector('.clnew'))root.insertAdjacentHTML('beforeend','<button class="clnew" data-cl="open" aria-label="Create a clip">'+I('plus',20)+'<span>Clip</span></button>');wire()})}).observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
+new MutationObserver(()=>{if(wt)return;wt=requestAnimationFrame(()=>{wt=0;if(!$('#s-videos'))return;const root=$('#s-videos');if(S.vmode!=='watch'&&root.querySelector('#reels')&&!root.querySelector('.clnew'))root.insertAdjacentHTML('beforeend',(S.fromHome?'<button class="clback" data-cl="back" aria-label="Back to Home">‹ Home</button>':'')+'<button class="clnew" data-cl="open" aria-label="Create a clip">'+I('plus',20)+'<span>Clip</span></button>');wire()})}).observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
 window.__CL={refresh(s){if(s===sig)return;sig=s;try{if(S.tab==='videos'&&S.vmode!=='watch'&&S.vmode!=='live'&&$('#reels')&&!document.querySelector('#scrim:not([hidden]) .sheet'))renderVideos()}catch(e){}},open:openMaker};
 document.addEventListener('click',e=>{
  const b=e.target.closest('[data-cl]');if(!b)return;
  const k=b.dataset.cl;
+ if(k==='back'){S.fromHome=false;setTab('home');return}
  if(k==='open')openMaker();
  else if(k==='rec')pick(true);
  else if(k==='pick')pick(false);
@@ -7562,6 +7575,23 @@ document.addEventListener('click',e=>{
   const a=api();if(a)a.guard(()=>a.col('clips').doc(b.dataset.id).delete()).then(()=>toast('Clip deleted'));
  }
 });
+
+/* ---- Home <-> Clips ---- */
+let _fh=false;const _stH=setTab;
+setTab=function(t){if(t==='videos'&&!_fh)S.fromHome=false;if(t!=='videos')S.fromHome=false;return _stH.apply(this,arguments)};
+function openClips(id){
+ const x=REELS.find(r=>r.id===id);if(!x)return false;
+ const rest=REELS.filter(r=>r!==x);for(let i=rest.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rest[i],rest[j]]=[rest[j],rest[i]]}
+ REELS.length=0;REELS.push(x,...rest);
+ S.vmode='clips';S.fromHome=true;_fh=true;try{setTab('videos')}finally{_fh=false}
+ renderVideos();return true;
+}
+window.__CL.openClips=openClips;
+document.addEventListener('click',e=>{
+ const pv=e.target.closest&&e.target.closest('.pvid,.pms');if(!pv||pv.closest('.sheet,.aip,#bkp'))return;
+ const v=pv.querySelector('video'),id=v&&v.dataset.pv;if(!id||!REELS.some(r=>r.id===id))return;
+ e.preventDefault();e.stopPropagation();openClips(id);
+},true);
 })();
 
 </script>
