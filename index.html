@@ -1698,6 +1698,14 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 #wPlayer.wureal .wuvid{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 #wPlayer.wureal .pback{z-index:3}
 
+.clnew{position:absolute;right:14px;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:6;display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:99px;background:rgba(0,0,0,.45);color:#fff;font-weight:700;font-size:14px;backdrop-filter:blur(8px)}
+.clvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+.clmute{margin-left:8px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.4);color:#fff;font-size:15px}
+
+.nbbar{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin:6px 0 10px}
+.nbloc{display:inline-flex;align-items:center;gap:6px}
+.nbst{color:var(--muted);font-size:13px;line-height:1.35}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -5705,7 +5713,7 @@ Object.assign(IC,{hub:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6
 const TV=1,MINAGE=13;
 const B=window.__BK={ready:false,uid:null,ok:false};
 let db=null,user=null,uid=null,me=null,admin=false,tab='people',thread=null,unsubs=[],mounted=false,synced=new Set(),known=new Map();
-const st={videos:[],stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
+const st={clips:[],videos:[],stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
 const now=()=>Date.now();
 const rel=ts=>{const d=(now()-ts)/1000;return d<60?'now':d<3600?Math.floor(d/60)+'m':d<86400?Math.floor(d/3600)+'h':Math.floor(d/86400)+'d'};
 const rid=k=>'r_'+k;
@@ -5741,6 +5749,7 @@ function startPublic(){
  sub(col('follows'),s=>{st.follows=s.docs.map(d=>d.data());feedSync()});
  sub(col('stories').orderBy('ts','desc').limit(200),s=>{st.stories=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('videos').orderBy('ts','desc').limit(200),s=>{st.videos=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
+ sub(col('clips').orderBy('ts','desc').limit(200),s=>{st.clips=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
 }
 function sub(q,fn){let t=setTimeout(()=>{},10);try{unsubs.push(q.onSnapshot(fn,e=>console.warn('sub',e&&e.code)))}catch(e){console.warn(e)}}
 function listen(){
@@ -5750,6 +5759,7 @@ function listen(){
  sub(col('follows'),s=>{st.follows=s.docs.map(d=>d.data());feedSync();refreshStats()});
  sub(col('stories').orderBy('ts','desc').limit(200),s=>{st.stories=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('videos').orderBy('ts','desc').limit(200),s=>{st.videos=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
+ sub(col('clips').orderBy('ts','desc').limit(200),s=>{st.clips=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('comments'),s=>{st.comments=s.docs.map(d=>({id:d.id,...d.data()}));feedSync();if(window.__CX)window.__CX.refresh()});
  sub(col('clikes'),s=>{st.clikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
  sub(col('dislikes'),s=>{st.dislikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
@@ -5801,17 +5811,34 @@ function videoSync(){
   const mineP=d.uid===uid,key=mineP?'me':rid(d.uid);
   if(!mineP){P[key]=P[key]||{n:nameOf(d.uid),h:hOf(d.uid),c:hue(d.uid)};P[key].n=nameOf(d.uid);P[key].h=hOf(d.uid)}
   if(typeof SUBS!=='undefined'&&SUBS[key]==null)SUBS[key]=0;
-  add.push({id:'r_'+d.id,docid:d.id,uid:d.uid,u:key,cat:(typeof CATS!=='undefined'&&CATS.includes(d.cat))?d.cat:'Tech',title:d.title||'Untitled',c:hue(d.uid),len:d.len||0,views:0,age:rel(d.ts),likes:0,cc:st.comments.filter(c=>c.pid==='r_'+d.id).length,desc:d.desc||'',comments:[],real:true,url:d.u,thumb:d.thumb||null,ts:d.ts})
+  add.push({id:'r_'+d.id,docid:d.id,uid:d.uid,u:key,cat:(typeof CATS!=='undefined'&&CATS.includes(d.cat))?d.cat:'Tech',title:d.title||'Untitled',c:hue(d.uid),len:d.len||0,views:0,age:rel(d.ts),likes:likeN('r_'+d.id,d.id),cc:st.comments.filter(c=>c.pid==='r_'+d.id).length,desc:d.desc||'',comments:[],real:true,url:d.u,thumb:d.thumb||null,ts:d.ts})
  });
  add.sort((x,y)=>y.ts-x.ts);
  VIDS.unshift(...add);
 }
 B.videoSync=videoSync;
+function likeN(id,pid){const n=st.likes.filter(l=>l.p===pid).length;return Math.max(0,n-(S.liked.has(id)&&st.likes.some(l=>l.p===pid&&l.u===uid)?1:0))}
+/* real clips (short videos) join the Clips feed */
+function clipSync(){
+ if(typeof REELS==='undefined')return;
+ for(let i=REELS.length-1;i>=0;i--)if(REELS[i].real)REELS.splice(i,1);
+ const add=[];
+ st.clips.filter(d=>d.u&&!st.hide.has(d.id)&&!st.ban.has(d.uid)&&!st.blocks.has(d.uid)).forEach(d=>{
+  const mineP=d.uid===uid,key=mineP?'me':rid(d.uid);
+  if(!mineP){P[key]=P[key]||{n:nameOf(d.uid),h:hOf(d.uid),c:hue(d.uid)};P[key].n=nameOf(d.uid);P[key].h=hOf(d.uid)}
+  add.push({id:'r_'+d.id,docid:d.id,uid:d.uid,u:key,c:hue(d.uid),cap:d.cap||'',snd:d.snd||('Original audio · '+hOf(d.uid)),likes:likeN('r_'+d.id,d.id),cc:st.comments.filter(c=>c.pid==='r_'+d.id).length,comments:[],real:true,url:d.u,thumb:d.thumb||null,ts:d.ts})
+ });
+ add.sort((x,y)=>y.ts-x.ts);
+ REELS.unshift(...add);
+ try{if(window.__CL)__CL.refresh(add.map(x=>x.id).join())}catch(e){}
+}
+B.clipAdd=d=>{if(!st.clips.some(x=>x.id===d.id)){st.clips.unshift(d);feedSync()}};
 B.videoAdd=d=>{if(!st.videos.some(x=>x.id===d.id)){st.videos.unshift(d);feedSync()}};
 function feedSync(){
  syncAcct();
  try{storySync()}catch(e){console.warn(e)}
  try{videoSync()}catch(e){console.warn(e)}
+ try{clipSync()}catch(e){console.warn(e)}
  if(typeof POSTS==='undefined')return;
  const fol=myFollows(),lk={},mine=new Set();
  st.likes.forEach(l=>{lk[l.p]=(lk[l.p]||0)+1;if(l.u===uid)mine.add(l.p)});
@@ -5875,9 +5902,9 @@ postHTML=function(p){
  return s;
 };
 document.addEventListener('click',async e=>{
- const b=e.target.closest('[data-a="like"],[data-a="follow"]');if(!b||!B.ok||!me)return;
+ const b=e.target.closest('[data-a="like"],[data-a="vlike"],[data-a="follow"]');if(!b||!B.ok||!me)return;
  const id=b.dataset.id,u=b.dataset.u;
- if(b.dataset.a==='like'&&id&&id.startsWith('r_')){
+ if((b.dataset.a==='like'||b.dataset.a==='vlike')&&id&&id.startsWith('r_')){
   const pid=id.slice(2),k=pid+'_'+uid,had=S.liked.has(id);pendingLike.add(id);
   const post=st.posts.find(x=>x.id===pid);
   await guard(async()=>{if(had){await col('likes').doc(k).delete()}else{await col('likes').doc(k).set({p:pid,u:uid,ts:now()});if(post&&post.uid!==uid)notify(post.uid,'like',pid)}});
@@ -7022,7 +7049,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 18',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 18',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 20',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 20',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7443,6 +7470,152 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('input',e=>{if(e.target.id==='wut')check()});
 window.__WU={open:openUpload};
+})();
+
+</script>
+<script>
+/* Clips: record or pick a short video and share it; real clips play in the feed. */
+(function(){
+const $=s=>document.querySelector(s);
+const api=()=>window.__BK&&window.__BK.api&&window.__BK.api.on()?window.__BK.api:null;
+const MAX=52428800,MAXLEN=180;
+let UP=null,sig='',muted=true;
+const fmtD=s=>{s=Math.round(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function openMaker(){
+ const a=api();
+ if(!a){if(window.__SB&&!__SB.isIn())return __SB.signIn();return toast('Finish setting up your profile first.')}
+ UP={file:null,thumb:null,dur:0,busy:false};
+ openSheet(`<h3>New clip</h3><div class="lb wuf">
+  <div class="syopts"><button data-cl="rec"><span class="syo">${I('camera',26)}</span><span><b>Record</b><small>Use your camera</small></span></button>
+  <button data-cl="pick"><span class="syo">${I('video',26)}</span><span><b>Choose from gallery</b><small>Up to 3 minutes, 50 MB</small></span></button></div>
+  <div id="clpv"></div>
+  <textarea id="clcap" maxlength="300" rows="2" placeholder="Write a caption. Use #tags and @names" aria-label="Caption"></textarea>
+  <input id="clsnd" maxlength="60" placeholder="Sound name (optional, default is original audio)" aria-label="Sound name">
+  <button class="mkbtn" data-cl="go" id="clgo" disabled style="justify-content:center">Share clip</button></div>`);
+}
+function pick(cam){
+ const i=document.createElement('input');i.type='file';i.accept='video/*';if(cam)i.setAttribute('capture','user');i.style.display='none';document.body.appendChild(i);
+ i.onchange=()=>{const f=i.files[0];i.remove();if(f)load(f)};i.click();
+}
+function load(f){
+ if(f.size>MAX)return toast('That video is over 50 MB. Choose a shorter one.');
+ const url=URL.createObjectURL(f),v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='metadata';
+ v.onloadedmetadata=()=>{
+  UP.dur=v.duration||0;
+  if(isFinite(v.duration)&&v.duration>MAXLEN+.5){URL.revokeObjectURL(url);UP.file=null;return toast('Clips can be up to 3 minutes. For longer videos use Watch.')}
+  try{v.currentTime=Math.min(.5,(v.duration||1)/2)}catch(e){}
+ };
+ v.onseeked=()=>{try{const c=document.createElement('canvas'),k=Math.min(1,480/(v.videoWidth||480));c.width=Math.round((v.videoWidth||480)*k);c.height=Math.round((v.videoHeight||854)*k);c.getContext('2d').drawImage(v,0,0,c.width,c.height);c.toBlob(b=>{UP.thumb=b;paint(c.toDataURL('image/jpeg',.7))},'image/jpeg',.8)}catch(e){paint('')}};
+ v.onerror=()=>paint('');
+ UP.file=f;UP.url=url;v.src=url;
+ const g=$('#clgo');if(g)g.disabled=false;
+}
+function paint(img){const el=$('#clpv');if(!el||!UP||!UP.file)return;el.innerHTML=`<div class="wupv">${img?`<img src="${img}" alt="" style="aspect-ratio:9/16;max-height:240px;width:auto;margin:auto">`:'<span></span>'}<small>${fmtD(UP.dur)}</small></div>`}
+async function publish(){
+ const a=api();if(!a||!UP||!UP.file||UP.busy)return;
+ UP.busy=true;const g=$('#clgo');if(g){g.disabled=true;g.textContent='Uploading…'}
+ try{
+  const u=await __SB.upload(UP.file,'clip');
+  let th=null;if(UP.thumb)try{th=await __SB.upload(new File([UP.thumb],'t.jpg',{type:'image/jpeg'}),'clip')}catch(e){}
+  const doc={uid:a.uid(),cap:($('#clcap').value||'').trim().slice(0,300),snd:($('#clsnd').value||'').trim().slice(0,60)||null,u,thumb:th,len:Math.round(UP.dur||0),ts:a.now()};
+  if(!doc.snd)delete doc.snd;
+  const r=await a.col('clips').add(doc);
+  if(r&&r.id&&window.__BK&&__BK.clipAdd)__BK.clipAdd({id:r.id,...doc});
+  try{URL.revokeObjectURL(UP.url)}catch(e){}
+  UP=null;closeSheet();toast('Clip shared');
+ }catch(e){UP.busy=false;if(g){g.disabled=false;g.textContent='Share clip'}toast('Could not share: '+((e&&(e.message||e.error))||'unknown error').toString().slice(0,90))}
+}
+/* ---- feed ---- */
+let io=null;
+const _rh=reelHTML;
+reelHTML=function(r){
+ const h=_rh.apply(this,arguments);
+ if(!r||!r.real||!r.url)return h;
+ const t=document.createElement('template');t.innerHTML=h.trim();const sec=t.content.firstElementChild;if(!sec)return h;
+ const bg=sec.querySelector('.bg');
+ if(bg){bg.style.background='#000';bg.innerHTML='<video class="clvid" src="'+esc(r.url)+'"'+(r.thumb?' poster="'+esc(r.thumb)+'"':'')+' loop muted playsinline preload="metadata"></video>'}
+ sec.querySelectorAll('.sample,.lowb').forEach(x=>x.remove());
+ const tag=sec.querySelector('.reeltag');if(tag)tag.insertAdjacentHTML('beforeend','<button class="clmute" data-cl="mute" aria-label="Sound on or off">'+(muted?'🔇':'🔊')+'</button>');
+ const a=api(),rail=sec.querySelector('.rail');
+ if(rail&&a&&r.uid===a.uid())rail.insertAdjacentHTML('beforeend','<button class="rb" data-cl="del" data-id="'+esc(r.docid)+'" aria-label="Delete clip">'+I('trash',28)+'Delete</button>');
+ return sec.outerHTML;
+};
+function wire(){
+ const root=$('#reels');if(!root)return;
+ if(io)io.disconnect();
+ io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target.querySelector('.clvid');if(!v)return;if(e.isIntersecting&&e.intersectionRatio>=.6){v.muted=muted;v.play&&v.play().catch(()=>{})}else{try{v.pause()}catch(_){}}}),{root,threshold:[0,.6,1]});
+ root.querySelectorAll('.reel').forEach(s=>io.observe(s));
+}
+let wt=0;
+new MutationObserver(()=>{if(wt)return;wt=requestAnimationFrame(()=>{wt=0;if(!$('#s-videos'))return;const root=$('#s-videos');if(S.vmode!=='watch'&&root.querySelector('#reels')&&!root.querySelector('.clnew'))root.insertAdjacentHTML('beforeend','<button class="clnew" data-cl="open" aria-label="Create a clip">'+I('plus',20)+'<span>Clip</span></button>');wire()})}).observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
+window.__CL={refresh(s){if(s===sig)return;sig=s;try{if(S.tab==='videos'&&S.vmode!=='watch'&&S.vmode!=='live'&&$('#reels')&&!document.querySelector('#scrim:not([hidden]) .sheet'))renderVideos()}catch(e){}},open:openMaker};
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-cl]');if(!b)return;
+ const k=b.dataset.cl;
+ if(k==='open')openMaker();
+ else if(k==='rec')pick(true);
+ else if(k==='pick')pick(false);
+ else if(k==='go')publish();
+ else if(k==='mute'){muted=!muted;document.querySelectorAll('.clvid').forEach(v=>v.muted=muted);document.querySelectorAll('.clmute').forEach(x=>x.textContent=muted?'🔇':'🔊');}
+ else if(k==='del'){
+  if(!confirm('Delete this clip for everyone?'))return;
+  const a=api();if(a)a.guard(()=>a.col('clips').doc(b.dataset.id).delete()).then(()=>toast('Clip deleted'));
+ }
+});
+})();
+
+</script>
+<script>
+/* Explore: "Near you" uses your real location to list the closest places, nearest first. */
+(function(){
+const KEY='blend-near';
+let busy=false,note='';
+const km=d=>d<1?Math.round(d*1000)+' m':d.toFixed(1)+' km';
+const hav=(a,b,c,d)=>{const R=6371,t=x=>x*Math.PI/180,dl=t(c-a),dn=t(d-b),h=Math.sin(dl/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
+function apply(names,dists){
+ if(!names.length)return false;
+ PLACES.length=0;names.forEach(n=>PLACES.push(n));
+ S.nearPlace=names[0];S.nearDist=dists;
+ return true;
+}
+try{const c=JSON.parse(localStorage.getItem(KEY)||'null');if(c&&c.names&&c.names.length&&Date.now()-c.ts<6048e5){apply(c.names,c.dists||{});note='Showing places near your last location.'}}catch(e){}
+async function overpass(lat,lng){
+ const q='[out:json][timeout:20];node(around:20000,'+lat+','+lng+')["place"~"^(suburb|neighbourhood|quarter|town|village|hamlet|city|locality)$"]["name"];out body 120;';
+ let last;
+ for(const ep of ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter']){
+  try{const r=await fetch(ep+'?data='+encodeURIComponent(q));if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){last=e}
+ }
+ throw last;
+}
+async function locate(){
+ if(busy)return;
+ if(!navigator.geolocation){note='This browser can’t share your location.';return redraw()}
+ busy=true;note='Finding where you are…';redraw();
+ navigator.geolocation.getCurrentPosition(async pos=>{
+  const lat=pos.coords.latitude,lng=pos.coords.longitude;
+  try{
+   const j=await overpass(lat,lng),seen=new Map();
+   (j.elements||[]).forEach(e=>{const n=(e.tags&&e.tags.name||'').trim();if(!n||!e.lat)return;const d=hav(lat,lng,e.lat,e.lon);if(!seen.has(n)||seen.get(n)>d)seen.set(n,d)});
+   const rows=[...seen.entries()].sort((a,b)=>a[1]-b[1]).slice(0,25);
+   if(!rows.length)throw new Error('none');
+   const names=rows.map(r=>r[0]),dists={};rows.forEach(r=>dists[r[0]]=km(r[1]));
+   apply(names,dists);
+   try{localStorage.setItem(KEY,JSON.stringify({names,dists,ts:Date.now()}))}catch(e){}
+   note='Closest places to you, nearest first.';
+  }catch(e){note='Could not look up places near you. Check your connection and try again.'}
+  busy=false;redraw();
+ },err=>{busy=false;note=err&&err.code===1?'Location is off. In Safari tap aA, then Website Settings, then Location, and choose Allow.':'Could not get your location. Try again.';redraw()},{enableHighAccuracy:false,timeout:15000,maximumAge:300000});
+}
+function redraw(){try{if(typeof renderExplore==='function'&&S.tab==='explore')renderExplore()}catch(e){}}
+const _nh=nearHTML;
+nearHTML=function(){
+ let h=_nh.apply(this,arguments);
+ const d=S.nearDist&&S.nearDist[S.nearPlace];
+ const bar='<div class="nbbar"><button class="chip nbloc" data-nb="loc" '+(busy?'disabled':'')+'>📍 '+(busy?'Finding you…':'Use my location')+'</button>'+(note||d?'<small class="nbst" role="status">'+(d?esc(S.nearPlace)+' is '+esc(d)+' away. ':'')+esc(note)+'</small>':'')+'</div>';
+ return h.replace(/(<h3>Near you<\/h3>)/,'$1'+bar);
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-nb=loc]');if(b){e.preventDefault();locate()}});
+window.__NB={locate};
 })();
 
 </script>
