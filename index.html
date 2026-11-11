@@ -1729,6 +1729,19 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 
 .lkrail{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);display:flex;flex-direction:column;gap:10px;z-index:5}.lkrail .lkb{width:44px;padding:0}.lkb.off{background:rgba(224,36,94,.7)}
 
+.calr,.calin{position:absolute;inset:0;z-index:90;background:#0b0b10;color:#fff;display:flex;flex-direction:column}
+.calhead{padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 8px;display:grid;text-align:center}.calhead small{opacity:.8}
+.calgrid{flex:1;display:grid;gap:6px;padding:6px;grid-template-columns:1fr;grid-auto-rows:1fr;min-height:0}
+.calgrid[data-n="2"]{grid-template-rows:1fr 1fr}.calgrid[data-n="3"],.calgrid[data-n="4"]{grid-template-columns:1fr 1fr}.calgrid[data-n="5"]{grid-template-columns:1fr 1fr}
+.calt{position:relative;background:#1a1a24;border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:0}
+.calt video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.calav{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#6b5cf0,#9b3fb5);display:grid;place-items:center;font-size:28px;font-weight:700}.calav.big{width:110px;height:110px;font-size:46px}
+.calt.hasv .calav{display:none}
+.calname{position:absolute;left:8px;bottom:6px;font-size:12px;font-weight:700;text-shadow:0 1px 3px #000;z-index:2}
+.calctl{display:flex;gap:14px;justify-content:center;padding:12px 12px calc(env(safe-area-inset-bottom,0px) + 18px)}
+.cb{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:22px}.cb.off{background:rgba(224,36,94,.7)}.cb.end{background:#e0245e}.cb.ok{background:#1f9d55}
+.calin{align-items:center;justify-content:center;gap:12px;text-align:center}.calin .calctl{gap:60px;margin-top:30px}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -5800,7 +5813,7 @@ function listen(){
  if(admin){let rr=[],rs={};const rm=()=>{st.reports=rr.map(x=>({...x,status:(rs[x.id]&&rs[x.id].status)||'open'})).sort((x,y)=>y.ts-x.ts);if(mounted&&tab==='mod')paint();badge()};sub(col('reports'),s=>{rr=[];s.docs.forEach(d=>((d.data().items)||[]).forEach(x=>rr.push(x)));rm()});sub(col('repstatus'),s=>{rs={};s.docs.forEach(d=>{rs[d.id]=d.data()});rm()})}
 }
 let mm={a:[],b:[]};
-function mergeMsgs(k,l){mm[k]=l;const all=[...mm.a,...mm.b];const seen=new Set();st.msgs=all.filter(m=>!seen.has(m.id)&&seen.add(m.id)).sort((x,y)=>x.ts-y.ts);badge();if(mounted&&(tab==='chat'||tab==='msgs'))paint()}
+function mergeMsgs(k,l){mm[k]=l;const all=[...mm.a,...mm.b];const seen=new Set();st.msgs=all.filter(m=>!seen.has(m.id)&&seen.add(m.id)).sort((x,y)=>x.ts-y.ts);badge();try{callScan()}catch(e){}if(mounted&&(tab==='chat'||tab==='msgs'))paint()}
 function pushLocal(n){try{if(window.Notification&&Notification.permission==='granted'&&document.hidden)new Notification('Blend',{body:nText(n)})}catch(e){}toast(nText(n))}
 
 /* ---------- feed integration: shared posts shown in For you / Following ---------- */
@@ -6001,7 +6014,7 @@ function paint(){
  let body='';
  if(tab==='people')body=vPeople();else if(tab==='msgs')body=vMsgs();else if(tab==='chat')body=vChat();else if(tab==='alerts')body=vAlerts();else if(tab==='jobs')body=vJobs();else if(tab==='more')body=vMore();else if(tab==='mod')body=vMod();
  const tb=tab==='chat'?'':`<div class="bktabs" role="tablist">${TABS().map(([k,l])=>`<button role="tab" data-bk="tab" data-t="${k}" aria-selected="${tab===k}">${l}${k==='alerts'&&st.notifs.some(n=>!n.read)?'<i class="dot"></i>':''}${k==='msgs'&&dmUnread()?'<i class="dot"></i>':''}</button>`).join('')}</div>`;
- o.innerHTML=`<div class="bkh"><button class="ib" data-bk="close" aria-label="Close">${I('back')}</button><span class="t"><b>${tab==='chat'?esc(nameOf(thread)):'Community'}</b><small>${tab==='chat'?'@'+esc(hOf(thread)):'@'+esc(me.h)+' · '+st.posts.length+' shared posts'}</small></span></div>${tb}<div class="bkbody">${body}</div>`;
+ o.innerHTML=`<div class="bkh"><button class="ib" data-bk="close" aria-label="Close">${I('back')}</button><span class="t"><b>${tab==='chat'?esc(nameOf(thread)):'Community'}</b><small>${tab==='chat'?'@'+esc(hOf(thread)):'@'+esc(me.h)+' · '+st.posts.length+' shared posts'}</small></span>${tab==='chat'?'<button class="ib" data-bk="call" data-k="voice" aria-label="Voice call">📞</button><button class="ib" data-bk="call" data-k="video" aria-label="Video call">📹</button>':''}</div>${tb}<div class="bkbody">${body}</div>`;
  const n=o.querySelector('.bkbody');if(n)n.scrollTop=top;
  if(tab==='chat'&&n)n.scrollTop=n.scrollHeight;
 }
@@ -6018,6 +6031,26 @@ function vPeople(){
 }
 
 /* ---------- messages ---------- */
+const seenCalls=new Set();
+function callScan(){
+ st.msgs.forEach(m=>{if(m.call&&m.call.room&&m.b===uid&&!seenCalls.has(m.id)){seenCalls.add(m.id);if(now()-m.ts<40000&&!st.blocks.has(m.a)&&window.__CAL)__CAL.incoming({id:m.id,from:m.a,name:nameOf(m.a),room:m.call.room,kind:m.call.kind||'voice'})}});
+}
+async function callInvite(to,room,kind){
+ if(!to||st.blocks.has(to))return;
+ await guard(async()=>{const d={a:uid,b:to,text:'',ts:now(),read:false,call:{room,kind}};const r=await col('msgs').add(d);notify(to,'dm','');if(!st.msgs.some(x=>r&&x.id===r.id)){const id=(r&&r.id)||'t'+d.ts;seenCalls.add(id);st.msgs.push({id,...d})}if(mounted)paint()});
+}
+function startCall(kind){
+ if(!thread)return;
+ const them=st.users[thread];
+ if((isMin()||(them&&them.minor))&&!mutual(thread))return toast('Calls with under-18s need you to follow each other first.');
+ if(!window.__CAL)return toast('Calls are not available here.');
+ const room='call_'+Array.from(crypto.getRandomValues(new Uint8Array(9))).map(x=>(x%36).toString(36)).join('');
+ callInvite(thread,room,kind);
+ const t=thread;close();__CAL.join(room,kind,[t]);
+}
+B.callInvite=callInvite;
+B.people=()=>threads().map(([o])=>({id:o,name:nameOf(o)}));
+B.userName=o=>nameOf(o);
 function threads(){const m=new Map();st.msgs.forEach(x=>{const o=x.a===uid?x.b:x.a;if(st.blocks.has(o))return;m.set(o,x)});return [...m.entries()].sort((a,b)=>b[1].ts-a[1].ts)}
 function vMsgs(){
  const t=threads();
@@ -6025,7 +6058,7 @@ function vMsgs(){
 }
 function vChat(){
  const ms=st.msgs.filter(m=>(m.a===uid&&m.b===thread)||(m.a===thread&&m.b===uid));
- return `<div class="bkchat">`+ms.map(m=>`<div class="bkm ${m.a===uid?'me':'them'}">${mediaHTML(m)}${m.text?`<span>${esc(m.text)}</span>`:''}<small>${rel(m.ts)}${m.a!==uid?` · <button data-bk="report" data-id="${m.id}" data-t="msg">Report</button>`:''}</small></div>`).join('')+(ms.length?'':'<div class="empty">Say hello.</div>')+`</div>${rec?`<div class="bkcomp bkrec"><i></i><b id="bkrt">${fmtT(recSecs())}</b><span>Recording, up to 2 minutes</span><button type="button" class="mkbtn ghost" data-bk="recx">Cancel</button><button type="button" class="mkbtn" data-bk="recok">Send</button></div>`:`<form class="bkcomp" data-bk="send"><button type="button" class="ib" data-bk="attach" aria-label="Photos and videos from your gallery">${I('image',22)}</button><button type="button" class="ib" data-bk="cam" aria-label="Camera">${I('camera',22)}</button><input class="mkfield" data-bkf="m" placeholder="Message" maxlength="1000" aria-label="Message" autocomplete="off"><button type="button" class="ib" data-bk="mic" aria-label="Voice note">${I('mic',22)}</button><button class="mkbtn" type="submit">Send</button></form>`}`
+ return `<div class="bkchat">`+ms.map(m=>`<div class="bkm ${m.a===uid?'me':'them'}">${mediaHTML(m)}${m.call?`<span>${m.call.kind==='video'?'📹 Video call':'📞 Voice call'}</span>`:''}${m.text?`<span>${esc(m.text)}</span>`:''}<small>${rel(m.ts)}${m.a!==uid?` · <button data-bk="report" data-id="${m.id}" data-t="msg">Report</button>`:''}</small></div>`).join('')+(ms.length?'':'<div class="empty">Say hello.</div>')+`</div>${rec?`<div class="bkcomp bkrec"><i></i><b id="bkrt">${fmtT(recSecs())}</b><span>Recording, up to 2 minutes</span><button type="button" class="mkbtn ghost" data-bk="recx">Cancel</button><button type="button" class="mkbtn" data-bk="recok">Send</button></div>`:`<form class="bkcomp" data-bk="send"><button type="button" class="ib" data-bk="attach" aria-label="Photos and videos from your gallery">${I('image',22)}</button><button type="button" class="ib" data-bk="cam" aria-label="Camera">${I('camera',22)}</button><input class="mkfield" data-bkf="m" placeholder="Message" maxlength="1000" aria-label="Message" autocomplete="off"><button type="button" class="ib" data-bk="mic" aria-label="Voice note">${I('mic',22)}</button><button class="mkbtn" type="submit">Send</button></form>`}`
 }
 async function openChat(u){
  const them=st.users[u];if(!them)return;
@@ -6252,6 +6285,7 @@ document.addEventListener('click',async e=>{
  else if(k==='follow'){const f=myFollows().has(d.u);await guard(async()=>{if(f)await col('follows').doc(uid+'_'+d.u).delete();else{await col('follows').doc(uid+'_'+d.u).set({a:uid,b:d.u,ts:now()});notify(d.u,'follow','')}})}
  else if(k==='dm'){closeSheet();if(!$('#bkp'))open('people');openChat(d.u)}
  else if(k==='chat')openChat(d.u);
+ else if(k==='call')startCall(d.k);
  else if(k==='readall'){st.notifs.filter(n=>!n.read).forEach(n=>guard(()=>col('notifs').doc(n.id).update({read:true})))}
  else if(k==='perm'){try{await Notification.requestPermission()}catch(e){}paint()}
  else if(k==='invite'){const t='Join me on Blend, a new social network for sharing, jobs and earning. @'+me.h;try{if(navigator.share)await navigator.share({title:'Blend',text:t});else{await navigator.clipboard.writeText(t);toast('Invite copied')}}catch(e){}}
@@ -7099,7 +7133,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 24',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 24',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 25',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 25',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7882,7 +7916,112 @@ startHost=function(){
  if(a&&window.__SB&&__SB.isIn()){const t=($('#lvTitle')&&$('#lvTitle').value||'').trim()||'Chatting with you';closeSheet();enter(a.uid(),t,true);return}
  return _sh.apply(this,arguments);
 };
-window.__LK={refresh(sig){if(sig===last)return;last=sig;try{if(!R&&S.tab==='videos'&&S.vmode==='live'&&!document.querySelector('#scrim:not([hidden]) .sheet'))renderVideos()}catch(e){}},active:()=>!!R};
+window.__LK={load:loadLK,refresh(sig){if(sig===last)return;last=sig;try{if(!R&&S.tab==='videos'&&S.vmode==='live'&&!document.querySelector('#scrim:not([hidden]) .sheet'))renderVideos()}catch(e){}},active:()=>!!R};
+})();
+
+</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const B=()=>window.__BK;
+const api=()=>window.__BK&&window.__BK.api&&window.__BK.api.on()?window.__BK.api:null;
+let C=null,ringT=null;
+const MAXP=5;
+const myName=()=>{try{return P.me.n||'Me'}catch(e){return 'Me'}};
+function tile(id,name){
+ let t=document.querySelector('[data-cal="'+CSS.escape(id)+'"]');if(t)return t;
+ t=document.createElement('div');t.className='calt';t.dataset.cal=id;
+ t.innerHTML='<span class="calav">'+esc((name||'?')[0]||'?')+'</span><span class="calname">'+esc(name||'Guest')+'</span>';
+ $('#calgrid').appendChild(t);layout();return t;
+}
+function layout(){const g=$('#calgrid');if(!g)return;g.dataset.n=Math.min(g.children.length,MAXP)}
+function attach(track,id,name,local){
+ if(!C)return;
+ if(track.kind==='audio'){if(local)return;const a=document.createElement('audio');a.autoplay=true;a.setAttribute('playsinline','');a.style.display='none';track.attach(a);$('#calr').appendChild(a);const p=a.play&&a.play();if(p&&p.catch)p.catch(()=>{});return}
+ const t=tile(id,name),old=t.querySelector('video');if(old)old.remove();
+ const e=document.createElement('video');e.setAttribute('playsinline','');e.playsInline=true;e.muted=true;e.autoplay=true;
+ if(local&&C.facing!=='environment')e.style.transform='scaleX(-1)';
+ t.insertBefore(e,t.firstChild);t.classList.add('hasv');track.attach(e);const p=e.play&&e.play();if(p&&p.catch)p.catch(()=>{});
+}
+function detachVideo(id){const t=document.querySelector('[data-cal="'+CSS.escape(id)+'"]');if(t){const v=t.querySelector('video');if(v)v.remove();t.classList.remove('hasv')}}
+function status(){
+ if(!C)return;const n=C.rm.remoteParticipants.size+1,s=$('#calst');
+ if(s){if(n>1){if(!C.t0)C.t0=Date.now();clearTimeout(C.noans)}s.textContent=n>1?(n+' in the call'):'Ringing…'}
+}
+function mount(){
+ const d=document.createElement('div');d.className='calr';d.id='calr';
+ d.innerHTML='<div class="calhead"><b>'+(C.kind==='video'?'Video call':'Voice call')+'</b><small id="calst">Connecting…</small></div><div class="calgrid" id="calgrid" data-n="1"></div>'+
+ '<div class="calctl"><button class="cb" data-cal-a="mic" aria-label="Mute">🎤</button>'+(C.kind==='video'?'<button class="cb" data-cal-a="cam" aria-label="Camera">📷</button><button class="cb" data-cal-a="flip" aria-label="Flip camera">⟲</button>':'')+'<button class="cb" data-cal-a="add" aria-label="Add someone">＋</button><button class="cb end" data-cal-a="end" aria-label="End call">✕</button></div>';
+ $('#app').appendChild(d);
+}
+function cleanup(msg){
+ const c=C;C=null;if(!c)return;
+ clearTimeout(c.noans);try{c.rm.disconnect()}catch(e){}
+ const e=$('#calr');if(e)e.remove();if(msg)toast(msg);
+}
+async function join(room,kind,invited){
+ if(C)return toast('You are already in a call');
+ if(!api()||!window.__SB||!__SB.isIn()){if(window.__SB)__SB.signIn('make a call');return}
+ if(S&&S.net==='offline')return toast('Calls need a connection');
+ C={room,kind,rm:null,invited:new Set(invited||[]),facing:'user'};
+ toast('Connecting…');
+ try{
+  await window.__LK.load();
+  const t=await __SB.fn('lk-token',{room,role:'call',name:myName()});
+  if(!t||!t.token)throw new Error('No pass was returned');
+  const LK=window.LivekitClient,rm=new LK.Room({adaptiveStream:true,dynacast:true}),E=LK.RoomEvent;
+  C.rm=rm;mount();
+  rm.on(E.TrackSubscribed,(tr,pub,p)=>attach(tr,p.identity,p.name));
+  rm.on(E.TrackUnsubscribed,(tr,pub,p)=>{try{tr.detach().forEach(x=>x.remove())}catch(e){}if(tr.kind==='video')detachVideo(p.identity)});
+  rm.on(E.LocalTrackPublished,(pub,p)=>{if(pub.track&&pub.track.kind==='video')attach(pub.track,p.identity,myName()+' (you)',true)});
+  rm.on(E.LocalTrackUnpublished,(pub,p)=>{if(pub.track&&pub.track.kind==='video')detachVideo(p.identity)});
+  rm.on(E.ParticipantConnected,p=>{tile(p.identity,p.name);status();if(rm.remoteParticipants.size+1>MAXP){toast('The call is full');}});
+  rm.on(E.ParticipantDisconnected,p=>{const el=document.querySelector('[data-cal="'+CSS.escape(p.identity)+'"]');if(el)el.remove();layout();status();if(C&&C.rm.remoteParticipants.size===0&&C.t0)cleanup('Call ended')});
+  rm.on(E.Disconnected,()=>{if(C)cleanup('Call ended')});
+  await rm.connect(t.url,t.token);
+  if(rm.remoteParticipants.size+1>MAXP){cleanup('That call is full (up to '+MAXP+' people)');return}
+  tile(rm.localParticipant.identity,myName()+' (you)');
+  rm.remoteParticipants.forEach(p=>{tile(p.identity,p.name);p.trackPublications.forEach(pub=>{if(pub.track)attach(pub.track,p.identity,p.name)})});
+  await rm.localParticipant.setMicrophoneEnabled(true);
+  if(kind==='video')await rm.localParticipant.setCameraEnabled(true);
+  status();
+  C.noans=setTimeout(()=>{if(C&&C.rm.remoteParticipants.size===0)cleanup('No answer')},45000);
+ }catch(e){
+  const m=(e&&e.message)||'';cleanup();
+  toast(/permission|denied|NotAllowed/i.test(m)?'Allow camera and microphone in your browser settings':'Could not start the call: '+m.slice(0,80));
+ }
+}
+function incoming(c){
+ if(C||$('#calin'))return;
+ const d=document.createElement('div');d.className='calin';d.id='calin';
+ d.innerHTML='<span class="calav big">'+esc((c.name||'?')[0])+'</span><b>'+esc(c.name)+'</b><small>'+(c.kind==='video'?'Video':'Voice')+' call</small><div class="calctl"><button class="cb end" data-cal-a="decl" aria-label="Decline">✕</button><button class="cb ok" data-cal-a="acc" aria-label="Accept">✓</button></div>';
+ d.dataset.room=c.room;d.dataset.kind=c.kind;d.dataset.from=c.from;
+ $('#app').appendChild(d);
+ clearTimeout(ringT);ringT=setTimeout(()=>{const x=$('#calin');if(x){x.remove();toast('Missed call from '+c.name)}},35000);
+}
+function openAdd(){
+ if(!C||!B().people)return;
+ const here=C.rm.remoteParticipants.size+1,room=Math.max(0,MAXP-here-0);
+ const list=B().people().filter(p=>!C.invited.has(p.id));
+ openSheet('<h3>Add someone</h3><div class="lb"><div class="create">'+(list.length?list.map(p=>'<div class="row"><div class="t"><b>'+esc(p.name)+'</b></div><button class="pill on" data-cal-a="inv" data-id="'+esc(p.id)+'">Invite</button></div>').join(''):'<p class="q">Start a chat with someone first, then invite them here.</p>')+'<p class="q">Up to '+MAXP+' people in a call.</p></div></div>');
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-cal-a]');if(!b)return;
+ const a=b.dataset.calA;
+ if(a==='acc'){const d=$('#calin');if(!d)return;clearTimeout(ringT);const r=d.dataset.room,k=d.dataset.kind;d.remove();join(r,k,[d.dataset.from])}
+ else if(a==='decl'){clearTimeout(ringT);const d=$('#calin');if(d)d.remove()}
+ else if(a==='end')cleanup('Call ended');
+ else if(a==='mic'&&C){const lp=C.rm.localParticipant,on=C.mic===false;lp.setMicrophoneEnabled(on).then(()=>{C.mic=on;b.textContent=on?'🎤':'🔇';b.classList.toggle('off',!on)}).catch(()=>toast('Could not change that'))}
+ else if(a==='cam'&&C){const lp=C.rm.localParticipant,on=C.cam===false;lp.setCameraEnabled(on).then(()=>{C.cam=on;b.textContent=on?'📷':'🚫';b.classList.toggle('off',!on)}).catch(()=>toast('Could not change that'))}
+ else if(a==='flip'&&C){(async()=>{try{const lp=C.rm.localParticipant,pub=lp.getTrackPublication(window.LivekitClient.Track.Source.Camera);if(!pub||!pub.track)throw 0;const n=C.facing==='environment'?'user':'environment';await pub.track.restartTrack({facingMode:n});C.facing=n;const v=document.querySelector('[data-cal="'+CSS.escape(lp.identity)+'"] video');if(v)v.style.transform=n==='user'?'scaleX(-1)':'none'}catch(x){toast('Could not flip the camera')}})()}
+ else if(a==='add')openAdd();
+ else if(a==='inv'&&C){
+  const n=C.rm.remoteParticipants.size+1+[...C.invited].filter(id=>!document.querySelector('[data-cal="'+CSS.escape(id)+'"]')).length;
+  if(C.invited.size+1>=MAXP){toast('Up to '+MAXP+' people in a call');return}
+  C.invited.add(b.dataset.id);B().callInvite(b.dataset.id,C.room,C.kind);closeSheet();toast('Invite sent');
+ }
+},true);
+window.__CAL={join,incoming,active:()=>!!C};
 })();
 
 </script>
