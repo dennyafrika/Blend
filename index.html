@@ -1727,6 +1727,8 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 .lkh2{position:absolute;bottom:90px;font-size:28px;color:#ff4d79;z-index:6;pointer-events:none;animation:lkfly 1.8s ease-out forwards}
 @keyframes lkfly{from{transform:translate(0,0);opacity:1}to{transform:translate(var(--dx),-260px);opacity:0}}
 
+.lkrail{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);display:flex;flex-direction:column;gap:10px;z-index:5}.lkrail .lkb{width:44px;padding:0}.lkb.off{background:rgba(224,36,94,.7)}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7097,7 +7099,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 22',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 22',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 24',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 24',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7709,8 +7711,14 @@ function mount(){
  '<div class="lkbar"><form data-lk="form"><input id="lkin" placeholder="Say something" autocomplete="off" aria-label="Chat message"></form><button class="lkb" data-lk="heart" aria-label="Send a heart">♥</button><span id="lkact"></span></div>';
  $('#app').appendChild(d);bar();
 }
+function rail(){
+ if(!R)return;let r=$('#lkrail');const can=R.asHost||R.guest;
+ if(!can){if(r)r.remove();return}
+ if(!r){r=document.createElement('div');r.id='lkrail';r.className='lkrail';$('#lkr').appendChild(r)}
+ r.innerHTML='<button class="lkb" data-lk="flip" aria-label="Flip camera">⟲</button><button class="lkb'+(R.mic===false?' off':'')+'" data-lk="mic" aria-label="Microphone">'+(R.mic===false?'🔇':'🎤')+'</button><button class="lkb'+(R.cam===false?' off':'')+'" data-lk="cam" aria-label="Camera">'+(R.cam===false?'🚫':'📷')+'</button>';
+}
 function bar(){
- const b=$('#lkact');if(!b||!R)return;
+ const b=$('#lkact');if(!b||!R)return;rail();
  if(R.asHost)b.innerHTML='<button class="lkb wide" data-lk="reqs">Requests'+(R.reqs.length?' <i class="lkn">'+R.reqs.length+'</i>':'')+'</button>';
  else if(R.guest)b.innerHTML='<button class="lkb wide" data-lk="offstage">Leave stage</button>';
  else b.innerHTML='<button class="lkb wide" data-lk="ask">Ask to join</button>';
@@ -7733,13 +7741,39 @@ function tile(id,name){
 }
 function attach(track,id,name,local){
  if(!R)return;
- if(track.kind==='audio'){if(local)return;const e=track.attach();e.style.display='none';$('#lkr').appendChild(e);return}
- const t=tile(id,name);const e=track.attach();e.playsInline=true;e.muted=true;e.setAttribute('playsinline','');t.insertBefore(e,t.firstChild);
+ if(track.kind==='audio'){
+  if(local)return;
+  const a=document.createElement('audio');a.autoplay=true;a.setAttribute('playsinline','');a.style.display='none';
+  track.attach(a);$('#lkr').appendChild(a);const pp=a.play&&a.play();if(pp&&pp.catch)pp.catch(()=>{});return;
+ }
+ const t=tile(id,name);
+ const e=document.createElement('video');e.setAttribute('playsinline','');e.setAttribute('webkit-playsinline','');e.playsInline=true;e.muted=true;e.autoplay=true;
+ if(local&&R.facing!=='environment')e.style.transform='scaleX(-1)';
+ t.insertBefore(e,t.firstChild);
+ track.attach(e);
  const p=e.play&&e.play();if(p&&p.catch)p.catch(()=>{});
 }
 function count(){
  if(!R)return;const n=R.rm.remoteParticipants.size;
  const c=$('#lkcount');if(c)c.textContent=R.asHost?(n+' watching'):((n)+' here');
+}
+async function flip(){
+ if(!R)return;
+ try{
+  const lp=R.rm.localParticipant,pub=lp.getTrackPublication(window.LivekitClient.Track.Source.Camera);
+  if(!pub||!pub.track)throw new Error('no camera');
+  const next=R.facing==='environment'?'user':'environment';
+  await pub.track.restartTrack({facingMode:next});R.facing=next;
+  const v=document.querySelector('[data-lkt="'+CSS.escape(lp.identity)+'"] video');if(v)v.style.transform=next==='user'?'scaleX(-1)':'none';
+ }catch(e){toast('Could not flip the camera')}
+}
+async function toggle(kind){
+ if(!R)return;const lp=R.rm.localParticipant;
+ try{
+  if(kind==='mic'){const on=R.mic===false;await lp.setMicrophoneEnabled(on);R.mic=on}
+  else{const on=R.cam===false;await lp.setCameraEnabled(on);R.cam=on}
+  rail();
+ }catch(e){toast('Could not change that')}
 }
 function onData(data,p){
  let o;try{o=JSON.parse(new TextDecoder().decode(data))}catch(e){return}
@@ -7824,7 +7858,9 @@ document.addEventListener('click',e=>{
  else if(k==='reqs')openReqs();
  else if(k==='acc')accept(b.dataset.id);
  else if(k==='dec'){const id=b.dataset.id;R.reqs=R.reqs.filter(x=>x.id!==id);send({t:'no'},[id]);bar();openReqs()}
- else if(k==='offstage'){try{R.rm.localParticipant.setCameraEnabled(false);R.rm.localParticipant.setMicrophoneEnabled(false)}catch(x){}R.guest=false;bar()}
+ else if(k==='flip')flip();
+ else if(k==='mic'||k==='cam')toggle(k);
+ else if(k==='offstage'){try{R.rm.localParticipant.setCameraEnabled(false);R.rm.localParticipant.setMicrophoneEnabled(false)}catch(x){}R.guest=false;R.mic=true;R.cam=true;bar()}
 },true);
 document.addEventListener('submit',e=>{
  const f=e.target.closest&&e.target.closest('[data-lk="form"]');if(!f)return;
