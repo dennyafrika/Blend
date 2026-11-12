@@ -5649,7 +5649,7 @@ Object.assign(IC,{hub:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6
 const TV=1,MINAGE=13;
 const B=window.__BK={ready:false,uid:null,ok:false};
 let db=null,user=null,uid=null,me=null,admin=false,tab='people',thread=null,unsubs=[],mounted=false,synced=new Set(),known=new Map();
-const st={vviews:[],vdis:[],pcreators:[],psess:[],presp:[],listings:[],lives:[],clips:[],videos:[],stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
+const st={pins:[],vviews:[],vdis:[],pcreators:[],psess:[],presp:[],listings:[],lives:[],clips:[],videos:[],stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
 const now=()=>Date.now();
 const rel=ts=>{const d=(now()-ts)/1000;return d<60?'now':d<3600?Math.floor(d/60)+'m':d<86400?Math.floor(d/3600)+'h':Math.floor(d/86400)+'d'};
 const rid=k=>'r_'+k;
@@ -5687,6 +5687,7 @@ function startPublic(){
  sub(col('videos').orderBy('ts','desc').limit(200),s=>{st.videos=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('clips').orderBy('ts','desc').limit(200),s=>{st.clips=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('lives').orderBy('ts','desc').limit(60),s=>{st.lives=s.docs.map(d=>({id:d.id,...d.data()}));try{liveSync()}catch(e){console.warn(e)}});
+ sub(col('pins').orderBy('ts','desc').limit(300),s=>{st.pins=s.docs.map(d=>({id:d.id,...d.data()}));try{pinSync()}catch(e){console.warn(e)}});
  sub(col('vviews').orderBy('ts','desc').limit(2000),s=>{st.vviews=s.docs.map(d=>d.data());try{videoSync();if(typeof renderWatchMeta==='function'&&W&&W.id)renderWatchMeta()}catch(e){console.warn(e)}});
  sub(col('pcreators').orderBy('ts','desc').limit(100),s=>{st.pcreators=s.docs.map(d=>({id:d.id,...d.data()}));try{window.__PS&&__PS.sync()}catch(e){console.warn(e)}});
  sub(col('psess').orderBy('ts','desc').limit(200),s=>{st.psess=s.docs.map(d=>({id:d.id,...d.data()}));try{window.__PS&&__PS.sync()}catch(e){console.warn(e)}});
@@ -5703,6 +5704,7 @@ function listen(){
  sub(col('videos').orderBy('ts','desc').limit(200),s=>{st.videos=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('clips').orderBy('ts','desc').limit(200),s=>{st.clips=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('lives').orderBy('ts','desc').limit(60),s=>{st.lives=s.docs.map(d=>({id:d.id,...d.data()}));try{liveSync()}catch(e){console.warn(e)}});
+ sub(col('pins').orderBy('ts','desc').limit(300),s=>{st.pins=s.docs.map(d=>({id:d.id,...d.data()}));try{pinSync()}catch(e){console.warn(e)}});
  sub(col('vviews').orderBy('ts','desc').limit(2000),s=>{st.vviews=s.docs.map(d=>d.data());try{videoSync();if(typeof renderWatchMeta==='function'&&W&&W.id)renderWatchMeta()}catch(e){console.warn(e)}});
  sub(col('vdis'),s=>{st.vdis=s.docs.map(d=>d.data());try{disSync()}catch(e){console.warn(e)}});
  sub(col('pcreators').orderBy('ts','desc').limit(100),s=>{st.pcreators=s.docs.map(d=>({id:d.id,...d.data()}));try{window.__PS&&__PS.sync()}catch(e){console.warn(e)}});
@@ -5842,6 +5844,35 @@ document.addEventListener('click',e=>{
   pendingDis.add(id);guard(()=>col('vdis').doc(k).delete());setTimeout(()=>pendingDis.delete(id),1200);
  }
 },true);
+const shownPin=new Set(),PINLIFE=7*864e5;
+function pinSync(){
+ if(typeof NEAR==='undefined')return;
+ for(let i=NEAR.length-1;i>=0;i--)if(NEAR[i].real)NEAR.splice(i,1);
+ const add=[];
+ st.pins.filter(d=>d.uid&&d.title&&now()-(d.ts||0)<PINLIFE&&!st.hide.has(d.id)&&!st.ban.has(d.uid)&&!st.blocks.has(d.uid)).forEach(d=>{
+  const own=d.uid===uid,key=own?'me':rid(d.uid);
+  if(!own){P[key]=P[key]||{n:nameOf(d.uid),h:hOf(d.uid),c:hue(d.uid)};P[key].n=nameOf(d.uid);P[key].h=hOf(d.uid)}
+  if(own)shownPin.add(d.id);
+  add.push({id:'r_'+d.id,doc:d.id,uid:d.uid,real:true,mine:own,u:key,place:d.place,kind:d.kind,title:d.title,text:d.text||'',dist:'',t:rel(d.ts)});
+ });
+ NEAR.unshift(...add);
+ try{if(typeof S!=='undefined'&&S.tab==='explore'&&!document.querySelector('#scrim:not([hidden]) .sheet')&&typeof renderExplore==='function'&&!(S.q||'').trim())renderExplore()}catch(e){}
+}
+function trimAway(){document.querySelectorAll('.nb span.q').forEach(s=>{if(s.textContent.trim()==='away')s.remove()})}
+new MutationObserver(trimAway).observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-xp="del"]');if(!b||!B.ok||!uid)return;
+ const x=NEAR.find(n=>n.id===b.dataset.id);if(!x||!x.real||!x.mine)return;
+ shownPin.delete(x.doc);st.pins=st.pins.filter(p=>p.id!==x.doc);guard(()=>col('pins').doc(x.doc).delete());
+},true);
+setInterval(()=>{
+ if(typeof NEAR==='undefined'||!uid||!B.ok)return;
+ NEAR.filter(n=>n.mine&&!n.real&&!n.pub&&n.place&&n.title).forEach(n=>{
+  n.pub=1;
+  const d={uid,ts:now(),place:n.place,kind:n.kind||'Tip',title:String(n.title).slice(0,80),text:String(n.text&&n.text!=='Pinned by you'?n.text:'').slice(0,300)};
+  guard(async()=>{const r=await col('pins').add(d);const id=(r&&r.id)||'t'+d.ts;if(!st.pins.some(x=>x.id===id))st.pins.unshift({id,...d});const i=NEAR.indexOf(n);if(i>=0)NEAR.splice(i,1);pinSync()});
+ });
+},2500);
 function liveSync(){
  if(typeof LIVES==='undefined')return;
  for(let i=LIVES.length-1;i>=0;i--)if(LIVES[i].real)LIVES.splice(i,1);
@@ -7100,7 +7131,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 33',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 33',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 34',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 34',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
