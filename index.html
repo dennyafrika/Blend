@@ -1729,6 +1729,9 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 
 .lkrail{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);display:flex;flex-direction:column;gap:10px;z-index:5}.lkrail .lkb{width:44px;padding:0}.lkb.off{background:rgba(224,36,94,.7)}
 
+.lkitem{position:absolute;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:4;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px)}.lkitem b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lkitem i{font-style:normal;font-weight:700}.lkik{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:#6b5cf0;border-radius:99px;padding:3px 8px}.lkitem .lkb{height:34px}
+.lkgs{top:calc(env(safe-area-inset-top,0px) + 120px)}
+
 .calr,.calin{position:absolute;inset:0;z-index:90;background:#0b0b10;color:#fff;display:flex;flex-direction:column}
 .calhead{padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 8px;display:grid;text-align:center}.calhead small{opacity:.8}
 .calgrid{flex:1;display:grid;gap:6px;padding:6px;grid-template-columns:1fr;grid-auto-rows:1fr;min-height:0}
@@ -1741,6 +1744,12 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 .calctl{display:flex;gap:14px;justify-content:center;padding:12px 12px calc(env(safe-area-inset-bottom,0px) + 18px)}
 .cb{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:22px}.cb.off{background:rgba(224,36,94,.7)}.cb.end{background:#e0245e}.cb.ok{background:#1f9d55}
 .calin{align-items:center;justify-content:center;gap:12px;text-align:center}.calin .calctl{gap:60px;margin-top:30px}
+
+.lsb{margin-top:14px}
+.lsrow{display:flex;align-items:center;gap:10px;width:100%;padding:10px;border-radius:14px;background:var(--surface);text-align:left;margin-bottom:6px}
+.lsrow .t{display:grid;flex:1;min-width:0}.lsrow .t small{color:var(--muted)}
+.lsw{font-weight:700;color:var(--accent,#6b5cf0)}
+.lstag{display:block;color:var(--accent,#6b5cf0);font-weight:700;margin-top:2px}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -5883,7 +5892,7 @@ function liveSync(){
  st.lives.filter(d=>d.uid&&now()-(d.ts||0)<100000&&!st.ban.has(d.uid)&&!st.blocks.has(d.uid)).forEach(d=>{
   const mineP=d.uid===uid,key=mineP?'me':rid(d.uid);
   if(!mineP){P[key]=P[key]||{n:nameOf(d.uid),h:hOf(d.uid),c:hue(d.uid)};P[key].n=nameOf(d.uid);P[key].h=hOf(d.uid)}
-  add.push({id:'rl_'+d.uid,real:true,uid:d.uid,u:key,c:hue(d.uid),title:d.title||'Live',viewers:d.viewers||0,raised:0,goal:0,goalName:''})
+  add.push({id:'rl_'+d.uid,real:true,uid:d.uid,u:key,c:hue(d.uid),title:d.title||'Live',viewers:d.viewers||0,raised:0,goal:0,goalName:'',item:d.item||null})
  });
  LIVES.unshift(...add);
  try{if(window.__LK)__LK.refresh(add.map(x=>x.id+x.title+x.viewers).join())}catch(e){}
@@ -7133,7 +7142,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 25',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 25',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 26',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 26',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7743,7 +7752,9 @@ function mount(){
  '<div class="lktop"><div class="lkh"><b>'+esc(R.title)+'</b><small id="lkcount">Connecting…</small></div><span class="livebadge">LIVE</span><button class="lkx" data-lk="leave" aria-label="Leave">✕</button></div>'+
  '<div class="lkchat" id="lkchat"></div>'+
  '<div class="lkbar"><form data-lk="form"><input id="lkin" placeholder="Say something" autocomplete="off" aria-label="Chat message"></form><button class="lkb" data-lk="heart" aria-label="Send a heart">♥</button><span id="lkact"></span></div>';
- $('#app').appendChild(d);bar();
+ $('#app').appendChild(d);
+ if(R.item){const it=R.item,pr=it.price?'R'+Number(it.price).toLocaleString('en-ZA'):'';const c=document.createElement('div');c.className='lkitem';c.innerHTML='<span class="lkik">'+(it.k==='sell'?'Selling':'Review')+'</span><b>'+esc(it.t||'Item')+'</b>'+(pr?'<i>'+pr+'</i>':'')+(R.asHost?'':'<button class="lkb wide" data-lk="item">'+(it.k==='sell'?'Make an offer':'View item')+'</button>');d.appendChild(c)}
+ bar();
 }
 function rail(){
  if(!R)return;let r=$('#lkrail');const can=R.asHost||R.guest;
@@ -7835,7 +7846,7 @@ function wire(rm,LK){
 }
 function publishDoc(){
  const a=api();if(!a||!R||!R.asHost)return;
- a.guard(()=>a.col('lives').doc(a.uid()).set({uid:a.uid(),title:R.title,ts:a.now(),viewers:R.rm.remoteParticipants.size}));
+ a.guard(()=>a.col('lives').doc(a.uid()).set({uid:a.uid(),title:R.title,item:R.item||null,ts:a.now(),viewers:R.rm.remoteParticipants.size}));
 }
 function cleanup(){
  const r=R;R=null;if(!r)return;
@@ -7844,12 +7855,12 @@ function cleanup(){
  if(r.asHost){const a=api();if(a)a.guard(()=>a.col('lives').doc(a.uid()).delete())}
  try{if(S.tab==='videos'&&S.vmode==='live')renderVideos()}catch(e){}
 }
-async function enter(hostUid,title,asHost){
+async function enter(hostUid,title,asHost,item){
  const a=api();
  if(!a||!window.__SB||!__SB.isIn()){if(window.__SB)__SB.signIn(asHost?'go live':'watch a live');return}
  if(R)return;
  if(S.net==='offline'){toast('Live needs a connection');return}
- R={title,host:hostUid,asHost,guest:false,reqs:[],guestIds:new Set(),hb:null,rm:null};
+ R={title,item:item||null,host:hostUid,asHost,guest:false,reqs:[],guestIds:new Set(),hb:null,rm:null};
  toast('Connecting…');
  try{
   await loadLK();
@@ -7892,6 +7903,7 @@ document.addEventListener('click',e=>{
  else if(k==='reqs')openReqs();
  else if(k==='acc')accept(b.dataset.id);
  else if(k==='dec'){const id=b.dataset.id;R.reqs=R.reqs.filter(x=>x.id!==id);send({t:'no'},[id]);bar();openReqs()}
+ else if(k==='item'){const it=R&&R.item;cleanup();const K=window.__MK;if(it&&K&&(K.M.mine.find(x=>x.id===it.id)||K.LST.find(x=>x.id===it.id)))window.__LSopen(it.id);else toast('That item is not available right now')}
  else if(k==='flip')flip();
  else if(k==='mic'||k==='cam')toggle(k);
  else if(k==='offstage'){try{R.rm.localParticipant.setCameraEnabled(false);R.rm.localParticipant.setMicrophoneEnabled(false)}catch(x){}R.guest=false;R.mic=true;R.cam=true;bar()}
@@ -7906,7 +7918,7 @@ const _ol=openLive;
 openLive=function(id){
  if(typeof id==='string'&&id.indexOf('rl_')===0){
   const a=api();if(a&&id.slice(3)===a.uid()){toast('You are already live');return}
-  const l=(typeof LIVES!=='undefined'?LIVES:[]).find(x=>x.id===id);enter(id.slice(3),(l&&l.title)||'Live',false);return;
+  const l=(typeof LIVES!=='undefined'?LIVES:[]).find(x=>x.id===id);enter(id.slice(3),(l&&l.title)||'Live',false,l&&l.item);return;
  }
  return _ol.apply(this,arguments);
 };
@@ -7916,7 +7928,7 @@ startHost=function(){
  if(a&&window.__SB&&__SB.isIn()){const t=($('#lvTitle')&&$('#lvTitle').value||'').trim()||'Chatting with you';closeSheet();enter(a.uid(),t,true);return}
  return _sh.apply(this,arguments);
 };
-window.__LK={load:loadLK,refresh(sig){if(sig===last)return;last=sig;try{if(!R&&S.tab==='videos'&&S.vmode==='live'&&!document.querySelector('#scrim:not([hidden]) .sheet'))renderVideos()}catch(e){}},active:()=>!!R};
+window.__LK={start:(title,item)=>{const a=api();if(a)enter(a.uid(),title,true,item)},load:loadLK,refresh(sig){if(sig===last)return;last=sig;try{if(!R&&S.tab==='videos'&&S.vmode==='live'&&!document.querySelector('#scrim:not([hidden]) .sheet'))renderVideos()}catch(e){}},active:()=>!!R};
 })();
 
 </script>
@@ -8022,6 +8034,70 @@ document.addEventListener('click',e=>{
  }
 },true);
 window.__CAL={join,incoming,active:()=>!!C};
+})();
+
+</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+let cur=null;
+const getLs=id=>{const K=window.__MK;return K&&(K.M.mine.find(l=>l.id===id)||K.LST.find(l=>l.id===id))};
+const priceT=p=>p?'R'+Number(p).toLocaleString('en-ZA'):'';
+function livesFor(id){return (typeof LIVES!=='undefined'?LIVES:[]).filter(l=>l.real&&l.item&&l.item.id===id)}
+function block(id){
+ const l=getLs(id);if(!l)return '';
+ const mine=l.s==='me',ls=livesFor(id);
+ return '<div class="lsb" id="lsblock" data-id="'+esc(id)+'"><h3>Live</h3>'+
+  (ls.length?ls.map(x=>'<button class="lsrow" data-ls="watch" data-id="'+esc(x.id)+'"><span class="livebadge">LIVE</span><span class="t"><b>'+esc(x.title)+'</b><small>'+esc((x.item.k==='sell'?'Selling live · ':'Live review · ')+(P[x.u]?P[x.u].n:''))+'</small></span><span class="lsw">Watch</span></button>').join(''):'<p class="q" style="color:var(--muted)">No one is live about this item right now.</p>')+
+  '<div style="display:flex;gap:8px;margin-top:8px">'+(mine?'<button class="mkbtn sm" data-ls="go" data-k="sell" data-id="'+esc(id)+'">Sell this live</button>':'')+'<button class="mkbtn sm ghost" data-ls="go" data-k="review" data-id="'+esc(id)+'">Review it live</button></div></div>';
+}
+function fill(){
+ const old=$('#lsblock');if(!old||!cur)return;
+ old.outerHTML=block(cur);
+}
+let wt=0;
+function scan(){
+ const h=[...document.querySelectorAll('.mkbody h3')].find(x=>/Stay safe/.test(x.textContent));
+ if(!h){cur=null;return}
+ const b=document.querySelector('.mkbody [data-m=report][data-id],.mkbody [data-m=save][data-id]');
+ if(!b)return;const id=b.dataset.id;
+ if(!$('#lsblock')||$('#lsblock').dataset.id!==id){cur=id;const o=$('#lsblock');if(o)o.remove();h.insertAdjacentHTML('beforebegin',block(id))}
+}
+new MutationObserver(()=>{if(wt)return;wt=requestAnimationFrame(()=>{wt=0;try{scan()}catch(e){console.warn(e)}})}).observe(document.getElementById('app')||document.body,{childList:true,subtree:true});
+window.__LSopen=id=>{const x=document.createElement('button');x.dataset.m='item';x.dataset.id=id;x.style.display='none';document.body.appendChild(x);x.click();x.remove()};
+function startSheet(id,k){
+ const l=getLs(id);if(!l)return;
+ const t=k==='sell'?'Selling '+l.t+' live':'Reviewing '+l.t;
+ openSheet('<h3>'+(k==='sell'?'Sell this live':'Review it live')+'</h3><div class="lb"><div class="create"><input id="lsTitle" class="sel" value="'+esc(t)+'" maxlength="80" aria-label="Live title" style="width:100%"><p class="q">'+(k==='sell'?'Viewers can watch, chat and tap the item to make an offer.':'Your live shows on this item’s page so buyers can watch your review.')+'</p><button class="go" data-ls="start" data-k="'+k+'" data-id="'+esc(id)+'">Go live</button></div></div>');
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-ls]');if(!b)return;
+ const a=b.dataset.ls;
+ if(a==='go'){
+  if(!window.__SB||!__SB.isIn()){__SB&&__SB.signIn('go live');return}
+  startSheet(b.dataset.id,b.dataset.k);
+ }else if(a==='start'){
+  const l=getLs(b.dataset.id),t=(($('#lsTitle')||{}).value||'').trim()||'Live';
+  closeSheet();
+  if(l&&window.__LK)__LK.start(t,{id:l.id,t:l.t,price:l.price,k:b.dataset.k});
+ }else if(a==='watch'){
+  openLive(b.dataset.id);
+ }
+},true);
+/* tags on the Live list */
+const _rv=renderVideos;
+renderVideos=function(){
+ const r=_rv.apply(this,arguments);
+ try{
+  document.querySelectorAll('.lcard[data-id^=rl_]').forEach(c=>{
+   const l=LIVES.find(x=>x.id===c.dataset.id);
+   if(l&&l.item&&!c.querySelector('.lstag'))c.insertAdjacentHTML('beforeend','<small class="lstag">'+(l.item.k==='sell'?'Selling':'Review')+' · '+esc(l.item.t||'')+(l.item.price?' · '+priceT(l.item.price):'')+'</small>');
+  });
+ }catch(e){}
+ return r;
+};
+const prev=window.__LK&&window.__LK.refresh;
+if(window.__LK)window.__LK.refresh=function(sig){try{fill()}catch(e){}return prev&&prev.apply(this,arguments)};
 })();
 
 </script>
