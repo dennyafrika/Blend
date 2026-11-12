@@ -1758,6 +1758,17 @@ html[data-halo][data-pal][data-theme="dark"]{--bg:color-mix(in srgb,var(--pal) c
 .lfstrip button{flex:0 0 auto;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.45);color:#fff;border-radius:99px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700}
 .lfstrip button.on{background:#fff;color:#111;border-color:#fff}
 .calr .lfstrip{bottom:calc(env(safe-area-inset-bottom,0px) + 100px)}
+.bkq{border:1px solid var(--line,#e4e7ec);border-radius:14px;padding:10px 12px;margin:8px 0;font-size:14px}
+.bkq b{font-size:14px}.bkq span{opacity:.6;font-size:13px}.bkq p{margin:4px 0 0;line-height:1.4;overflow-wrap:anywhere}.bkq small{opacity:.65}
+.bkrp{font-size:13px;opacity:.65;margin:2px 0 4px;font-weight:700}
+.bkrpm{display:flex;flex-direction:column;gap:8px}
+.bkrpb{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1px solid var(--line,#e4e7ec);background:var(--surface,#fff);color:inherit;border-radius:16px;padding:12px 14px;font:inherit}
+.bkrpb b{font-size:15px}.bkrpb small{opacity:.65;font-size:13px}
+.bkqadd{display:flex;gap:8px;margin:8px 0}
+.bkqadd .pill{cursor:pointer}
+.bkqpv{position:relative;margin:8px 0}
+.bkqpv img,.bkqpv video{width:100%;max-height:240px;object-fit:cover;border-radius:14px;display:block}
+.bkqx{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff}
 
 .psform{display:flex;flex-direction:column;gap:8px;margin:6px 0 12px}
 .psform input{padding:10px 12px;border-radius:12px;border:1px solid var(--line,#ddd);background:var(--surface,#fff);color:inherit;font:inherit}
@@ -5924,7 +5935,7 @@ function feedSync(){
  keep.forEach(p=>{
   const mineP=p.uid===uid,key=mineP?'me':rid(p.uid),idl=rid(p.id);
   if(!mineP){P[key]=P[key]||{n:nameOf(p.uid),h:hOf(p.uid),c:hue(p.uid)};P[key].n=nameOf(p.uid);P[key].h=hOf(p.uid)}
-  const o={id:idl,u:key,type:(p.vid?'video':p.img?'photo':'text'),t:rel(p.ts),text:p.text,c:hue(p.uid),likes:lk[p.id]||0,cc:st.comments.filter(c=>c.pid===p.id).length,rp:0,comments:[],remote:true,doc:p.id,bg:p.bg,music:p.music,img:p.img,noCap:p.noCap,ts:p.tsx||undefined,mix:p.mix||undefined,media:(p.imgs&&p.imgs.length>1)?p.imgs.map(i=>({k:'p',img:i})):undefined};
+  const o={id:idl,u:key,type:(p.vid?'video':p.img?'photo':'text'),t:rel(p.ts),text:p.text,c:hue(p.uid),likes:lk[p.id]||0,cc:st.comments.filter(c=>c.pid===p.id).length,rp:st.posts.filter(x=>x.q&&x.q.pid===p.id).length,q:p.q||null,comments:[],remote:true,doc:p.id,bg:p.bg,music:p.music,img:p.img,noCap:p.noCap,ts:p.tsx||undefined,mix:p.mix||undefined,media:(p.imgs&&p.imgs.length>1)?p.imgs.map(i=>({k:'p',img:i})):undefined};
   if(p.vid){o.vfile={url:p.vid.u,name:p.vid.name};o.len=p.vid.len||'';o.media=[{k:'v',url:p.vid.u,name:p.vid.name,trim:p.vid.trim||undefined,ovl:p.vid.ovl||undefined}];o.mix=p.vid.mix||p.mix||undefined}
   if(mineP)synced.add(p.id),known.set('p'+p.id,p.text);
   add.push(o)
@@ -5943,12 +5954,13 @@ function feedSync(){
  const un=POSTS.filter(p=>!p.remote),re=POSTS.filter(p=>p.remote);
  POSTS.length=0;POSTS.push(...un.filter(p=>p.u==='me'&&!p.sync),...re,...un.filter(p=>!(p.u==='me'&&!p.sync)));
  mine.forEach(x=>S.liked.add(rid(x)));
+ {const mr=new Set(st.posts.filter(x=>x.uid===uid&&x.rp&&x.q&&x.q.pid).map(x=>'r_'+x.q.pid));mr.forEach(x=>S.rep.add(x));[...S.rep].forEach(x=>{if(x.startsWith('r_')&&!mr.has(x)&&!pendingRep.has(x))S.rep.delete(x)})}
  [...S.liked].forEach(x=>{if(x.startsWith('r_')&&!mine.has(x.slice(2))&&!pendingLike.has(x))S.liked.delete(x)});
  fol.forEach(x=>S.following.add(rid(x)));
  [...S.following].forEach(x=>{if(x.startsWith('r_')&&!fol.has(x.slice(2))&&!pendingFol.has(x))S.following.delete(x)});
  if(typeof renderHome==='function'&&document.querySelector('#homeBody')&&S.tab==='home'&&!document.querySelector('.sheet,.aip,#bkp'))renderHome()
 }
-const pendingLike=new Set(),pendingFol=new Set();
+const pendingLike=new Set(),pendingFol=new Set(),pendingRep=new Set();
 const _rh=renderHome;
 renderHome=function(){mirror();return _rh.apply(this,arguments)};
 function mirror(){
@@ -5976,9 +5988,79 @@ function mirror(){
  have.forEach((p,id)=>{const prev=known.get('p'+id);if(prev!=null&&prev!==p.text){known.set('p'+id,p.text);guard(()=>col('posts').doc(id).update({text:String(p.text).slice(0,2000),edited:true}))}});
  st.posts.filter(p=>p.uid===uid&&!have.has(p.id)&&synced.has(p.id)&&!st.hide.has(p.id)).forEach(p=>{synced.delete(p.id);guard(()=>col('posts').doc(p.id).delete())});
 }
+function srcOf(id){
+ const p=POSTS.find(x=>x.id===id);if(!p)return null;
+ if(p.q&&p.remote&&!p.text)return{...p.q};
+ const d=p.doc?st.posts.find(x=>x.id===p.doc):null;const who=P[p.u]||{n:'Someone',h:''};
+ return{pid:d?p.doc:null,uid:d?d.uid:null,n:who.n,h:who.h,t:String(p.text||'').slice(0,280),k:p.type==='video'?'video':(p.type==='photo'||p.img)?'photo':'text'};
+}
+let qmedia=null;
+async function sendRepost(id,text,media){
+ const q=srcOf(id);if(!q)return;
+ const d={uid,text:String(text||'').slice(0,500),ts:now(),q};if(!text&&!media)d.rp=1;
+ if(media){
+  toast('Uploading…');
+  try{
+   const u=await __SB.upload(media.file,'post');
+   if(media.kind==='video')d.vid={u,name:media.file.name||'video',len:''};else d.img=u;
+  }catch(e){toast('Upload failed. Try a smaller file.');return}
+ }
+ const plain=!!d.rp;
+ await guard(async()=>{const r=await col('posts').add(d);const nid=(r&&r.id)||'t'+d.ts;if(!st.posts.some(x=>x.id===nid))st.posts.unshift({id:nid,...d});if(q.pid&&plain){pendingRep.add('r_'+q.pid);S.rep.add('r_'+q.pid);setTimeout(()=>pendingRep.delete('r_'+q.pid),1500)}feedSync();try{repaint(id)}catch(e){}if(q.uid&&q.uid!==uid)notify(q.uid,plain?'repost':'quote',q.pid||'')});
+ toast(plain?'Reposted to your followers':'Posted');
+ setTimeout(()=>{try{if(S.tab==='home'&&!document.querySelector('.sheet'))renderHome()}catch(e){}},600);
+}
+function qprev(){
+ const e=document.getElementById('bkqm');if(!e)return;
+ if(!qmedia){e.innerHTML='';return}
+ e.innerHTML='<div class="bkqpv">'+(qmedia.kind==='video'?'<video src="'+qmedia.url+'" muted playsinline controls></video>':'<img src="'+qmedia.url+'" alt="">')+'<button class="bkqx" data-bkrp="clear" aria-label="Remove">✕</button></div>';
+}
+function pickQ(kind,f){
+ if(!f)return;
+ if(kind==='video'&&!/^video\//.test(f.type)){toast('Pick a video file');return}
+ if(kind==='photo'&&!/^image\//.test(f.type)){toast('Pick a photo');return}
+ if(f.size>50*1024*1024){toast('That file is over 50 MB');return}
+ if(qmedia&&qmedia.url)URL.revokeObjectURL(qmedia.url);
+ qmedia={kind,file:f,url:URL.createObjectURL(f)};qprev();
+}
+document.addEventListener('change',e=>{
+ if(e.target.id==='bkqp'){pickQ('photo',e.target.files[0]);e.target.value=''}
+ else if(e.target.id==='bkqv'){pickQ('video',e.target.files[0]);e.target.value=''}
+},true);
+function undoRepost(id){
+ const q=srcOf(id);if(!q||!q.pid)return;
+ const m=st.posts.find(x=>x.uid===uid&&x.rp&&x.q&&x.q.pid===q.pid);if(!m)return;
+ pendingRep.add('r_'+q.pid);S.rep.delete('r_'+q.pid);st.posts=st.posts.filter(x=>x.id!==m.id);feedSync();
+ guard(()=>col('posts').doc(m.id).delete());toast('Repost removed');setTimeout(()=>pendingRep.delete('r_'+q.pid),1500);
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-a="repost"]');
+ if(b){
+  if(!B.ok||!me)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  const id=b.dataset.id,done=S.rep.has(id);
+  openSheet('<h3 style="margin:0 0 10px">Share this post</h3><div class="bkrpm"><button class="bkrpb" data-bkrp="plain" data-id="'+id+'"><b>'+(done?'Undo repost':'Repost')+'</b><small>'+(done?'Remove it from your profile':'Share it with your followers as it is')+'</small></button><button class="bkrpb" data-bkrp="quote" data-id="'+id+'"><b>Quote</b><small>Add words, a photo or a video</small></button></div>');
+  return;
+ }
+ const m=e.target.closest('[data-bkrp]');if(!m)return;
+ e.preventDefault();e.stopPropagation();
+ const id=m.dataset.id,k=m.dataset.bkrp;
+ if(k==='plain'){closeSheet();if(S.rep.has(id))undoRepost(id);else sendRepost(id,'')}
+ else if(k==='clear'){if(qmedia&&qmedia.url)URL.revokeObjectURL(qmedia.url);qmedia=null;qprev()}
+ else if(k==='quote'){
+  const q=srcOf(id);if(!q)return;
+  qmedia=null;
+  openSheet('<h3 style="margin:0 0 10px">Quote post</h3><textarea class="mkfield" id="bkqt" rows="3" maxlength="500" placeholder="Add a comment…" style="width:100%;box-sizing:border-box"></textarea><div id="bkqm"></div><div class="bkqadd"><label class="pill" for="bkqp">📷 Photo</label><label class="pill" for="bkqv">🎬 Video</label><input id="bkqp" type="file" accept="image/*" hidden><input id="bkqv" type="file" accept="video/*" hidden></div><div class="bkq"><b>'+esc(q.n)+'</b> <span>@'+esc(q.h)+'</span><p>'+esc(q.t)+'</p></div><button class="mkbtn" data-bkrp="send" data-id="'+id+'" style="margin-top:10px;width:100%">Post</button>');
+  setTimeout(()=>{const t=document.getElementById('bkqt');if(t)t.focus()},120);
+ }else if(k==='send'){
+  const t=((document.getElementById('bkqt')||{}).value||'').trim();if(!t&&!qmedia){toast('Write something or add a photo or video');return}
+  const md=qmedia;qmedia=null;closeSheet();sendRepost(id,t,md);
+ }
+},true);
 const _ph=postHTML;
 postHTML=function(p){
  let s=_ph(p);
+ if(p.q){const q=p.q;s=s.replace('<div class="acts">',(p.remote&&!p.text?'<div class="bkrp">🔁 Reposted</div>':'')+'<div class="bkq"><b>'+esc(q.n||'Someone')+'</b> <span>@'+esc(q.h||'')+'</span><p>'+esc(q.t||'')+'</p>'+(q.k&&q.k!=='text'?'<small>'+(q.k==='video'?'🎬 Video':'📷 Photo')+'</small>':'')+'</div><div class="acts">')}
  if(p.remote&&p.u!=='me')s=s.replace(/<\/article>$/,`<div class="bkfoot"><button data-bk="report" data-id="${p.doc}" data-t="post">Report</button><button data-bk="block" data-u="${p.u.slice(2)}">Block @${esc(P[p.u].h)}</button></div></article>`);
  return s;
 };
@@ -5999,7 +6081,7 @@ document.addEventListener('click',async e=>{
 
 /* ---------- notifications ---------- */
 function notify(to,kind,ref){if(!to||to===uid)return;return col('notifs').add({to,from:uid,kind,ref:ref||'',ts:now(),read:false}).catch(()=>{})}
-function nText(n){const w=nameOf(n.from);return n.kind==='like'?w+' liked your post':n.kind==='follow'?w+' started following you':n.kind==='comment'?w+' commented on your post':n.kind==='reply'?w+' replied to your comment':n.kind==='mention'?w+' mentioned you in a comment':n.kind==='dm'?w+' sent you a message':n.kind==='psreq'?w+' requested a private session with you':n.kind==='psacc'?w+' accepted your private session':n.kind==='psdec'?w+' could not take your private session request':n.kind==='apply'?w+' applied to your job':n.kind==='verif'?'Your employer verification was '+(n.ref==='ok'?'approved':'declined'):'New activity'}
+function nText(n){const w=nameOf(n.from);return n.kind==='like'?w+' liked your post':n.kind==='repost'?w+' reposted your post':n.kind==='quote'?w+' quoted your post':n.kind==='follow'?w+' started following you':n.kind==='comment'?w+' commented on your post':n.kind==='reply'?w+' replied to your comment':n.kind==='mention'?w+' mentioned you in a comment':n.kind==='dm'?w+' sent you a message':n.kind==='psreq'?w+' requested a private session with you':n.kind==='psacc'?w+' accepted your private session':n.kind==='psdec'?w+' could not take your private session request':n.kind==='apply'?w+' applied to your job':n.kind==='verif'?'Your employer verification was '+(n.ref==='ok'?'approved':'declined'):'New activity'}
 function unread(){return st.notifs.filter(n=>!n.read).length+(admin?st.reports.filter(r=>r.status==='open').length:0)+dmUnread()}
 function dmUnread(){return st.msgs.filter(m=>m.b===uid&&!m.read).length}
 function badge(){const b=document.querySelector('.bkbtn .dot');const n=unread();if(b){b.textContent=n>9?'9+':n;b.hidden=!n}}
@@ -7152,7 +7234,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 35',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 35',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 36',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 36',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
