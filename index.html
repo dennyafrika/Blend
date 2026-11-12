@@ -5357,7 +5357,8 @@ function card(x){
  if(isC&&st==='accepted')btn=Date.now()>=s.slot-600000?'<button class="pill on" data-ps="start" data-id="'+x.id+'">Start session</button>':'<small class="q">Opens 10 min before</small>';
  if(isC&&st==='live'&&!cur)btn='<button class="pill on" data-ps="join" data-id="'+x.id+'">Rejoin</button>';
  if(!isC&&st==='live')btn='<button class="pill on" data-ps="join" data-id="'+x.id+'">Join now</button>';
- if(!isC&&st==='requested')btn='<button class="pill" data-ps="cancel" data-id="'+x.id+'">Cancel</button>';
+ if((st==='accepted'||st==='requested')&&s.slot>Date.now())btn+='<button class="pill" data-ps="ics" data-id="'+x.id+'">Add to calendar</button>';
+ if(!isC&&st==='requested')btn+='<button class="pill" data-ps="cancel" data-id="'+x.id+'">Cancel</button>';
  if(!isC&&st==='ended'&&!s.rate)btn='<button class="pill" data-ps="ratesheet" data-id="'+x.id+'">Rate</button>';
  return'<div class="row psc"><div class="t"><b>'+esc(who)+'</b><small>'+D(s.slot)+' · '+STT[st]+'</small>'+(money?'<small>'+money+'</small>':'')+'</div>'+btn+'</div>';
 }
@@ -5392,7 +5393,7 @@ function request(cu,slot){
  if(taken(cu,slot)){toast('That slot was just taken');return}
  const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
  put('psess',id,{uid:a.uid(),fan:a.uid(),creator:cu,slot,price:c.price,over:c.over,st:'req',ts:a.now()});
- closeSheet();toast('Request sent. Your '+M(c.price)+' is held.');
+ a.notify(cu,'psreq',id);closeSheet();toast('Request sent. Your '+M(c.price)+' is held.');
 }
 function startAndJoin(id,asCreator){
  const a=A(),x=rows().find(y=>y.id===id);if(!x)return;
@@ -5400,7 +5401,7 @@ function startAndJoin(id,asCreator){
  closeSheet();
  cur={sid:id,role:asCreator?'creator':'fan',t:Date.now(),price:x.s.price,over:x.s.over};
  __CAL.join('call_ps'+id,'video',[]).then(()=>setTimeout(decorate,300));
- const j=$('#psjoin');if(j)j.remove();
+ const j=$('#psjoin');if(j)j.remove();const r=$('#psrem');if(r)r.remove();
 }
 function decorate(){
  const c=$('#calr');if(!c||!cur)return;c.classList.add('ps');
@@ -5443,6 +5444,24 @@ function tick(){
   }
  }
 }
+function ics(id){
+ const x=rows().find(y=>y.id===id);if(!x)return;const a=A();
+ const z=t=>new Date(t).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+ const who=a.nameOf(x.mine==='creator'?x.s.fan:x.s.creator);
+ const t=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Blend//Private Sessions//EN','BEGIN:VEVENT','UID:'+id+'@blend','DTSTAMP:'+z(Date.now()),'DTSTART:'+z(x.s.slot),'DTEND:'+z(x.s.slot+900000),'SUMMARY:Blend private session with '+who.replace(/[,;\n]/g,' '),'DESCRIPTION:Open Blend and tap Private Sessions to join.','BEGIN:VALARM','TRIGGER:-PT10M','ACTION:DISPLAY','DESCRIPTION:Private session starts in 10 minutes','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+ const u=URL.createObjectURL(new Blob([t],{type:'text/calendar'})),l=document.createElement('a');l.href=u;l.download='blend-session.ics';document.body.appendChild(l);l.click();setTimeout(()=>{URL.revokeObjectURL(u);l.remove()},800);
+}
+const reminded=new Set();
+function remind(){
+ const a=A();if(!a||cur||$('#psrem')||$('#psjoin'))return;
+ const now=Date.now();
+ const x=rows().find(y=>{const st=stat(y,now);return st==='accepted'&&y.s.slot-now<=15*60000&&y.s.slot-now>-20*60000&&!reminded.has(y.id)});
+ if(!x)return;reminded.add(x.id);
+ const isC=x.mine==='creator',m=Math.max(0,Math.round((x.s.slot-now)/60000));
+ const d=document.createElement('div');d.id='psrem';d.className='psjoin';
+ d.innerHTML='<span>🔒 Private session with <b>'+esc(a.nameOf(isC?x.s.fan:x.s.creator))+'</b> '+(m>0?'starts in '+m+' min':'is starting now')+'</span><button class="pill on" data-ps="'+(isC?'start':'hub')+'" data-id="'+x.id+'">'+(isC?'Start':'Open')+'</button><button class="pill" data-ps="remx">Later</button>';
+ $('#app').appendChild(d);
+}
 function sync(){try{render()}catch(e){}}
 function entry(){
  const g=document.querySelector('.golive:not(.psent)');
@@ -5458,13 +5477,13 @@ function entry(){
  }
 }
 new MutationObserver(entry).observe(document.documentElement,{childList:true,subtree:true});
-setInterval(()=>{entry();tick()},500);
+setInterval(()=>{entry();tick()},500);setInterval(remind,3000);
 document.addEventListener('click',e=>{
  const b=e.target.closest&&e.target.closest('[data-ps]');if(!b)return;
  e.preventDefault();e.stopPropagation();
  const k=b.dataset.ps,id=b.dataset.id,a=A();
  if(!a){if(window.__SB)__SB.signIn('use Private Sessions');return}
- if(k==='hub')openHub();
+ if(k==='hub'){const j=$('#psrem');if(j)j.remove();openHub(id?'mine':undefined)}
  else if(k==='tab'){tab=id;render()}
  else if(k==='book'){if(window.__LK&&__LK.active&&__LK.active()){}bookSheet(id)}
  else if(k==='req')request(id,+b.dataset.t);
@@ -5472,10 +5491,12 @@ document.addEventListener('click',e=>{
  else if(k==='savep'){const c=mine()||{},p=+($('#psPrice')||{}).value,o=+($('#psOver')||{}).value;if(!(p>0)){toast('Set a price for 15 minutes');return}put('pcreators',a.uid(),{uid:a.uid(),on:c.on!==undefined?c.on:true,price:p,over:o>0?o:0,slots:c.slots||[],ts:a.now()});toast('Saved')}
  else if(k==='addslot'){const v=($('#psSlot')||{}).value,t=v?new Date(v).getTime():0;if(!t||t<Date.now()){toast('Pick a time in the future');return}const c=mine()||{};if(!(c.price>0)){toast('Save your prices first');return}put('pcreators',a.uid(),{uid:a.uid(),on:c.on,price:c.price,over:c.over||0,slots:[...new Set([...(c.slots||[]),t])].sort(),ts:a.now()})}
  else if(k==='delslot'){const c=mine();if(c)put('pcreators',a.uid(),{slots:(c.slots||[]).filter(t=>t!==+id)})}
- else if(k==='acc'||k==='dec'){const x=rows().find(y=>y.id===id);if(x)put('presp',id,{uid:a.uid(),sid:id,fan:x.s.fan,creator:x.s.creator,st:k==='acc'?'acc':'dec',ts:a.now()})}
+ else if(k==='acc'||k==='dec'){const x=rows().find(y=>y.id===id);if(x){put('presp',id,{uid:a.uid(),sid:id,fan:x.s.fan,creator:x.s.creator,st:k==='acc'?'acc':'dec',ts:a.now()});a.notify(x.s.fan,k==='acc'?'psacc':'psdec',id)}}
  else if(k==='cancel')put('psess',id,{st:'cancel'});
  else if(k==='start')startAndJoin(id,true);
  else if(k==='join'){const x=rows().find(y=>y.id===id);startAndJoin(id,x&&x.mine==='creator')}
+ else if(k==='ics')ics(id);
+ else if(k==='remx'){const j=$('#psrem');if(j)j.remove()}
  else if(k==='hide'){const j=$('#psjoin');if(j)j.remove();rows().forEach(x=>x.dismissed=true)}
  else if(k==='cont'&&cur)put('presp',cur.sid,{ot:true});
  else if(k==='stop'){const e=document.querySelector('[data-cal-a=end]');if(e)e.click()}
@@ -5978,7 +5999,7 @@ document.addEventListener('click',async e=>{
 
 /* ---------- notifications ---------- */
 function notify(to,kind,ref){if(!to||to===uid)return;return col('notifs').add({to,from:uid,kind,ref:ref||'',ts:now(),read:false}).catch(()=>{})}
-function nText(n){const w=nameOf(n.from);return n.kind==='like'?w+' liked your post':n.kind==='follow'?w+' started following you':n.kind==='comment'?w+' commented on your post':n.kind==='reply'?w+' replied to your comment':n.kind==='mention'?w+' mentioned you in a comment':n.kind==='dm'?w+' sent you a message':n.kind==='apply'?w+' applied to your job':n.kind==='verif'?'Your employer verification was '+(n.ref==='ok'?'approved':'declined'):'New activity'}
+function nText(n){const w=nameOf(n.from);return n.kind==='like'?w+' liked your post':n.kind==='follow'?w+' started following you':n.kind==='comment'?w+' commented on your post':n.kind==='reply'?w+' replied to your comment':n.kind==='mention'?w+' mentioned you in a comment':n.kind==='dm'?w+' sent you a message':n.kind==='psreq'?w+' requested a private session with you':n.kind==='psacc'?w+' accepted your private session':n.kind==='psdec'?w+' could not take your private session request':n.kind==='apply'?w+' applied to your job':n.kind==='verif'?'Your employer verification was '+(n.ref==='ok'?'approved':'declined'):'New activity'}
 function unread(){return st.notifs.filter(n=>!n.read).length+(admin?st.reports.filter(r=>r.status==='open').length:0)+dmUnread()}
 function dmUnread(){return st.msgs.filter(m=>m.b===uid&&!m.read).length}
 function badge(){const b=document.querySelector('.bkbtn .dot');const n=unread();if(b){b.textContent=n>9?'9+':n;b.hidden=!n}}
@@ -7131,7 +7152,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 34',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 34',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 35',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 35',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -8229,7 +8250,8 @@ function card(x){
  if(isC&&st==='accepted')btn=Date.now()>=s.slot-600000?'<button class="pill on" data-ps="start" data-id="'+x.id+'">Start session</button>':'<small class="q">Opens 10 min before</small>';
  if(isC&&st==='live'&&!cur)btn='<button class="pill on" data-ps="join" data-id="'+x.id+'">Rejoin</button>';
  if(!isC&&st==='live')btn='<button class="pill on" data-ps="join" data-id="'+x.id+'">Join now</button>';
- if(!isC&&st==='requested')btn='<button class="pill" data-ps="cancel" data-id="'+x.id+'">Cancel</button>';
+ if((st==='accepted'||st==='requested')&&s.slot>Date.now())btn+='<button class="pill" data-ps="ics" data-id="'+x.id+'">Add to calendar</button>';
+ if(!isC&&st==='requested')btn+='<button class="pill" data-ps="cancel" data-id="'+x.id+'">Cancel</button>';
  if(!isC&&st==='ended'&&!s.rate)btn='<button class="pill" data-ps="ratesheet" data-id="'+x.id+'">Rate</button>';
  return'<div class="row psc"><div class="t"><b>'+esc(who)+'</b><small>'+D(s.slot)+' · '+STT[st]+'</small>'+(money?'<small>'+money+'</small>':'')+'</div>'+btn+'</div>';
 }
@@ -8264,7 +8286,7 @@ function request(cu,slot){
  if(taken(cu,slot)){toast('That slot was just taken');return}
  const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
  put('psess',id,{uid:a.uid(),fan:a.uid(),creator:cu,slot,price:c.price,over:c.over,st:'req',ts:a.now()});
- closeSheet();toast('Request sent. Your '+M(c.price)+' is held.');
+ a.notify(cu,'psreq',id);closeSheet();toast('Request sent. Your '+M(c.price)+' is held.');
 }
 function startAndJoin(id,asCreator){
  const a=A(),x=rows().find(y=>y.id===id);if(!x)return;
@@ -8272,7 +8294,7 @@ function startAndJoin(id,asCreator){
  closeSheet();
  cur={sid:id,role:asCreator?'creator':'fan',t:Date.now(),price:x.s.price,over:x.s.over};
  __CAL.join('call_ps'+id,'video',[]).then(()=>setTimeout(decorate,300));
- const j=$('#psjoin');if(j)j.remove();
+ const j=$('#psjoin');if(j)j.remove();const r=$('#psrem');if(r)r.remove();
 }
 function decorate(){
  const c=$('#calr');if(!c||!cur)return;c.classList.add('ps');
@@ -8315,6 +8337,24 @@ function tick(){
   }
  }
 }
+function ics(id){
+ const x=rows().find(y=>y.id===id);if(!x)return;const a=A();
+ const z=t=>new Date(t).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+ const who=a.nameOf(x.mine==='creator'?x.s.fan:x.s.creator);
+ const t=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Blend//Private Sessions//EN','BEGIN:VEVENT','UID:'+id+'@blend','DTSTAMP:'+z(Date.now()),'DTSTART:'+z(x.s.slot),'DTEND:'+z(x.s.slot+900000),'SUMMARY:Blend private session with '+who.replace(/[,;\n]/g,' '),'DESCRIPTION:Open Blend and tap Private Sessions to join.','BEGIN:VALARM','TRIGGER:-PT10M','ACTION:DISPLAY','DESCRIPTION:Private session starts in 10 minutes','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+ const u=URL.createObjectURL(new Blob([t],{type:'text/calendar'})),l=document.createElement('a');l.href=u;l.download='blend-session.ics';document.body.appendChild(l);l.click();setTimeout(()=>{URL.revokeObjectURL(u);l.remove()},800);
+}
+const reminded=new Set();
+function remind(){
+ const a=A();if(!a||cur||$('#psrem')||$('#psjoin'))return;
+ const now=Date.now();
+ const x=rows().find(y=>{const st=stat(y,now);return st==='accepted'&&y.s.slot-now<=15*60000&&y.s.slot-now>-20*60000&&!reminded.has(y.id)});
+ if(!x)return;reminded.add(x.id);
+ const isC=x.mine==='creator',m=Math.max(0,Math.round((x.s.slot-now)/60000));
+ const d=document.createElement('div');d.id='psrem';d.className='psjoin';
+ d.innerHTML='<span>🔒 Private session with <b>'+esc(a.nameOf(isC?x.s.fan:x.s.creator))+'</b> '+(m>0?'starts in '+m+' min':'is starting now')+'</span><button class="pill on" data-ps="'+(isC?'start':'hub')+'" data-id="'+x.id+'">'+(isC?'Start':'Open')+'</button><button class="pill" data-ps="remx">Later</button>';
+ $('#app').appendChild(d);
+}
 function sync(){try{render()}catch(e){}}
 function entry(){
  const g=document.querySelector('.golive:not(.psent)');
@@ -8330,13 +8370,13 @@ function entry(){
  }
 }
 new MutationObserver(entry).observe(document.documentElement,{childList:true,subtree:true});
-setInterval(()=>{entry();tick()},500);
+setInterval(()=>{entry();tick()},500);setInterval(remind,3000);
 document.addEventListener('click',e=>{
  const b=e.target.closest&&e.target.closest('[data-ps]');if(!b)return;
  e.preventDefault();e.stopPropagation();
  const k=b.dataset.ps,id=b.dataset.id,a=A();
  if(!a){if(window.__SB)__SB.signIn('use Private Sessions');return}
- if(k==='hub')openHub();
+ if(k==='hub'){const j=$('#psrem');if(j)j.remove();openHub(id?'mine':undefined)}
  else if(k==='tab'){tab=id;render()}
  else if(k==='book'){if(window.__LK&&__LK.active&&__LK.active()){}bookSheet(id)}
  else if(k==='req')request(id,+b.dataset.t);
@@ -8344,10 +8384,12 @@ document.addEventListener('click',e=>{
  else if(k==='savep'){const c=mine()||{},p=+($('#psPrice')||{}).value,o=+($('#psOver')||{}).value;if(!(p>0)){toast('Set a price for 15 minutes');return}put('pcreators',a.uid(),{uid:a.uid(),on:c.on!==undefined?c.on:true,price:p,over:o>0?o:0,slots:c.slots||[],ts:a.now()});toast('Saved')}
  else if(k==='addslot'){const v=($('#psSlot')||{}).value,t=v?new Date(v).getTime():0;if(!t||t<Date.now()){toast('Pick a time in the future');return}const c=mine()||{};if(!(c.price>0)){toast('Save your prices first');return}put('pcreators',a.uid(),{uid:a.uid(),on:c.on,price:c.price,over:c.over||0,slots:[...new Set([...(c.slots||[]),t])].sort(),ts:a.now()})}
  else if(k==='delslot'){const c=mine();if(c)put('pcreators',a.uid(),{slots:(c.slots||[]).filter(t=>t!==+id)})}
- else if(k==='acc'||k==='dec'){const x=rows().find(y=>y.id===id);if(x)put('presp',id,{uid:a.uid(),sid:id,fan:x.s.fan,creator:x.s.creator,st:k==='acc'?'acc':'dec',ts:a.now()})}
+ else if(k==='acc'||k==='dec'){const x=rows().find(y=>y.id===id);if(x){put('presp',id,{uid:a.uid(),sid:id,fan:x.s.fan,creator:x.s.creator,st:k==='acc'?'acc':'dec',ts:a.now()});a.notify(x.s.fan,k==='acc'?'psacc':'psdec',id)}}
  else if(k==='cancel')put('psess',id,{st:'cancel'});
  else if(k==='start')startAndJoin(id,true);
  else if(k==='join'){const x=rows().find(y=>y.id===id);startAndJoin(id,x&&x.mine==='creator')}
+ else if(k==='ics')ics(id);
+ else if(k==='remx'){const j=$('#psrem');if(j)j.remove()}
  else if(k==='hide'){const j=$('#psjoin');if(j)j.remove();rows().forEach(x=>x.dismissed=true)}
  else if(k==='cont'&&cur)put('presp',cur.sid,{ot:true});
  else if(k==='stop'){const e=document.querySelector('[data-cal-a=end]');if(e)e.click()}
