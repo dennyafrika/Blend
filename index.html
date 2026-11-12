@@ -1816,20 +1816,25 @@ function authUI(why){if(authOpen)return authOpen;authOpen=new Promise(async reso
  let mode='in';
  const paint=()=>{el.innerHTML=`<form class="card" novalidate>
   <h1>Blend<i>.</i></h1>
-  <p>${why?esc0(why):mode==='in'?'Welcome back. Sign in to continue.':'Create your account. It takes a minute.'}</p>
+  <p>${why?esc0(why):mode==='reset'?'Enter your email and we will send you a link to choose a new password.':mode==='in'?'Welcome back. Sign in to continue.':'Create your account. It takes a minute.'}</p>
   <label for="sbE">Email</label><input id="sbE" type="email" autocomplete="email" inputmode="email" autocapitalize="none" required>
-  <label for="sbP">Password</label><input id="sbP" type="password" autocomplete="${mode==='in'?'current-password':'new-password'}" ${mode==='up'?'minlength="8"':''} required>
-  ${mode==='up'?'<p style="margin:8px 0 0;font-size:12.5px">At least 8 characters.</p>':''}
+  ${mode==='reset'?'':`<label for="sbP">Password</label><input id="sbP" type="password" autocomplete="${mode==='in'?'current-password':'new-password'}" ${mode==='up'?'minlength="8"':''} required>
+  ${mode==='up'?'<p style="margin:8px 0 0;font-size:12.5px">At least 8 characters.</p>':''}${mode==='in'?'<button class="alt" type="button" data-forgot style="text-align:left;padding:8px 0 0">Forgot password?</button>':''}`}
   <div class="err" role="alert" aria-live="polite"></div>
-  <button class="go" type="submit">${mode==='in'?'Sign in':'Create account'}</button>
+  <button class="go" type="submit">${mode==='reset'?'Send reset link':mode==='in'?'Sign in':'Create account'}</button>
   <button class="alt" type="button" data-alt>${mode==='in'?'New here? Create an account':'Already have an account? Sign in'}</button>
   <button class="alt later" type="button" data-notnow>Not now</button></form>`;
   const f=el.querySelector('form'),err=el.querySelector('.err'),go=el.querySelector('.go');
   el.querySelector('[data-alt]').onclick=()=>{mode=mode==='in'?'up':'in';paint()};
+  const fg=el.querySelector('[data-forgot]');if(fg)fg.onclick=()=>{mode='reset';paint()};
   el.querySelector('[data-notnow]').onclick=()=>{el.remove();authOpen=null;resolve(null)};
   f.onsubmit=async ev=>{ev.preventDefault();
-   const email=f.querySelector('#sbE').value.trim(),pw=f.querySelector('#sbP').value;
+   const email=f.querySelector('#sbE').value.trim(),pw=mode==='reset'?'':f.querySelector('#sbP').value;
    if(!/^\S+@\S+\.\S+$/.test(email)){err.textContent='Enter a valid email address.';return}
+   if(mode==='reset'){go.disabled=true;err.textContent='';
+    try{const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(r.error)throw r.error;err.style.color='inherit';err.textContent='If that email has an account, a reset link is on its way. Check your inbox and spam.'}
+    catch(e){err.textContent=/rate limit/i.test(String(e&&e.message))?'Too many tries. Wait a minute and try again.':'Could not send the email. Try again.'}
+    go.disabled=false;return}
    if(pw.length<8&&mode==='up'){err.textContent='Use at least 8 characters for your password.';return}
    if(!pw){err.textContent='Enter your password.';return}
    go.disabled=true;err.textContent='';
@@ -1852,6 +1857,16 @@ const esc0=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 async function start(){
  await loadLib();
  sb=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+ try{
+  const h=new URLSearchParams(location.hash.replace(/^#/,''));
+  if(h.get('type')==='recovery'&&h.get('access_token')){
+   const r=await sb.auth.setSession({access_token:h.get('access_token'),refresh_token:h.get('refresh_token')||''});
+   history.replaceState(null,'',location.pathname+location.search);
+   if(!r.error)setTimeout(()=>newPassUI(true),600);
+  }else if(/error_code=otp_expired|error_description=/.test(location.hash)){
+   history.replaceState(null,'',location.pathname+location.search);setTimeout(()=>{try{toast('That reset link has expired. Ask for a new one.')}catch(e){}},800);
+  }
+ }catch(e){}
  const {data}=await sb.auth.getSession();
  if(data&&data.session)gotSession(data.session);
  sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_OUT')location.reload()});
@@ -1928,7 +1943,31 @@ const downloads={save:async({filename,data})=>{const b=new Blob([data],{type:'ap
 window.claude={use:async n=>n==='user'?user:n==='db'?(await ready(),db):n==='downloads'?downloads:null};
 async function upload(file,kind){await ready();if(!session)throw new Error('signin');const t=(file.type||'application/octet-stream').split(';')[0];const ext=({'image/jpeg':'jpg','video/quicktime':'mov','audio/mpeg':'mp3','audio/x-m4a':'m4a','audio/mp4':'m4a'})[t]||(t.split('/')[1]||'bin');const path=session.user.id+'/'+(kind||'f')+'/'+Date.now()+'_'+Math.random().toString(36).slice(2,8)+'.'+ext;const r=await sb.storage.from('media').upload(path,file,{contentType:t,cacheControl:'31536000'});if(r.error)throw r.error;return sb.storage.from('media').getPublicUrl(path).data.publicUrl}
 async function fn(name,body){await ready();if(!session)throw new Error('signin');const r=await sb.functions.invoke(name,{body});if(r.error){let m=r.error.message||'failed';try{const j=await r.error.context.json();if(j&&j.error)m=j.error}catch(e){}throw new Error(m)}return r.data}
-window.__SB={fn,upload,signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
+function newPassUI(recovery){
+ if(document.getElementById('sbNew'))return;
+ const el=document.createElement('div');el.id='sbNew';el.style.cssText='position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.45)';
+ el.innerHTML='<form class="card" novalidate style="width:100%;max-width:380px;background:var(--surface,#fff);color:var(--ink,#101322);border-radius:28px;padding:26px 22px;box-sizing:border-box"><h2 style="margin:0 0 6px">'+(recovery?'Choose a new password':'Change password')+'</h2><p style="margin:0 0 12px;opacity:.7;font-size:14px">At least 8 characters.</p><input id="sbNp" type="password" autocomplete="new-password" placeholder="New password" style="width:100%;box-sizing:border-box;height:50px;border-radius:16px;border:1px solid var(--line,#e4e7ec);padding:0 14px;font:inherit;font-size:16px;background:var(--surface2,#f4f5f7);color:inherit"><div class="err" style="min-height:20px;margin-top:10px;color:#d6336c;font-size:13.5px;font-weight:600"></div><button class="go" type="submit" style="width:100%;height:52px;border:0;border-radius:99px;background:linear-gradient(135deg,#8e7cff,#3b2fc9);color:#fff;font:inherit;font-weight:800;font-size:16px">Save password</button><button type="button" data-x style="display:block;width:100%;margin-top:8px;background:none;border:0;color:inherit;opacity:.7;font:inherit;padding:8px">Cancel</button></form>';
+ document.body.appendChild(el);
+ el.querySelector('[data-x]').onclick=()=>el.remove();
+ el.querySelector('form').onsubmit=async ev=>{ev.preventDefault();const p=el.querySelector('#sbNp').value,er=el.querySelector('.err');
+  if(p.length<8){er.textContent='Use at least 8 characters.';return}
+  const r=await sb.auth.updateUser({password:p});
+  if(r.error){er.textContent=/same|different/i.test(r.error.message||'')?'Pick a password you have not used before.':(r.error.message||'Could not save.');return}
+  el.remove();try{toast('Password updated')}catch(e){}};
+}
+function deleteUI(){
+ if(document.getElementById('sbDel'))return;
+ const el=document.createElement('div');el.id='sbDel';el.style.cssText='position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.45)';
+ el.innerHTML='<form novalidate style="width:100%;max-width:380px;background:var(--surface,#fff);color:var(--ink,#101322);border-radius:28px;padding:26px 22px;box-sizing:border-box"><h2 style="margin:0 0 6px">Delete your account?</h2><p style="margin:0 0 12px;font-size:14px;line-height:1.45">This permanently deletes your profile, posts, messages, listings and everything tied to your account. It cannot be undone. Type <b>DELETE</b> to confirm.</p><input id="sbDt" autocapitalize="characters" autocomplete="off" style="width:100%;box-sizing:border-box;height:50px;border-radius:16px;border:1px solid var(--line,#e4e7ec);padding:0 14px;font:inherit;font-size:16px;background:var(--surface2,#f4f5f7);color:inherit"><div class="err" style="min-height:20px;margin-top:10px;color:#d6336c;font-size:13.5px;font-weight:600"></div><button type="submit" style="width:100%;height:52px;border:0;border-radius:99px;background:#d6336c;color:#fff;font:inherit;font-weight:800;font-size:16px">Delete my account</button><button type="button" data-x style="display:block;width:100%;margin-top:8px;background:none;border:0;color:inherit;opacity:.7;font:inherit;padding:8px">Keep my account</button></form>';
+ document.body.appendChild(el);
+ el.querySelector('[data-x]').onclick=()=>el.remove();
+ el.querySelector('form').onsubmit=async ev=>{ev.preventDefault();const er=el.querySelector('.err');
+  if(el.querySelector('#sbDt').value.trim()!=='DELETE'){er.textContent='Type DELETE in capitals to confirm.';return}
+  const r=await sb.rpc('delete_my_account');
+  if(r.error){er.textContent='Could not delete right now. Try again, or contact support.';return}
+  try{await sb.auth.signOut()}catch(e){}try{localStorage.clear()}catch(e){}location.reload()};
+}
+window.__SB={newPass:()=>ready().then(()=>newPassUI(false)),deleteAcc:()=>ready().then(deleteUI),fn,upload,signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
 /* visitors can look around; liking, commenting, following, posting and messages ask them to sign in */
 const WALL='[data-a="like"],[data-a="comments"],[data-a="follow"],[data-a="repost"],[data-a="save"],[data-a="create"],[data-a="notif"],[data-a="msgs"],[data-a="vlike"],[data-a="vdis"],[data-a="vsub"],[data-a="vbell"],[data-a="join"],[data-a="gift"],[data-a="sendgift"],[data-a="golive"],[data-a="livetab"],[data-a="liveopen"],[data-a="startlive"],[data-a="heart"],[data-a="going"],[data-a="vlater"],[data-a="coins"],[data-a="buycoins"],[data-a="revive"],[data-cx="clike"],[data-cx="reply"],[data-cx="cdel"],[data-cx="crep"],[data-a="cform"],[data-a="cform2"],[data-a="post"],[data-a="post2"],.bkbtn';
 document.addEventListener('submit',e=>{if(session)return;const f=e.target;if(f&&f.dataset&&['cform','cform2','lvform','mform'].includes(f.dataset.a)||f.dataset.cx==='form'){e.preventDefault();e.stopImmediatePropagation();ready().then(()=>authUI('Sign in or create an account to comment.'))}},true);
@@ -7189,12 +7228,12 @@ const items=[
  ['share','Invite friends','Share Blend with someone',()=>{const u=location.href.split('#')[0];if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).catch(()=>{})}]
 ];
 const svg=(p)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
-const icon={out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
+const icon={key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
 b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 30',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 30',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 31',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 31',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
