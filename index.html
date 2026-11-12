@@ -1150,7 +1150,20 @@ nav button.aib:focus-visible span{outline:2px solid var(--ink);outline-offset:3p
 #s-explore>.topbar{display:none}
 #s-explore>.seg.nv3{position:static;flex:none}
 
-/* none */
+.lgv{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center}
+.lgc{width:100%;max-width:560px;max-height:88vh;background:var(--surface,#fff);color:var(--ink,#101322);border-radius:24px 24px 0 0;display:flex;flex-direction:column;overflow:hidden}
+.lgh{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 8px}
+.lgh b{font-size:18px}
+.lgx{border:0;background:var(--surface2,#f4f5f7);color:inherit;width:34px;height:34px;border-radius:50%;font-size:15px}
+.lgtabs{display:flex;gap:8px;padding:4px 18px 10px}
+.lgt{border:1px solid var(--line,#e4e7ec);background:none;color:inherit;border-radius:99px;padding:7px 14px;font:inherit;font-size:13.5px;font-weight:700}
+.lgt.on{background:var(--accent,#5b4bff);border-color:transparent;color:#fff}
+.lgb{overflow:auto;padding:0 18px 28px;-webkit-overflow-scrolling:touch}
+.lgb h4{margin:16px 0 4px;font-size:14.5px}
+.lgb p{margin:0;font-size:14px;line-height:1.5;opacity:.85}
+.lgb .lgm{margin-top:20px;font-size:12.5px;opacity:.6}
+.sbterms{font-size:12.5px!important;margin:10px 0 0!important}
+.sbterms a{color:var(--accent,#5b4bff);font-weight:700;text-decoration:underline}
 
 /* ===== Full-screen on phones: no frame, edge to edge ===== */
 @media (max-width:600px){
@@ -1746,6 +1759,21 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 .psjoin span{flex:1}
 .lkr .psb,.psb{position:absolute;left:12px;top:64px;z-index:4;border-radius:20px;padding:8px 12px;font-size:13px}
 
+.lgv{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center}
+.lgc{width:100%;max-width:560px;max-height:88vh;background:var(--surface,#fff);color:var(--ink,#101322);border-radius:24px 24px 0 0;display:flex;flex-direction:column;overflow:hidden}
+.lgh{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 8px}
+.lgh b{font-size:18px}
+.lgx{border:0;background:var(--surface2,#f4f5f7);color:inherit;width:34px;height:34px;border-radius:50%;font-size:15px}
+.lgtabs{display:flex;gap:8px;padding:4px 18px 10px}
+.lgt{border:1px solid var(--line,#e4e7ec);background:none;color:inherit;border-radius:99px;padding:7px 14px;font:inherit;font-size:13.5px;font-weight:700}
+.lgt.on{background:var(--accent,#5b4bff);border-color:transparent;color:#fff}
+.lgb{overflow:auto;padding:0 18px 28px;-webkit-overflow-scrolling:touch}
+.lgb h4{margin:16px 0 4px;font-size:14.5px}
+.lgb p{margin:0;font-size:14px;line-height:1.5;opacity:.85}
+.lgb .lgm{margin-top:20px;font-size:12.5px;opacity:.6}
+.sbterms{font-size:12.5px!important;margin:10px 0 0!important}
+.sbterms a{color:var(--accent,#5b4bff);font-weight:700;text-decoration:underline}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -1819,7 +1847,7 @@ function authUI(why){if(authOpen)return authOpen;authOpen=new Promise(async reso
   <p>${why?esc0(why):mode==='reset'?'Enter your email and we will send you a link to choose a new password.':mode==='in'?'Welcome back. Sign in to continue.':'Create your account. It takes a minute.'}</p>
   <label for="sbE">Email</label><input id="sbE" type="email" autocomplete="email" inputmode="email" autocapitalize="none" required>
   ${mode==='reset'?'':`<label for="sbP">Password</label><input id="sbP" type="password" autocomplete="${mode==='in'?'current-password':'new-password'}" ${mode==='up'?'minlength="8"':''} required>
-  ${mode==='up'?'<p style="margin:8px 0 0;font-size:12.5px">At least 8 characters.</p>':''}${mode==='in'?'<button class="alt" type="button" data-forgot style="text-align:left;padding:8px 0 0">Forgot password?</button>':''}`}
+  ${mode==='up'?'<p style="margin:8px 0 0;font-size:12.5px">At least 8 characters.</p>':''}${mode==='up'?'<p class="sbterms">By creating an account you agree to the <a href="#" data-lg="terms">Terms</a> and <a href="#" data-lg="privacy">Privacy Policy</a>.</p>':''}${mode==='in'?'<button class="alt" type="button" data-forgot style="text-align:left;padding:8px 0 0">Forgot password?</button>':''}`}
   <div class="err" role="alert" aria-live="polite"></div>
   <button class="go" type="submit">${mode==='reset'?'Send reset link':mode==='in'?'Sign in':'Create account'}</button>
   <button class="alt" type="button" data-alt>${mode==='in'?'New here? Create an account':'Already have an account? Sign in'}</button>
@@ -5543,263 +5571,59 @@ renderNav();renderHome();
 
 </script>
 <script>
-/* ===== Language: choose from 200+ languages, right-to-left support, translated menus ===== */
 (function(){
-const RAW=`aa|Afar||
-ab|Abkhazian|Аҧсуа|
-af|Afrikaans|Afrikaans|
-ak|Akan|Akan|
-am|Amharic|አማርኛ|
-an|Aragonese|Aragonés|
-ar|Arabic|العربية|r
-as|Assamese|অসমীয়া|
-ast|Asturian|Asturianu|
-av|Avaric|Авар|
-ay|Aymara|Aymar aru|
-az|Azerbaijani|Azərbaycanca|
-ba|Bashkir|Башҡортса|
-be|Belarusian|Беларуская|
-bg|Bulgarian|Български|
-bho|Bhojpuri|भोजपुरी|
-bi|Bislama|Bislama|
-bm|Bambara|Bamanankan|
-bn|Bengali|বাংলা|
-bo|Tibetan|བོད་སྐད་|
-br|Breton|Brezhoneg|
-bs|Bosnian|Bosanski|
-ca|Catalan|Català|
-ce|Chechen|Нохчийн|
-ceb|Cebuano|Cebuano|
-ch|Chamorro|Chamoru|
-ckb|Central Kurdish|کوردیی ناوەندی|r
-co|Corsican|Corsu|
-cr|Cree|ᓀᐦᐃᔭᐍᐏᐣ|
-cs|Czech|Čeština|
-cv|Chuvash|Чӑвашла|
-cy|Welsh|Cymraeg|
-da|Danish|Dansk|
-de|German|Deutsch|
-dv|Dhivehi|ދިވެހި|r
-dz|Dzongkha|རྫོང་ཁ|
-ee|Ewe|Eʋegbe|
-el|Greek|Ελληνικά|
-en|English|English|
-eo|Esperanto|Esperanto|
-es|Spanish|Español|
-et|Estonian|Eesti|
-eu|Basque|Euskara|
-fa|Persian|فارسی|r
-ff|Fula|Fulfulde|
-fi|Finnish|Suomi|
-fil|Filipino|Filipino|
-fj|Fijian|Vosa Vakaviti|
-fo|Faroese|Føroyskt|
-fr|French|Français|
-fy|Western Frisian|Frysk|
-ga|Irish|Gaeilge|
-gd|Scottish Gaelic|Gàidhlig|
-gl|Galician|Galego|
-gn|Guarani|Avañe'ẽ|
-gu|Gujarati|ગુજરાતી|
-gv|Manx|Gaelg|
-ha|Hausa|Hausa|
-haw|Hawaiian|ʻŌlelo Hawaiʻi|
-he|Hebrew|עברית|r
-hi|Hindi|हिन्दी|
-hmn|Hmong|Hmoob|
-hr|Croatian|Hrvatski|
-ht|Haitian Creole|Kreyòl ayisyen|
-hu|Hungarian|Magyar|
-hy|Armenian|Հայերեն|
-ia|Interlingua|Interlingua|
-id|Indonesian|Bahasa Indonesia|
-ig|Igbo|Igbo|
-ik|Inupiaq|Iñupiaq|
-io|Ido|Ido|
-is|Icelandic|Íslenska|
-it|Italian|Italiano|
-iu|Inuktitut|ᐃᓄᒃᑎᑐᑦ|
-ja|Japanese|日本語|
-jv|Javanese|Basa Jawa|
-ka|Georgian|ქართული|
-kg|Kongo|Kikongo|
-ki|Kikuyu|Gĩkũyũ|
-kk|Kazakh|Қазақша|
-kl|Kalaallisut|Kalaallisut|
-km|Khmer|ខ្មែរ|
-kn|Kannada|ಕನ್ನಡ|
-ko|Korean|한국어|
-kr|Kanuri|Kanuri|
-ks|Kashmiri|کٲشُر|r
-ku|Kurdish (Kurmanji)|Kurdî|
-kv|Komi|Коми|
-kw|Cornish|Kernewek|
-ky|Kyrgyz|Кыргызча|
-la|Latin|Latina|
-lad|Ladino|Ladino|
-lb|Luxembourgish|Lëtzebuergesch|
-lg|Luganda|Luganda|
-li|Limburgish|Limburgs|
-ln|Lingala|Lingála|
-lo|Lao|ລາວ|
-lt|Lithuanian|Lietuvių|
-lu|Luba-Katanga|Kiluba|
-lv|Latvian|Latviešu|
-mai|Maithili|मैथिली|
-mg|Malagasy|Malagasy|
-mh|Marshallese|Kajin M̧ajeļ|
-mi|Māori|Te Reo Māori|
-mk|Macedonian|Македонски|
-ml|Malayalam|മലയാളം|
-mn|Mongolian|Монгол|
-mr|Marathi|मराठी|
-ms|Malay|Bahasa Melayu|
-mt|Maltese|Malti|
-my|Burmese|မြန်မာ|
-na|Nauruan|Dorerin Naoero|
-nb|Norwegian Bokmål|Norsk bokmål|
-nd|Northern Ndebele|isiNdebele|
-ne|Nepali|नेपाली|
-ng|Ndonga|Owambo|
-nl|Dutch|Nederlands|
-nn|Norwegian Nynorsk|Nynorsk|
-nr|Southern Ndebele|isiNdebele saseNingizimu|
-nso|Sepedi|Sesotho sa Leboa|
-nv|Navajo|Diné bizaad|
-ny|Chichewa|Chichewa|
-oc|Occitan|Occitan|
-oj|Ojibwe|Anishinaabemowin|
-om|Oromo|Afaan Oromoo|
-or|Odia|ଓଡ଼ିଆ|
-os|Ossetian|Ирон|
-pa|Punjabi|ਪੰਜਾਬੀ|
-pi|Pali|पालि|
-pl|Polish|Polski|
-ps|Pashto|پښتو|r
-pt|Portuguese|Português|
-qu|Quechua|Runasimi|
-rm|Romansh|Rumantsch|
-rn|Kirundi|Ikirundi|
-ro|Romanian|Română|
-ru|Russian|Русский|
-rw|Kinyarwanda|Ikinyarwanda|
-sa|Sanskrit|संस्कृतम्|
-sc|Sardinian|Sardu|
-sd|Sindhi|سنڌي|r
-se|Northern Sámi|Davvisámegiella|
-sg|Sango|Sängö|
-si|Sinhala|සිංහල|
-sk|Slovak|Slovenčina|
-sl|Slovenian|Slovenščina|
-sm|Samoan|Gagana Sāmoa|
-sn|Shona|chiShona|
-so|Somali|Soomaali|
-sq|Albanian|Shqip|
-sr|Serbian|Српски|
-ss|Swati|siSwati|
-st|Sesotho|Sesotho|
-su|Sundanese|Basa Sunda|
-sv|Swedish|Svenska|
-sw|Swahili|Kiswahili|
-ta|Tamil|தமிழ்|
-te|Telugu|తెలుగు|
-tg|Tajik|Тоҷикӣ|
-th|Thai|ไทย|
-ti|Tigrinya|ትግርኛ|
-tk|Turkmen|Türkmençe|
-tl|Tagalog|Tagalog|
-tn|Setswana|Setswana|
-to|Tongan|Lea faka-Tonga|
-tr|Turkish|Türkçe|
-ts|Xitsonga|Xitsonga|
-tt|Tatar|Татарча|
-tw|Twi|Twi|
-ty|Tahitian|Reo Tahiti|
-ug|Uyghur|ئۇيغۇرچە|r
-uk|Ukrainian|Українська|
-ur|Urdu|اردو|r
-uz|Uzbek|Oʻzbekcha|
-ve|Tshivenda|Tshivenḓa|
-vi|Vietnamese|Tiếng Việt|
-vo|Volapük|Volapük|
-wa|Walloon|Walon|
-wo|Wolof|Wolof|
-xh|isiXhosa|isiXhosa|
-yi|Yiddish|ייִדיש|r
-yo|Yoruba|Yorùbá|
-yue|Cantonese|粵語|
-za|Zhuang|Vahcuengh|
-zh|Chinese (Simplified)|简体中文|
-zh-TW|Chinese (Traditional)|繁體中文|
-zu|isiZulu|isiZulu|`;
-const LANGS=RAW.split('\n').map(l=>{const [c,e,n,r]=l.split('|');return{c,e,n:n||e,r:r==='r'}}).sort((a,b)=>a.e.localeCompare(b.e));
-const KEYS=['Home','Videos','Market','You','For you','Following','Explore','Watch','Clips','Live','Shop','Jobs','Services','Posts','Saved','Library','Follow','Join','Joined','Edit','Done','Send','Messages','Earnings'];
-const TR={
-es:['Inicio','Vídeos','Mercado','Tú','Para ti','Siguiendo','Explorar','Ver','Clips','En vivo','Tienda','Empleos','Servicios','Publicaciones','Guardado','Biblioteca','Seguir','Unirse','Unido','Editar','Listo','Enviar','Mensajes','Ganancias'],
-fr:['Accueil','Vidéos','Marché','Moi','Pour vous','Abonnements','Explorer','Regarder','Clips','En direct','Boutique','Emplois','Services','Publications','Enregistrés','Bibliothèque','Suivre','Rejoindre','Rejoint','Modifier','Terminé','Envoyer','Messages','Gains'],
-pt:['Início','Vídeos','Mercado','Você','Para você','Seguindo','Explorar','Assistir','Clipes','Ao vivo','Loja','Empregos','Serviços','Publicações','Salvos','Biblioteca','Seguir','Participar','Participando','Editar','Concluído','Enviar','Mensagens','Ganhos'],
-de:['Start','Videos','Markt','Du','Für dich','Folge ich','Entdecken','Ansehen','Clips','Live','Shop','Jobs','Dienste','Beiträge','Gespeichert','Bibliothek','Folgen','Beitreten','Beigetreten','Bearbeiten','Fertig','Senden','Nachrichten','Einnahmen'],
-ar:['الرئيسية','فيديو','السوق','أنت','لك','المتابَعون','استكشف','شاهد','مقاطع','مباشر','تسوّق','وظائف','خدمات','المنشورات','المحفوظات','المكتبة','متابعة','انضم','منضم','تعديل','تم','إرسال','الرسائل','الأرباح'],
-hi:['होम','वीडियो','बाज़ार','आप','आपके लिए','फ़ॉलो किए','एक्सप्लोर','देखें','क्लिप्स','लाइव','खरीदें','नौकरियाँ','सेवाएँ','पोस्ट','सहेजे गए','लाइब्रेरी','फ़ॉलो करें','जुड़ें','जुड़ गए','संपादित करें','हो गया','भेजें','संदेश','कमाई'],
-sw:['Mwanzo','Video','Soko','Wewe','Kwako','Unaowafuata','Gundua','Tazama','Klipu','Moja kwa moja','Duka','Ajira','Huduma','Machapisho','Vilivyohifadhiwa','Maktaba','Fuata','Jiunge','Umejiunga','Hariri','Imekamilika','Tuma','Ujumbe','Mapato'],
-zu:['Ikhaya','Amavidiyo','Imakethe','Wena','Kuwe','Ozilandelayo','Hlola','Buka','Amaklip','Bukhoma','Isitolo','Imisebenzi','Izinsiza','Amaposti','Okulondoloziwe','Umtapo','Landela','Joyina','Ujoyinile','Hlela','Kwenziwe','Thumela','Imilayezo','Imali engenayo'],
-af:['Tuis','Video\'s','Mark','Jy','Vir jou','Volg','Verken','Kyk','Snitte','Regstreeks','Winkel','Werke','Dienste','Plasings','Gestoor','Biblioteek','Volg','Sluit aan','Aangesluit','Wysig','Klaar','Stuur','Boodskappe','Verdienste'],
-zh:['首页','视频','市场','我的','为你推荐','关注','发现','观看','短片','直播','购物','工作','服务','帖子','已保存','资料库','关注','加入','已加入','编辑','完成','发送','消息','收益'],
-'zh-TW':['首頁','影片','市場','我的','為你推薦','追蹤中','探索','觀看','短片','直播','購物','工作','服務','貼文','已儲存','資料庫','追蹤','加入','已加入','編輯','完成','傳送','訊息','收益']
+const CONTACT='';
+const UPDATED='12 November 2026';
+const T={
+terms:['Terms of Use',[
+['Welcome','Blend is a social app for sharing posts, videos, clips and stories, chatting, going live, buying and selling in the Shop, and booking private one-to-one sessions with creators. By using Blend you agree to these terms. If you do not agree, please do not use the app.'],
+['Who can use Blend','You must be 18 or older. You are responsible for your account and for keeping your password safe. Give us true information, and do not pretend to be someone else.'],
+['What you post','You own what you post. You give Blend permission to store it and show it to other people as part of the app. Only post things you have the right to share. Do not post anything illegal, hateful, threatening, sexual involving minors, scams, or content that harms or harasses others. We may remove content or accounts that break these rules.'],
+['Safety and reporting','You can report posts, people, lives and listings, and you can block people. We review reports and may remove content, suspend accounts, or limit features.'],
+['Live and calls','When you go live or join a call, other people can see and hear you. Do not record or share other people\'s lives or calls without their permission.'],
+['Shop and Blend Protect','Sellers are responsible for their listings and for delivering what they sell. Blend takes a fee of 5% of each Shop sale. Blend Protect holds the buyer\'s payment until the buyer confirms delivery or the dispute window ends. Prohibited items cannot be listed.'],
+['Private Sessions','Creators set their own price for a 15-minute private session and an optional per-minute rate after that. The fan\'s payment is held by Blend until the session ends, then released to the creator. Blend keeps 20% of each session. Creators decide whether to continue past 15 minutes.'],
+['Gifts and coins','Gifts and coins are digital items with no cash value to the sender. Blend keeps 10% of the value of gifts sent to creators.'],
+['Payments','Payments are processed by a third-party payment provider. Fees may apply. Some payment features are still being set up and may be shown as demonstrations until they go live.'],
+['Ending your account','You can delete your account at any time from the menu. We may suspend or close accounts that break these terms.'],
+['Changes and liability','We may update these terms and will tell you about important changes. Blend is provided as is, and to the extent the law allows we are not liable for losses from things other users do or from interruptions to the service. Nothing here removes rights you have under the law.']
+]],
+privacy:['Privacy Policy',[
+['What we collect','Your email address, profile details (name, handle, year of birth, photo), and what you create or send: posts, comments, messages, stories, videos, clips, listings and session bookings. If you allow it, we use your camera and microphone for lives and calls, and your approximate location for nearby features.'],
+['How we use it','To run Blend: show your content, deliver messages, connect lives and calls, keep the community safe, and improve the app. We do not sell your personal information.'],
+['Who helps us run Blend','We use service providers: Supabase (accounts and data storage), LiveKit (live video and calls), and, when payments go live, a payment provider. They only handle data to provide their service to us.'],
+['Who sees what','Posts, videos, stories and listings you publish can be seen by other people. Messages are visible to the people in the conversation. Private Session requests are visible only to you and the creator.'],
+['Keeping it','We keep your data while your account is open. When you delete your account from the menu, your profile and the content stored under it are deleted. Some uploaded media files may remain in storage for a short time until cleaned up. We may keep limited records where the law requires.'],
+['Your rights','You can see, correct and delete your information, and object to how it is used. In South Africa this is protected by the Protection of Personal Information Act (POPIA). You can edit your profile in the app and delete your account from the menu.'],
+['Security','We use secure connections and access rules so people can only change their own data. No system is perfectly secure, so use a strong password and do not share it.'],
+['Children','Blend is for adults. If we learn that someone under 18 has an account, we will close it.'],
+['Changes','We will update this page when our practices change.']
+]],
+refunds:['Refunds and Disputes',[
+['Private Sessions','If the creator declines your request, does not reply within 48 hours, or does not start the session, your payment is returned in full. If you cancel a request before the creator accepts, it is returned in full. Once a session has started, the time used is not refundable. If something went wrong during a session, use the report button and we will review it.'],
+['Shop purchases','With Blend Protect, your payment is held until you confirm you received the item as described. If the item does not arrive or is not as described, open a dispute before confirming. We review disputes and may refund you or release payment to the seller.'],
+['Gifts and coins','Coins and gifts already sent are final. Unused coins can be refunded where the law requires it.'],
+['How long refunds take','Approved refunds go back to the original payment method. Your bank may take several working days to show it.'],
+['Need help','Use Report in the app and tell us what happened, with details of the order or session.']
+]]
 };
-const LK='blend-lang',CK='blend-lang-custom';
-let code='en',custom='';
-try{code=localStorage.getItem(LK)||'en';custom=localStorage.getItem(CK)||''}catch(_){}
-const info=c=>LANGS.find(l=>l.c===c);
-const name=()=>code==='x'?(custom||'your language'):(info(code)||{e:'English'}).e;
-function dict(){const t=TR[code];if(!t)return null;const m=new Map();KEYS.forEach((k,i)=>m.set(k,t[i]));return m}
-/* ----- translate visible text ----- */
-const orig=new WeakMap();let D=null,busy=false;
-function walk(root){
- const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentNode;if(!p||/^(SCRIPT|STYLE|TEXTAREA|INPUT)$/.test(p.nodeName))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT}});
- const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
- busy=true;
- nodes.forEach(n=>{
-  let raw=n.nodeValue;const o=orig.get(n);
-  if(o){if(raw===o.lead+o.tr+o.trail){raw=o.raw;n.nodeValue=raw}orig.delete(n)}
-  const t=raw.trim();
-  if(D&&t&&D.has(t)){const lead=raw.match(/^\s*/)[0],trail=raw.match(/\s*$/)[0],tr=D.get(t);orig.set(n,{raw,lead,trail,tr});n.nodeValue=lead+tr+trail}
- });
- mo.takeRecords();
- busy=false;
-}
-let raf=0;
-const mo=new MutationObserver(()=>{if(busy||raf)return;raf=requestAnimationFrame(()=>{raf=0;if(D)walk(document.getElementById('app'))})});
-mo.observe(document.getElementById('app'),{childList:true,subtree:true,characterData:true});
-function apply(){
- D=dict();const i=info(code);
- document.documentElement.lang=code==='x'?'und':code;
- document.documentElement.dir=(i&&i.r)?'rtl':'ltr';
- walk(document.getElementById('app'));
- try{localStorage.setItem(LK,code);localStorage.setItem(CK,custom)}catch(_){}
-}
-/* ----- the picker inside Look and feel ----- */
-function opts(q){
- const s=norm(q||'');
- return LANGS.filter(l=>!s||norm(l.e+' '+l.n).includes(s)).map(l=>`<option value="${l.c}" ${l.c===code?'selected':''}>${esc(l.n===l.e?l.e:l.n+' — '+l.e)}</option>`).join('');
-}
-const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-function note(){const n=document.getElementById('lgn');if(!n)return;n.textContent=TR[code]?'Menus, tabs and buttons are translated.':code==='en'?'':'Your language is saved. Menus stay in English for now; the assistant can translate posts and messages for you.'}
-function block(){
- return `<div class="dmsetg" style="padding:0 0 8px">Language</div><div id="lgbox"><input class="mkfield" id="lgq" placeholder="Search ${LANGS.length}+ languages" aria-label="Search languages" autocomplete="off" style="margin-bottom:6px"><select class="mkfield" id="lgs" aria-label="Language">${code==='x'?`<option value="x" selected>${esc(custom)}</option>`:''}${opts()}</select><div style="display:flex;gap:8px"><input class="mkfield" id="lgc" placeholder="Not listed? Type your language" aria-label="Another language" style="margin:0" value="${code==='x'?esc(custom):''}"><button class="mkbtn sm" data-lg="custom" style="flex:none">Use</button></div><p class="q" id="lgn" style="margin-top:6px"></p></div>`;
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function open(k){
+ k=T[k]?k:'terms';
+ let v=$('#lgv');if(v)v.remove();
+ v=document.createElement('div');v.id='lgv';v.className='lgv';
+ const tabs=Object.keys(T).map(x=>'<button class="lgt'+(x===k?' on':'')+'" data-lgt="'+x+'">'+(x==='terms'?'Terms':x==='privacy'?'Privacy':'Refunds')+'</button>').join('');
+ v.innerHTML='<div class="lgc"><div class="lgh"><b>'+T[k][0]+'</b><button class="lgx" data-lgx aria-label="Close">✕</button></div><div class="lgtabs">'+tabs+'</div><div class="lgb">'+T[k][1].map(s=>'<h4>'+esc(s[0])+'</h4><p>'+esc(s[1])+'</p>').join('')+'<p class="lgm">Last updated '+UPDATED+'.'+(CONTACT?' Contact: '+esc(CONTACT)+'.':' Contact us through Report in the app.')+'</p></div></div>';
+ document.body.appendChild(v);
 }
 document.addEventListener('click',e=>{
- if(e.target.closest('#palSw')){setTimeout(()=>{const pv=document.querySelector('.palprev');if(pv&&!document.getElementById('lgbox')){pv.insertAdjacentHTML('afterend',block());note()}},0);return}
- const b=e.target.closest('[data-lg=custom]');if(b){const v=(document.getElementById('lgc').value||'').trim();if(!v){toast('Type the name of your language');return}code='x';custom=v;apply();note();toast('Language set to '+v)}
-});
-document.addEventListener('input',e=>{
- if(e.target.id==='lgq'){const s=document.getElementById('lgs');if(s){s.innerHTML=(code==='x'?`<option value="x" selected>${esc(custom)}</option>`:'')+opts(e.target.value)}}
-});
-document.addEventListener('change',e=>{
- if(e.target.id==='lgs'){code=e.target.value;if(code!=='x')custom='';apply();note();toast('Language: '+(info(code)?info(code).n:custom))}
-});
-apply();
-window.__LG={name,code:()=>code,LANGS,TR,apply,set:c=>{code=c;apply()}};
+ const t=e.target.closest&&e.target.closest('[data-lg],[data-lgt],[data-lgx]');if(!t)return;
+ e.preventDefault();e.stopPropagation();
+ if(t.hasAttribute('data-lgx')){const v=$('#lgv');if(v)v.remove()}
+ else open(t.dataset.lg||t.dataset.lgt);
+},true);
+window.__LG={open};
 })();
 
 </script>
@@ -7225,15 +7049,16 @@ const close=()=>{if(menu){menu.remove();menu=null;b.setAttribute('aria-expanded'
 const items=[
  ['pdot','Colours and background','Custom colour, fonts, transparency',()=>{const x=document.getElementById('palSw');x&&x.click()}],
  ['people','Community','Groups and shared spaces',()=>{const x=document.querySelector('#s-home .bkbtn');x&&x.click()}],
- ['share','Invite friends','Share Blend with someone',()=>{const u=location.href.split('#')[0];if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).catch(()=>{})}]
+ ['share','Invite friends','Share Blend with someone',()=>{const u=location.href.split('#')[0];if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).catch(()=>{})}],
+ ['doc','Terms, privacy and refunds','How Blend works and your rights',()=>{window.__LG&&window.__LG.open('terms')}]
 ];
 const svg=(p)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
-const icon={key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
+const icon={doc:svg('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
 b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 31',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 31',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 32',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 32',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -8452,6 +8277,63 @@ document.addEventListener('click',e=>{
  else if(k==='rate'){put('psess',id,{rate:+b.dataset.n});closeSheet();toast('Thanks for rating')}
 },true);
 window.__PS={sync,calc,openHub,rows,stat,FEE};
+})();
+
+</script>
+<script>
+(function(){
+const CONTACT='';
+const UPDATED='12 November 2026';
+const T={
+terms:['Terms of Use',[
+['Welcome','Blend is a social app for sharing posts, videos, clips and stories, chatting, going live, buying and selling in the Shop, and booking private one-to-one sessions with creators. By using Blend you agree to these terms. If you do not agree, please do not use the app.'],
+['Who can use Blend','You must be 18 or older. You are responsible for your account and for keeping your password safe. Give us true information, and do not pretend to be someone else.'],
+['What you post','You own what you post. You give Blend permission to store it and show it to other people as part of the app. Only post things you have the right to share. Do not post anything illegal, hateful, threatening, sexual involving minors, scams, or content that harms or harasses others. We may remove content or accounts that break these rules.'],
+['Safety and reporting','You can report posts, people, lives and listings, and you can block people. We review reports and may remove content, suspend accounts, or limit features.'],
+['Live and calls','When you go live or join a call, other people can see and hear you. Do not record or share other people\'s lives or calls without their permission.'],
+['Shop and Blend Protect','Sellers are responsible for their listings and for delivering what they sell. Blend takes a fee of 5% of each Shop sale. Blend Protect holds the buyer\'s payment until the buyer confirms delivery or the dispute window ends. Prohibited items cannot be listed.'],
+['Private Sessions','Creators set their own price for a 15-minute private session and an optional per-minute rate after that. The fan\'s payment is held by Blend until the session ends, then released to the creator. Blend keeps 20% of each session. Creators decide whether to continue past 15 minutes.'],
+['Gifts and coins','Gifts and coins are digital items with no cash value to the sender. Blend keeps 10% of the value of gifts sent to creators.'],
+['Payments','Payments are processed by a third-party payment provider. Fees may apply. Some payment features are still being set up and may be shown as demonstrations until they go live.'],
+['Ending your account','You can delete your account at any time from the menu. We may suspend or close accounts that break these terms.'],
+['Changes and liability','We may update these terms and will tell you about important changes. Blend is provided as is, and to the extent the law allows we are not liable for losses from things other users do or from interruptions to the service. Nothing here removes rights you have under the law.']
+]],
+privacy:['Privacy Policy',[
+['What we collect','Your email address, profile details (name, handle, year of birth, photo), and what you create or send: posts, comments, messages, stories, videos, clips, listings and session bookings. If you allow it, we use your camera and microphone for lives and calls, and your approximate location for nearby features.'],
+['How we use it','To run Blend: show your content, deliver messages, connect lives and calls, keep the community safe, and improve the app. We do not sell your personal information.'],
+['Who helps us run Blend','We use service providers: Supabase (accounts and data storage), LiveKit (live video and calls), and, when payments go live, a payment provider. They only handle data to provide their service to us.'],
+['Who sees what','Posts, videos, stories and listings you publish can be seen by other people. Messages are visible to the people in the conversation. Private Session requests are visible only to you and the creator.'],
+['Keeping it','We keep your data while your account is open. When you delete your account from the menu, your profile and the content stored under it are deleted. Some uploaded media files may remain in storage for a short time until cleaned up. We may keep limited records where the law requires.'],
+['Your rights','You can see, correct and delete your information, and object to how it is used. In South Africa this is protected by the Protection of Personal Information Act (POPIA). You can edit your profile in the app and delete your account from the menu.'],
+['Security','We use secure connections and access rules so people can only change their own data. No system is perfectly secure, so use a strong password and do not share it.'],
+['Children','Blend is for adults. If we learn that someone under 18 has an account, we will close it.'],
+['Changes','We will update this page when our practices change.']
+]],
+refunds:['Refunds and Disputes',[
+['Private Sessions','If the creator declines your request, does not reply within 48 hours, or does not start the session, your payment is returned in full. If you cancel a request before the creator accepts, it is returned in full. Once a session has started, the time used is not refundable. If something went wrong during a session, use the report button and we will review it.'],
+['Shop purchases','With Blend Protect, your payment is held until you confirm you received the item as described. If the item does not arrive or is not as described, open a dispute before confirming. We review disputes and may refund you or release payment to the seller.'],
+['Gifts and coins','Coins and gifts already sent are final. Unused coins can be refunded where the law requires it.'],
+['How long refunds take','Approved refunds go back to the original payment method. Your bank may take several working days to show it.'],
+['Need help','Use Report in the app and tell us what happened, with details of the order or session.']
+]]
+};
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function open(k){
+ k=T[k]?k:'terms';
+ let v=$('#lgv');if(v)v.remove();
+ v=document.createElement('div');v.id='lgv';v.className='lgv';
+ const tabs=Object.keys(T).map(x=>'<button class="lgt'+(x===k?' on':'')+'" data-lgt="'+x+'">'+(x==='terms'?'Terms':x==='privacy'?'Privacy':'Refunds')+'</button>').join('');
+ v.innerHTML='<div class="lgc"><div class="lgh"><b>'+T[k][0]+'</b><button class="lgx" data-lgx aria-label="Close">✕</button></div><div class="lgtabs">'+tabs+'</div><div class="lgb">'+T[k][1].map(s=>'<h4>'+esc(s[0])+'</h4><p>'+esc(s[1])+'</p>').join('')+'<p class="lgm">Last updated '+UPDATED+'.'+(CONTACT?' Contact: '+esc(CONTACT)+'.':' Contact us through Report in the app.')+'</p></div></div>';
+ document.body.appendChild(v);
+}
+document.addEventListener('click',e=>{
+ const t=e.target.closest&&e.target.closest('[data-lg],[data-lgt],[data-lgx]');if(!t)return;
+ e.preventDefault();e.stopPropagation();
+ if(t.hasAttribute('data-lgx')){const v=$('#lgv');if(v)v.remove()}
+ else open(t.dataset.lg||t.dataset.lgt);
+},true);
+window.__LG={open};
 })();
 
 </script>
