@@ -7174,7 +7174,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 28',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 28',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 29',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 29',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7830,9 +7830,11 @@ function attach(track,id,name,local){
  track.attach(e);
  const p=e.play&&e.play();if(p&&p.catch)p.catch(()=>{});
 }
+function kfmt(n){n=n|0;return n>=1e6?(n/1e6).toFixed(n>=1e7?0:1).replace('.0','')+'M':n>=1e3?(n/1e3).toFixed(n>=1e4?0:1).replace('.0','')+'K':String(n)}
 function count(){
  if(!R)return;const n=R.rm.remoteParticipants.size;
- const c=$('#lkcount');if(c)c.textContent=R.asHost?(n+' watching'):((n)+' here');
+ const c=$('#lkcount');if(c)c.textContent=kfmt(n)+' watching'+(R.asHost&&R.total>n?' · '+kfmt(R.total)+' joined':'');
+ if(R.asHost){clearTimeout(R.pt);R.pt=setTimeout(publishDoc,1500)}
 }
 async function flip(){
  if(!R)return;
@@ -7870,7 +7872,7 @@ function wire(rm,LK){
  rm.on(E.TrackUnsubscribed,(tr,pub,p)=>{try{tr.detach().forEach(x=>x.remove())}catch(e){}if(tr.kind==='video'&&p.identity!==R.host){const t=document.querySelector('[data-lkt="'+CSS.escape(p.identity)+'"]');if(t)t.remove()}});
  rm.on(E.LocalTrackPublished,(pub,p)=>{if(pub.track&&pub.track.kind==='video')attach(pub.track,p.identity,myName()+' (you)',true)});
  rm.on(E.LocalTrackUnpublished,(pub,p)=>{if(pub.track&&pub.track.kind==='video'){try{pub.track.detach().forEach(x=>x.remove())}catch(e){}const t=document.querySelector('[data-lkt="'+CSS.escape(p.identity)+'"]');if(t&&p.identity!==R.host)t.remove()}});
- rm.on(E.ParticipantConnected,count);
+ rm.on(E.ParticipantConnected,()=>{if(R)R.total=(R.total||0)+1;count()});
  rm.on(E.ParticipantDisconnected,p=>{const t=document.querySelector('[data-lkt="'+CSS.escape(p.identity)+'"]');if(t&&p.identity!==R.host)t.remove();if(R)R.reqs=R.reqs.filter(r=>r.id!==p.identity);if(R&&p.identity===R.host&&!R.asHost){toast('The live has ended');cleanup()}else{count();bar()}});
  rm.on(E.DataReceived,onData);
  rm.on(E.Disconnected,()=>{if(R){toast('Disconnected');cleanup()}});
@@ -7878,11 +7880,11 @@ function wire(rm,LK){
 }
 function publishDoc(){
  const a=api();if(!a||!R||!R.asHost)return;
- a.guard(()=>a.col('lives').doc(a.uid()).set({uid:a.uid(),title:R.title,item:R.item||null,ts:a.now(),viewers:R.rm.remoteParticipants.size}));
+ a.guard(()=>a.col('lives').doc(a.uid()).set({uid:a.uid(),title:R.title,item:R.item||null,ts:a.now(),viewers:R.rm.remoteParticipants.size,total:Math.max(R.total||0,R.rm.remoteParticipants.size)}));
 }
 function cleanup(){
  const r=R;R=null;if(!r)return;
- clearInterval(r.hb);try{r.rm.disconnect()}catch(e){}
+ clearInterval(r.hb);clearTimeout(r.pt);try{r.rm.disconnect()}catch(e){}
  const e=$('#lkr');if(e)e.remove();
  if(r.asHost){const a=api();if(a)a.guard(()=>a.col('lives').doc(a.uid()).delete())}
  try{if(S.tab==='videos'&&S.vmode==='live')renderVideos()}catch(e){}
@@ -7904,7 +7906,7 @@ async function enter(hostUid,title,asHost,item){
   await rm.connect(t.url,t.token);
   if(asHost){
    await rm.localParticipant.setCameraEnabled(true);await rm.localParticipant.setMicrophoneEnabled(true);
-   publishDoc();R.hb=setInterval(publishDoc,25000);addChat('','You are live. Be kind in chat.',true);
+   publishDoc();R.hb=setInterval(publishDoc,10000);addChat('','You are live. Be kind in chat.',true);
   }else addChat('','Welcome. Be kind in chat.',true);
   count();
   rm.remoteParticipants.forEach(p=>p.trackPublications.forEach(pub=>{if(pub.track)attach(pub.track,p.identity,p.name)}));
