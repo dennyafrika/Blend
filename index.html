@@ -1751,6 +1751,9 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 .lsw{font-weight:700;color:var(--accent,#6b5cf0)}
 .lstag{display:block;color:var(--accent,#6b5cf0);font-weight:700;margin-top:2px}
 
+.lfg{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.lkrail .lkb.on{background:var(--acc,#7c3aed);color:#fff}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7171,7 +7174,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 27',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 27',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 28',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 28',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7789,7 +7792,7 @@ function rail(){
  if(!R)return;let r=$('#lkrail');const can=R.asHost||R.guest;
  if(!can){if(r)r.remove();return}
  if(!r){r=document.createElement('div');r.id='lkrail';r.className='lkrail';$('#lkr').appendChild(r)}
- r.innerHTML='<button class="lkb" data-lk="flip" aria-label="Flip camera">⟲</button><button class="lkb'+(R.mic===false?' off':'')+'" data-lk="mic" aria-label="Microphone">'+(R.mic===false?'🔇':'🎤')+'</button><button class="lkb'+(R.cam===false?' off':'')+'" data-lk="cam" aria-label="Camera">'+(R.cam===false?'🚫':'📷')+'</button>';
+ r.innerHTML='<button class="lkb" data-lk="flip" aria-label="Flip camera">⟲</button><button class="lkb'+(R.fx&&R.fx!=='none'?' on':'')+'" data-lk="fx" aria-label="Filters">✨</button><button class="lkb'+(R.mic===false?' off':'')+'" data-lk="mic" aria-label="Microphone">'+(R.mic===false?'🔇':'🎤')+'</button><button class="lkb'+(R.cam===false?' off':'')+'" data-lk="cam" aria-label="Camera">'+(R.cam===false?'🚫':'📷')+'</button>';
 }
 function bar(){
  const b=$('#lkact');if(!b||!R)return;rail();
@@ -7934,6 +7937,7 @@ document.addEventListener('click',e=>{
  else if(k==='dec'){const id=b.dataset.id;R.reqs=R.reqs.filter(x=>x.id!==id);send({t:'no'},[id]);bar();openReqs()}
  else if(k==='item'){const it=R&&R.item;cleanup();const K=window.__MK;if(it&&K&&(K.M.mine.find(x=>x.id===it.id)||K.LST.find(x=>x.id===it.id)))window.__LSopen(it.id);else toast('That item is not available right now')}
  else if(k==='flip')flip();
+ else if(k==='fx'){if(window.__LF)window.__LF.open(R)}
  else if(k==='mic'||k==='cam')toggle(k);
  else if(k==='offstage'){try{R.rm.localParticipant.setCameraEnabled(false);R.rm.localParticipant.setMicrophoneEnabled(false)}catch(x){}R.guest=false;R.mic=true;R.cam=true;bar()}
 },true);
@@ -8127,6 +8131,84 @@ renderVideos=function(){
 };
 const prev=window.__LK&&window.__LK.refresh;
 if(window.__LK)window.__LK.refresh=function(sig){try{fill()}catch(e){}return prev&&prev.apply(this,arguments)};
+})();
+
+</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const FX=[['none','Normal'],['warm','Warm'],['cool','Cool'],['vivid','Vivid'],['mono','Mono'],['retro','Retro'],['night','Night'],['soft','Soft skin'],['glow','Glow']];
+const clamp=v=>v<0?0:v>255?255:v;
+function apply(fx,d){
+ const n=d.length;
+ for(let i=0;i<n;i+=4){
+  let r=d[i],g=d[i+1],b=d[i+2];
+  if(fx==='warm'){r=r*1.12+8;g=g*1.02;b=b*0.88}
+  else if(fx==='cool'){r=r*0.9;g=g*1.0;b=b*1.15+8}
+  else if(fx==='vivid'){const l=0.3*r+0.59*g+0.11*b;r=l+(r-l)*1.5;g=l+(g-l)*1.5;b=l+(b-l)*1.5;r=(r-128)*1.08+128;g=(g-128)*1.08+128;b=(b-128)*1.08+128}
+  else if(fx==='mono'){const l=0.3*r+0.59*g+0.11*b;r=g=b=(l-128)*1.1+128}
+  else if(fx==='retro'){const R=0.393*r+0.769*g+0.189*b,G=0.349*r+0.686*g+0.168*b,B=0.272*r+0.534*g+0.131*b;r=R;g=G;b=B*0.95}
+  else if(fx==='night'){const l=0.3*r+0.59*g+0.11*b;r=l*0.35;g=l*1.05+10;b=l*0.5}
+  else if(fx==='soft'){r=r*1.05+10;g=g*1.03+8;b=b*1.02+8}
+  else if(fx==='glow'){r=r*1.1+14;g=g*1.06+10;b=b*1.1+18}
+  d[i]=clamp(r);d[i+1]=clamp(g);d[i+2]=clamp(b);
+ }
+}
+function makeProc(fx){
+ let cv,cx,sm,sx,vid,raf=0,alive=false,out=null,opts=null;
+ const W=640;
+ const draw=()=>{
+  if(!alive)return;
+  try{
+   if(vid.videoWidth){
+    const w=Math.min(W,vid.videoWidth),h=Math.round(w*vid.videoHeight/vid.videoWidth);
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;sm.width=Math.max(8,w>>3);sm.height=Math.max(8,h>>3)}
+    cx.drawImage(vid,0,0,w,h);
+    if(fx==='soft'||fx==='glow'){sx.drawImage(cv,0,0,sm.width,sm.height);cx.globalAlpha=fx==='soft'?0.45:0.35;cx.drawImage(sm,0,0,w,h);cx.globalAlpha=1}
+    const im=cx.getImageData(0,0,w,h);apply(fx,im.data);cx.putImageData(im,0,0);
+    if(fx==='night'||fx==='retro'){const g=cx.createRadialGradient(w/2,h/2,h*0.35,w/2,h/2,h*0.85);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,0.45)');cx.fillStyle=g;cx.fillRect(0,0,w,h)}
+   }
+  }catch(e){}
+  raf=requestAnimationFrame(draw);
+ };
+ return{
+  name:'blend-'+fx,
+  async init(o){
+   opts=o;cv=document.createElement('canvas');cx=cv.getContext('2d',{willReadFrequently:true});
+   sm=document.createElement('canvas');sx=sm.getContext('2d');
+   vid=document.createElement('video');vid.muted=true;vid.playsInline=true;vid.setAttribute('playsinline','');
+   vid.srcObject=new MediaStream([o.track]);await vid.play().catch(()=>{});
+   cv.width=640;cv.height=360;alive=true;out=cv.captureStream(30).getVideoTracks()[0];this.processedTrack=out;draw();
+  },
+  async restart(o){alive=false;cancelAnimationFrame(raf);await this.init(o)},
+  async destroy(){alive=false;cancelAnimationFrame(raf);try{out&&out.stop()}catch(e){}try{vid&&(vid.srcObject=null)}catch(e){}}
+ };
+}
+async function set(R,fx){
+ const LK=window.LivekitClient;if(!R||!LK)return;
+ const lp=R.rm.localParticipant,pub=lp.getTrackPublication(LK.Track.Source.Camera);
+ if(!pub||!pub.track){toast('Turn your camera on first');return}
+ try{
+  if(fx==='none'){await pub.track.stopProcessor()}
+  else{
+   if(!document.createElement('canvas').captureStream)throw new Error('unsupported');
+   await pub.track.setProcessor(makeProc(fx));
+  }
+  R.fx=fx;try{localStorage.setItem('blend_fx',fx)}catch(e){}
+  const b=$('#lkrail [data-lk="fx"]');if(b)b.classList.toggle('on',fx!=='none');
+ }catch(e){toast('Filters are not supported on this phone yet')}
+}
+function open(R){
+ const cur=R.fx||'none';
+ openSheet('<h3>Filters</h3><div class="lb"><div class="create"><div class="lfg">'+FX.map(f=>'<button class="pill'+(f[0]===cur?' on':'')+'" data-lf="'+f[0]+'">'+f[1]+'</button>').join('')+'</div><p class="q">Filters change how you look on camera for everyone watching.</p></div></div>');
+ window.__LFR=R;
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest&&e.target.closest('[data-lf]');if(!b)return;
+ const R=window.__LFR;if(!R)return;
+ set(R,b.dataset.lf);closeSheet();
+},true);
+window.__LF={open,set,FX};
 })();
 
 </script>
