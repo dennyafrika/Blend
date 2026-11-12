@@ -5759,7 +5759,7 @@ Object.assign(IC,{hub:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6
 const TV=1,MINAGE=13;
 const B=window.__BK={ready:false,uid:null,ok:false};
 let db=null,user=null,uid=null,me=null,admin=false,tab='people',thread=null,unsubs=[],mounted=false,synced=new Set(),known=new Map();
-const st={lives:[],clips:[],videos:[],stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
+const st={listings:[],lives:[],clips:[],videos:[],stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
 const now=()=>Date.now();
 const rel=ts=>{const d=(now()-ts)/1000;return d<60?'now':d<3600?Math.floor(d/60)+'m':d<86400?Math.floor(d/3600)+'h':Math.floor(d/86400)+'d'};
 const rid=k=>'r_'+k;
@@ -5797,6 +5797,7 @@ function startPublic(){
  sub(col('videos').orderBy('ts','desc').limit(200),s=>{st.videos=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('clips').orderBy('ts','desc').limit(200),s=>{st.clips=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('lives').orderBy('ts','desc').limit(60),s=>{st.lives=s.docs.map(d=>({id:d.id,...d.data()}));try{liveSync()}catch(e){console.warn(e)}});
+ sub(col('listings').orderBy('ts','desc').limit(200),s=>{st.listings=s.docs.map(d=>({id:d.id,...d.data()}));try{listSync()}catch(e){console.warn(e)}});
 }
 function sub(q,fn){let t=setTimeout(()=>{},10);try{unsubs.push(q.onSnapshot(fn,e=>console.warn('sub',e&&e.code)))}catch(e){console.warn(e)}}
 function listen(){
@@ -5808,6 +5809,7 @@ function listen(){
  sub(col('videos').orderBy('ts','desc').limit(200),s=>{st.videos=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('clips').orderBy('ts','desc').limit(200),s=>{st.clips=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('lives').orderBy('ts','desc').limit(60),s=>{st.lives=s.docs.map(d=>({id:d.id,...d.data()}));try{liveSync()}catch(e){console.warn(e)}});
+ sub(col('listings').orderBy('ts','desc').limit(200),s=>{st.listings=s.docs.map(d=>({id:d.id,...d.data()}));try{listSync()}catch(e){console.warn(e)}});
  sub(col('comments'),s=>{st.comments=s.docs.map(d=>({id:d.id,...d.data()}));feedSync();if(window.__CX)window.__CX.refresh()});
  sub(col('clikes'),s=>{st.clikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
  sub(col('dislikes'),s=>{st.dislikes=s.docs.map(d=>d.data());if(window.__CX)window.__CX.refresh()});
@@ -5885,6 +5887,33 @@ function clipSync(){
  REELS.unshift(...add);
  try{if(window.__CL)__CL.refresh(add.map(x=>x.id).join())}catch(e){}
 }
+const shownL=new Set();
+function listSync(){
+ const K=window.__MK;if(!K||!K.M)return;
+ const {M,LST,SEL}=K;
+ for(let i=LST.length-1;i>=0;i--)if(LST[i].real)LST.splice(i,1);
+ M.mine=M.mine.filter(l=>!l.real);
+ const mineL=[],other=[];
+ st.listings.filter(d=>d.uid&&d.l&&!st.hide.has(d.id)&&!st.ban.has(d.uid)&&!st.blocks.has(d.uid)).forEach(d=>{
+  const own=d.uid===uid,s=own?'me':rid(d.uid);
+  if(!own){if(!SEL[s])SEL[s]={n:nameOf(d.uid),phone:0,id:0,joined:'recently',sold:0,rating:0,rev:0,resp:'unknown'};SEL[s].n=nameOf(d.uid)}
+  const o={...d.l,id:'r_'+d.id,doc:d.id,uid:d.uid,s,real:true,off:own?0:1+(hue(d.uid)%5),age:rel(d.ts),st:'live'};
+  if(own)shownL.add(d.id);
+  (own?mineL:other).push(o);
+ });
+ M.mine.unshift(...mineL);LST.unshift(...other);
+}
+setInterval(()=>{
+ const K=window.__MK;if(!K||!K.M||!uid||!B.ok)return;const M=K.M;
+ M.mine.filter(l=>!l.real&&!l.pub&&l.st==='live').forEach(l=>{
+  l.pub=1;
+  const d={uid,ts:now(),l:{t:l.t,cat:l.cat,price:l.price,cond:l.cond,pl:l.pl,desc:l.desc,del:l.del}};
+  guard(async()=>{const r=await col('listings').add(d);const id=(r&&r.id)||'t'+d.ts;if(!st.listings.some(x=>x.id===id))st.listings.unshift({id,...d});M.mine=M.mine.filter(x=>x!==l);listSync()});
+ });
+ st.listings.filter(d=>d.uid===uid&&shownL.has(d.id)&&!M.mine.some(l=>l.doc===d.id)).forEach(d=>{
+  shownL.delete(d.id);st.listings=st.listings.filter(x=>x.id!==d.id);guard(()=>col('listings').doc(d.id).delete());
+ });
+},2500);
 function liveSync(){
  if(typeof LIVES==='undefined')return;
  for(let i=LIVES.length-1;i>=0;i--)if(LIVES[i].real)LIVES.splice(i,1);
@@ -7142,7 +7171,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 26',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 26',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['out','Sign out','Leave this account on this device · build 27',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 27',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
