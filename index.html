@@ -1866,6 +1866,10 @@ html[data-halo][data-pal][data-theme="dark"]{--bg:color-mix(in srgb,var(--pal) c
 .csc button{border:1.5px solid rgba(128,128,128,.4);background:none;color:inherit;border-radius:999px;padding:8px 14px;font:inherit}
 .csc button[aria-pressed=true]{background:var(--acc,#8b5cf6);border-color:transparent;color:#fff}
 
+.trb{border:0;background:none;color:var(--acc,#7c6cf0);font:inherit;font-size:13px;font-weight:600;padding:2px 0 6px;margin:0 0 0 16px}
+.cm .trb{margin-left:0}
+.trb:disabled{opacity:.6}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7304,16 +7308,17 @@ const items=[
  ['people','Community','Groups and shared spaces',()=>{const x=document.querySelector('#s-home .bkbtn');x&&x.click()}],
  ['share','Invite friends','Share Blend with someone',()=>{const u=location.href.split('#')[0];if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).catch(()=>{})}],
  ['chart','Creator Studio','Your views, likes and followers',()=>{window.__CS&&window.__CS.open()}],
+ ['globe','Translate into','Choose your language for translations',()=>{window.__TR&&window.__TR.pick()}],
  ['star','My interests','Choose what you want to see more of',()=>{window.__CS&&window.__CS.interests()}],
  ['doc','Terms, privacy and refunds','How Blend works and your rights',()=>{window.__LG&&window.__LG.open('terms')}]
 ];
 const svg=(p)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
-const icon={chart:svg('<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>'),star:svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),doc:svg('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
+const icon={globe:svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>'),chart:svg('<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>'),star:svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),doc:svg('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
 b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 41',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 41',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 42',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 42',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -8880,6 +8885,58 @@ if(typeof score==='function'){
  },750);
 })();
 window.__CS={open,interests,stats};
+})();
+
+</script>
+<script>
+/* ===== Translate posts and replies ===== */
+(function(){
+const LANGS=['English','Afrikaans','isiZulu','isiXhosa','Sesotho','Setswana','Sepedi','Xitsonga','Tshivenda','French','Portuguese','Swahili','Arabic','Spanish','German','Hindi','Mandarin Chinese'];
+const KEY='blend-lang';
+const dflt=()=>{const l=(navigator.language||'en').slice(0,2);return({af:'Afrikaans',zu:'isiZulu',xh:'isiXhosa',st:'Sesotho',tn:'Setswana',fr:'French',pt:'Portuguese',sw:'Swahili',ar:'Arabic',es:'Spanish',de:'German',hi:'Hindi',zh:'Mandarin Chinese'})[l]||'English'};
+const lang=()=>{try{return localStorage.getItem(KEY)||dflt()}catch(e){return dflt()}};
+const setLang=v=>{try{localStorage.setItem(KEY,v)}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cache=new Map();let stamps=[];
+function pick(){
+ const cur=lang();
+ openSheet('<h3>Translate into</h3><div class="lb"><p class="q">Posts and replies in other languages can be translated into this language.</p><div class="csc">'+LANGS.map(l=>'<button data-tr="lang" data-l="'+l+'" aria-pressed="'+(l===cur)+'">'+l+'</button>').join('')+'</div></div>');
+}
+function addBtns(root){
+ (root||document).querySelectorAll('.ptext:not([data-trd]),.cm > div > p:not([data-trd])').forEach(el=>{
+  el.dataset.trd='1';
+  const t=(el.textContent||'').trim();if(t.length<4)return;
+  const b=document.createElement('button');b.type='button';b.className='trb';b.dataset.tr='go';b.textContent='Translate';
+  el.insertAdjacentElement('afterend',b);
+ });
+}
+async function go(b){
+ const el=b.previousElementSibling;if(!el)return;
+ if(el.dataset.orig!==undefined){el.innerHTML=el.dataset.orig;delete el.dataset.orig;b.textContent='Translate';return}
+ const to=lang(),txt=(el.textContent||'').trim(),ck=to+'|'+txt;
+ const now=Date.now();stamps=stamps.filter(x=>now-x<60000);
+ if(stamps.length>=20){toast('Slow down a little, then try again');return}
+ let out=cache.get(ck);
+ if(!out){
+  if(!window.__SB||!__SB.isIn()){__SB&&__SB.signIn?__SB.signIn('translate'):toast('Sign in to translate');return}
+  b.textContent='Translating…';b.disabled=true;stamps.push(now);
+  try{const r=await __SB.fn('translate',{text:txt,to});out=(r&&r.text)||'';if(out)cache.set(ck,out)}
+  catch(e){b.disabled=false;b.textContent='Translate';toast(/not switched on/.test(e.message)?'Translation is not switched on yet':'Could not translate. Try again.');return}
+  b.disabled=false;
+ }
+ if(!out||out.trim()===txt){b.textContent='Translate';toast('Already in '+to);return}
+ el.dataset.orig=el.innerHTML;el.textContent=out;b.textContent='Show original';
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-tr]');if(!b)return;
+ e.preventDefault();e.stopPropagation();
+ if(b.dataset.tr==='go')go(b);
+ else if(b.dataset.tr==='lang'){setLang(b.dataset.l);document.querySelectorAll('[data-tr=lang]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));toast('Translating into '+b.dataset.l)}
+},true);
+let tm=null;
+new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(()=>addBtns(),150)}).observe(document.body,{childList:true,subtree:true});
+addBtns();
+window.__TR={pick,lang,addBtns};
 })();
 
 </script>
