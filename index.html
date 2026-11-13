@@ -2727,7 +2727,7 @@ function closeSheet(){clearInterval(F.timer);clearInterval(R.timer);R.on=false;$
 function nearHTML(){
  const kinds=['All','Event','Lost pet','Open now','Tip'];
  const list=NEAR.filter(x=>x.place===S.nearPlace&&(S.nk==='All'||x.kind===S.nk));
- return `<div class="sec"><h3>Near you</h3><select class="place" id="nbPlace" aria-label="Your area">${PLACES.map(p=>`<option ${p===S.nearPlace?'selected':''}>${p}</option>`).join('')}</select><div class="cats" style="padding:0 0 8px;border:0">${kinds.map(k=>`<button class="chip" data-a="nbkind" data-k="${k}" aria-pressed="${S.nk===k}">${k}</button>`).join('')}</div>${list.length?list.map(x=>`<div class="nb">${av(x.u,40)}<div class="t"><div><span class="badge ${x.kind==='Open now'?'live':''}">${x.kind}</span> <span class="q">${x.dist} away</span></div><b>${esc(x.title)}</b><span class="q">${esc(x.text)}<br>${esc(x.t)}</span></div></div>`).join(''):'<div class="empty" style="padding:20px">Nothing pinned here yet.</div>'}<p class="q">Prototype: pick an area to simulate where you are. Pinned posts only show to people nearby.</p></div>`;
+ return `<div class="sec"><h3>Near you</h3><select class="place" id="nbPlace" aria-label="Your area">${PLACES.map(p=>`<option ${p===S.nearPlace?'selected':''}>${p}</option>`).join('')}</select><div class="cats" style="padding:0 0 8px;border:0">${kinds.map(k=>`<button class="chip" data-a="nbkind" data-k="${k}" aria-pressed="${S.nk===k}">${k}</button>`).join('')}</div>${list.length?list.map(x=>`<div class="nb">${av(x.u,40)}<div class="t"><div><span class="badge ${x.kind==='Open now'?'live':''}">${x.kind}</span> <span class="q">${x.dist} away</span></div><b>${esc(x.title)}</b><span class="q">${esc(x.text)}<br>${esc(x.t)}</span></div></div>`).join(''):'<div class="empty" style="padding:20px">Nothing pinned here yet.</div>'}<p class="q">Pick your area to see what is pinned near you. Pins only show to people nearby.</p></div>`;
 }
 const _renderExploreBase=renderExplore;
 renderExplore=function(){_renderExploreBase();if(!S.q.trim())$('#exploreBody').insertAdjacentHTML('afterbegin',nearHTML())};
@@ -6899,7 +6899,7 @@ nearHTML=function(){
  return `<div class="sec"><h3>Near you</h3><select class="place" id="nbPlace" aria-label="Your area">${PLACES.map(p=>`<option ${p===S.nearPlace?'selected':''}>${p}</option>`).join('')}</select><div class="cats" style="padding:0 0 8px;border:0">${kinds.map(k=>`<button class="chip" data-a="nbkind" data-k="${k}" aria-pressed="${S.nk===k}">${k}</button>`).join('')}</div>
  <button class="mkbtn sm ghost xpnewpin" data-xp="pinhere">+ Pin something in ${esc(S.nearPlace)}</button>
  ${list.length?list.map(x=>`<div class="nb" role="button" tabindex="0" data-xp="near" data-id="${x.id}">${av(x.u,40)}<div class="t"><div><span class="badge ${x.kind==='Open now'?'live':''}">${x.kind}</span> <span class="q">${x.dist} away</span></div><b>${esc(x.title)}</b><span class="q">${esc(x.text)}<br>${esc(x.t)}${cntTxt(x)?' · '+cntTxt(x):''}</span></div></div>`).join(''):`<div class="empty" style="padding:20px">Nothing pinned here yet.${S.nk!=='All'?'<br>Try All.':''}</div>`}
- <p class="q">Prototype: pick an area to simulate where you are. Pinned posts only show to people nearby.</p></div>`;
+ <p class="q">Pick your area to see what is pinned near you. Pins only show to people nearby.</p></div>`;
 };
 function nearSheet(id){
  const x=NEAR.find(n=>n.id===id);if(!x)return;
@@ -7313,7 +7313,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 40',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 40',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 41',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 41',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -8880,6 +8880,64 @@ if(typeof score==='function'){
  },750);
 })();
 window.__CS={open,interests,stats};
+})();
+
+</script>
+<script>
+/* ===== Launch cleanup: only real content is shown, sample content is removed ===== */
+(function(){
+const keep=(arr,fn)=>{try{for(let i=arr.length-1;i>=0;i--)if(!fn(arr[i]))arr.splice(i,1)}catch(e){}};
+const real=x=>!!(x&&(x.real||x.remote));
+function purge(){
+ if(typeof POSTS!=='undefined')keep(POSTS,real);
+ if(typeof REELS!=='undefined')keep(REELS,real);
+ if(typeof VIDS!=='undefined')keep(VIDS,real);
+ if(typeof LIVES!=='undefined')keep(LIVES,real);
+ if(typeof NEAR!=='undefined')keep(NEAR,x=>real(x)||x.mine);
+ if(typeof STORIES!=='undefined')keep(STORIES,g=>real(g)||g.u==='me');
+ try{if(!window.__KEEPSAMPLE&&window.__MK&&__MK.LST)keep(__MK.LST,real)}catch(e){}
+}
+function purgeP(){
+ try{if(typeof S!=='undefined'){S.subs&&S.subs.clear&&S.subs.clear()}}catch(e){}
+ try{if(typeof TRENDS!=='undefined')TRENDS.length=0}catch(e){}
+ try{if(typeof GROUPS!=='undefined')GROUPS.length=0}catch(e){}
+}
+purge();purgeP();
+const _rh=renderHome;
+renderHome=function(){purge();return _rh.apply(this,arguments)};
+/* wider search: posts, shop items and live rooms join People/Groups/Videos */
+const _re=renderExplore;
+renderExplore=function(){
+ const hid={};try{Object.keys(P).forEach(k=>{if(k!=='me'&&!/^r_/.test(k)){hid[k]=P[k];delete P[k]}})}catch(e){}
+ try{_re.apply(this,arguments)}finally{Object.assign(P,hid)}
+ const q=(S.q||'').trim().toLowerCase();
+ if(!q){const b0=document.getElementById('exploreBody');if(b0&&b0.querySelector('.empty'))b0.innerHTML='<div class="empty">Search for people, posts, videos, shop items or live rooms.</div>'}
+ if(!q||q.charAt(0)==='#')return;
+ const box=document.getElementById('exploreBody');if(!box)return;
+ const m=x=>String(x||'').toLowerCase().includes(q);
+ let h='';
+ const ps=(typeof POSTS!=='undefined'?POSTS:[]).filter(p=>(p.remote||p.u==='me')&&m(p.text)).slice(0,8);
+ if(ps.length)h+='<div class="sec"><h3>Posts</h3>'+ps.map(p=>'<div class="row" data-pg="post" data-id="'+esc(p.id)+'"><div class="t"><b>'+esc(((P[p.u]&&P[p.u].n)||'You'))+'</b><small>'+esc((p.text||'').slice(0,90))+'</small></div></div>').join('')+'</div>';
+ let it=[];try{it=((window.__MK&&__MK.LST)||[]).filter(x=>x.real&&(m(x.t)||m(x.title)||m(x.cat)||m(x.desc))).slice(0,6)}catch(e){}
+ if(it.length)h+='<div class="sec"><h3>Shop and market</h3>'+it.map(x=>'<div class="row"><div class="t"><b>'+esc(x.t||x.title||'Item')+'</b><small>'+(x.price?'R'+Number(x.price).toLocaleString('en-ZA')+' · ':'')+esc(x.cat||'')+'</small></div></div>').join('')+'</div>';
+ const lv=(typeof LIVES!=='undefined'?LIVES:[]).filter(l=>l.real&&m(l.title)).slice(0,4);
+ if(lv.length)h+='<div class="sec"><h3>Live now</h3>'+lv.map(l=>'<div class="row" data-pg="live" data-id="'+esc(l.id)+'"><div class="t"><b>'+esc(l.title)+'</b><small>Live now</small></div></div>').join('')+'</div>';
+ if(h){if(box.querySelector('.empty'))box.innerHTML=h;else box.insertAdjacentHTML('beforeend',h)}
+};
+const qi=document.getElementById('q');if(qi)qi.placeholder='Search people, posts, videos, shop and live';
+document.addEventListener('click',e=>{
+ const r=e.target.closest('[data-pg]');if(!r)return;
+ e.preventDefault();e.stopPropagation();
+ if(r.dataset.pg==='post'){const p=POSTS.find(x=>x.id===r.dataset.id);if(p)openSheet('<div class="lb">'+postHTML(p)+'</div>')}
+ else if(r.dataset.pg==='live')openLive(r.dataset.id);
+},true);
+const _rv=renderVideos;
+renderVideos=function(){
+ const r=_rv.apply(this,arguments);
+ try{if(S.vmode==='clips'&&!REELS.length){const v=document.getElementById('s-videos')||document.body;if(!document.getElementById('pgce'))v.insertAdjacentHTML('beforeend','<div id="pgce" style="position:absolute;inset:0;z-index:6;background:#000;color:#fff;text-align:center"><div style="display:flex;gap:18px;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 16px) 0;font-size:22px;font-weight:700"><span data-a="vmode" data-m="watch" style="opacity:.55">Watch</span><span>Clips</span><span data-a="vmode" data-m="live" style="opacity:.55">Live</span></div><p style="opacity:.8;padding:30vh 30px 0">No clips yet. Tap “+ Clip” to post the first one.</p></div>')}else{const e=document.getElementById('pgce');e&&e.remove()}}catch(e){}
+ return r;
+};
+window.__PG={purge};
 })();
 
 </script>
