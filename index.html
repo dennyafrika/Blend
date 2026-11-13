@@ -1761,6 +1761,21 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 .lkitem{position:absolute;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:4;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px)}.lkitem b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lkitem i{font-style:normal;font-weight:700}.lkik{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:#6b5cf0;border-radius:99px;padding:3px 8px}.lkitem .lkb{height:34px}
 .lkgs{top:calc(env(safe-area-inset-top,0px) + 120px)}
 
+.lkaudio .lkstage{display:none}
+.lkaudio{background:linear-gradient(160deg,#2a1450,#0f1a3d)}
+.lkspk{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 80px);display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:10px 14px;z-index:3;max-height:42%;overflow:auto}
+.lksp{width:84px;text-align:center;color:#fff}
+.lksp span{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 6px;border-radius:50%;background:linear-gradient(135deg,#ff6bb5,#8b5cf6);font-size:26px;font-weight:800;border:3px solid transparent}
+.lksp.on span{border-color:#4ade80;box-shadow:0 0 0 4px rgba(74,222,128,.35)}
+.lksp b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lksp small{opacity:.7;font-size:11px}
+.lkls{width:100%;text-align:center;color:#fff;opacity:.7;font-size:13px}
+.lkaudio [data-lk=flip],.lkaudio [data-lk=cam],.lkaudio [data-lk=fx]{display:none}
+.lkwt{position:absolute;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px) + 70px);z-index:4;background:#000;border-radius:14px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.lkwt video{width:100%;max-height:34vh;display:block;background:#000}
+.lkwtc{display:flex;gap:8px;align-items:center;padding:6px 10px;color:#fff;font-size:13px}
+.lkwtc button{margin-left:auto;border:0;border-radius:999px;padding:5px 12px;background:#ef4444;color:#fff}
+
 .calr,.calin{position:absolute;inset:0;z-index:90;background:#0b0b10;color:#fff;display:flex;flex-direction:column}
 .calhead{padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 8px;display:grid;text-align:center}.calhead small{opacity:.8}
 .calgrid{flex:1;display:grid;gap:6px;padding:6px;grid-template-columns:1fr;grid-auto-rows:1fr;min-height:0}
@@ -5960,7 +5975,7 @@ function liveSync(){
  st.lives.filter(d=>d.uid&&now()-(d.ts||0)<100000&&!st.ban.has(d.uid)&&!st.blocks.has(d.uid)).forEach(d=>{
   const mineP=d.uid===uid,key=mineP?'me':rid(d.uid);
   if(!mineP){P[key]=P[key]||{n:nameOf(d.uid),h:hOf(d.uid),c:hue(d.uid)};P[key].n=nameOf(d.uid);P[key].h=hOf(d.uid)}
-  add.push({id:'rl_'+d.uid,real:true,uid:d.uid,u:key,c:hue(d.uid),title:d.title||'Live',viewers:d.viewers||0,raised:0,goal:0,goalName:'',item:d.item||null})
+  add.push({id:'rl_'+d.uid,real:true,uid:d.uid,u:key,c:hue(d.uid),title:(d.audio?'🎙️ ':'')+(d.title||'Live'),audio:!!d.audio,viewers:d.viewers||0,raised:0,goal:0,goalName:'',item:d.item||null})
  });
  LIVES.unshift(...add);
  try{if(window.__LK)__LK.refresh(add.map(x=>x.id+x.title+x.viewers).join())}catch(e){}
@@ -7287,7 +7302,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 38',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 38',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 39',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 39',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7973,7 +7988,7 @@ window.__NB={locate};
 const $=s=>document.querySelector(s);
 const api=()=>window.__BK&&window.__BK.api&&window.__BK.api.on()?window.__BK.api:null;
 const SRC=['https://cdnjs.cloudflare.com/ajax/libs/livekit-client/2.7.3/livekit-client.umd.min.js','https://cdn.jsdelivr.net/npm/livekit-client@2.18.3/dist/livekit-client.umd.min.js'];
-let loading=null,R=null,last='';
+let loading=null,R=null,last='',pendT='';
 const MAXG=20;
 function loadLK(){
  if(window.LivekitClient)return Promise.resolve();
@@ -7991,6 +8006,7 @@ function mount(){
  '<div class="lkchat" id="lkchat"></div>'+
  '<div class="lkbar"><form data-lk="form"><input id="lkin" placeholder="Say something" autocomplete="off" aria-label="Chat message"></form><button class="lkb" data-lk="heart" aria-label="Send a heart">♥</button><span id="lkact"></span></div>';
  $('#app').appendChild(d);
+ if(R.audio){d.classList.add('lkaudio');const sp=document.createElement('div');sp.id='lkspk';sp.className='lkspk';d.insertBefore(sp,d.firstChild.nextSibling);R.spt=setInterval(spk,1200);spk()}
  if(R.item){const it=R.item,pr=it.price?'R'+Number(it.price).toLocaleString('en-ZA'):'';const c=document.createElement('div');c.className='lkitem';c.innerHTML='<span class="lkik">'+(it.k==='sell'?'Selling':'Review')+'</span><b>'+esc(it.t||'Item')+'</b>'+(pr?'<i>'+pr+'</i>':'')+(R.asHost?'':'<button class="lkb wide" data-lk="item">'+(it.k==='sell'?'Make an offer':'View item')+'</button>');d.appendChild(c)}
  bar();
 }
@@ -7998,13 +8014,13 @@ function rail(){
  if(!R)return;let r=$('#lkrail');const can=R.asHost||R.guest;
  if(!can){if(r)r.remove();return}
  if(!r){r=document.createElement('div');r.id='lkrail';r.className='lkrail';$('#lkr').appendChild(r)}
- r.innerHTML='<button class="lkb" data-lk="flip" aria-label="Flip camera">⟲</button><button class="lkb'+(R.fx&&R.fx!=='none'?' on':'')+'" data-lk="fx" aria-label="Filters">✨</button><button class="lkb'+(R.mic===false?' off':'')+'" data-lk="mic" aria-label="Microphone">'+(R.mic===false?'🔇':'🎤')+'</button><button class="lkb'+(R.cam===false?' off':'')+'" data-lk="cam" aria-label="Camera">'+(R.cam===false?'🚫':'📷')+'</button>';
+ r.innerHTML=(R.asHost?'<button class="lkb" data-lk="wt" aria-label="Watch together">🎬</button>':'')+'<button class="lkb" data-lk="flip" aria-label="Flip camera">⟲</button><button class="lkb'+(R.fx&&R.fx!=='none'?' on':'')+'" data-lk="fx" aria-label="Filters">✨</button><button class="lkb'+(R.mic===false?' off':'')+'" data-lk="mic" aria-label="Microphone">'+(R.mic===false?'🔇':'🎤')+'</button><button class="lkb'+(R.cam===false?' off':'')+'" data-lk="cam" aria-label="Camera">'+(R.cam===false?'🚫':'📷')+'</button>';
 }
 function bar(){
  const b=$('#lkact');if(!b||!R)return;rail();
  if(R.asHost)b.innerHTML='<button class="lkb wide" data-lk="reqs">Requests'+(R.reqs.length?' <i class="lkn">'+R.reqs.length+'</i>':'')+'</button>';
  else if(R.guest)b.innerHTML='<button class="lkb wide" data-lk="offstage">Leave stage</button>';
- else b.innerHTML='<button class="lkb wide" data-lk="ask">Ask to join</button>';
+ else b.innerHTML='<button class="lkb wide" data-lk="ask">'+(R.audio?'Ask to speak':'Ask to join')+'</button>';
 }
 function addChat(n,x,sys){
  const c=$('#lkchat');if(!c)return;
@@ -8067,10 +8083,45 @@ function onData(data,p){
  else if(o.t==='heart')heart();
  else if(o.t==='req'&&R&&R.asHost){if(!R.reqs.some(r=>r.id===p.identity)&&!(R.guestIds&&R.guestIds.has(p.identity))){R.reqs.push({id:p.identity,n:o.n||who});bar();toast((o.n||who)+' wants to join')}}
  else if(o.t==='no')toast('The host said not now');
+ else if(o.t==='wt'&&R&&!R.asHost)wtSync(o);
 }
 async function becomeGuest(){
  if(!R||R.asHost||R.guest)return;R.guest=true;bar();
- try{await R.rm.localParticipant.setCameraEnabled(true);await R.rm.localParticipant.setMicrophoneEnabled(true);toast('You are on stage')}catch(e){toast('Allow camera and microphone to join');R.guest=false;bar()}
+ try{if(!R.audio)await R.rm.localParticipant.setCameraEnabled(true);await R.rm.localParticipant.setMicrophoneEnabled(true);toast(R.audio?'You can speak now':'You are on stage')}catch(e){toast('Allow camera and microphone to join');R.guest=false;bar()}
+}
+
+function spk(){
+ const e=$('#lkspk');if(!e||!R||!R.rm)return;
+ const rm=R.rm;if(!rm.localParticipant)return;const all=[rm.localParticipant,...rm.remoteParticipants.values()];
+ const sp=all.filter(p=>p.identity===R.host||p.isMicrophoneEnabled||(R.guestIds&&R.guestIds.has(p.identity)));
+ const ls=all.length-sp.length;
+ e.innerHTML=sp.map(p=>{const n=p===rm.localParticipant?myName():(p.name||'Guest');return '<div class="lksp'+(p.isSpeaking?' on':'')+(p.identity===R.host?' host':'')+'"><span>'+esc((n||'?').trim().charAt(0).toUpperCase())+'</span><b>'+esc(n)+'</b><small>'+(p.identity===R.host?'Host':'Speaker')+(p.isMicrophoneEnabled?'':' · muted')+'</small></div>'}).join('')+'<div class="lkls">'+ls+' listening</div>';
+}
+function wtBox(){let b=$('#lkwt');if(!b){b=document.createElement('div');b.id='lkwt';b.className='lkwt';b.innerHTML='<video id="lkwtv" playsinline></video><div class="lkwtc"><b id="lkwtt"></b>'+(R.asHost?'<button data-lk="wtstop">Stop</button>':'')+'</div>';$('#lkr').appendChild(b)}return b}
+function wtSync(o){
+ if(!o.u){const b=$('#lkwt');if(b)b.remove();return}
+ const b=wtBox(),v=$('#lkwtv');
+ if(v.getAttribute('src')!==o.u){v.src=o.u;v.controls=false}
+ $('#lkwtt').textContent='Watching together: '+(o.n||'');
+ const drift=Math.abs((v.currentTime||0)-(o.p||0));
+ if(drift>2.5)try{v.currentTime=o.p||0}catch(e){}
+ if(o.pl&&v.paused){const pp=v.play();if(pp&&pp.catch)pp.catch(()=>{v.muted=true;v.play().catch(()=>{})})}
+ if(!o.pl&&!v.paused)v.pause();
+}
+function wtStart(v){
+ if(!R||!R.asHost)return;closeSheet();
+ const b=wtBox(),el=$('#lkwtv');el.src=v.url;el.controls=true;$('#lkwtt').textContent='Watching together: '+v.title;
+ R.wt={u:v.url,n:v.title};
+ const tick=()=>{if(!R||!R.wt)return;send({t:'wt',u:R.wt.u,n:R.wt.n,p:el.currentTime||0,pl:!el.paused})};
+ ['play','pause','seeked'].forEach(ev=>el.addEventListener(ev,tick));
+ clearInterval(R.wtt);R.wtt=setInterval(tick,2500);el.play().catch(()=>{});setTimeout(tick,400);
+}
+function wtStop(){if(!R)return;R.wt=null;clearInterval(R.wtt);send({t:'wt',u:''});const b=$('#lkwt');if(b)b.remove()}
+function wtPick(){
+ if(!R||!R.asHost)return;
+ const l=(typeof VIDS!=='undefined'?VIDS:[]).filter(v=>v.real&&v.url);
+ openSheet('<h3>Watch together</h3><div class="lb"><div class="create"><p class="q">Pick a video. Everyone in your room watches it at the same time.</p>'+(l.length?l.map((v,i)=>'<div class="row"><div class="t"><b>'+esc(v.title||'Video')+'</b></div><button class="pill on" data-lk="wtgo" data-i="'+i+'">Play</button></div>').join(''):'<p class="q">No videos yet. Upload one in Watch first.</p>')+'</div></div>');
+ R.wtl=l;
 }
 function wire(rm,LK){
  const E=LK.RoomEvent;
@@ -8086,21 +8137,21 @@ function wire(rm,LK){
 }
 function publishDoc(){
  const a=api();if(!a||!R||!R.asHost)return;
- a.guard(()=>a.col('lives').doc(a.uid()).set({uid:a.uid(),title:R.title,item:R.item||null,ts:a.now(),viewers:R.rm.remoteParticipants.size,total:Math.max(R.total||0,R.rm.remoteParticipants.size)}));
+ a.guard(()=>a.col('lives').doc(a.uid()).set({uid:a.uid(),title:R.title,item:R.item||null,audio:!!R.audio,ts:a.now(),viewers:R.rm.remoteParticipants.size,total:Math.max(R.total||0,R.rm.remoteParticipants.size)}));
 }
 function cleanup(){
  const r=R;R=null;if(!r)return;
- clearInterval(r.hb);clearTimeout(r.pt);try{r.rm.disconnect()}catch(e){}
+ clearInterval(r.hb);clearInterval(r.spt);clearInterval(r.wtt);clearTimeout(r.pt);try{r.rm.disconnect()}catch(e){}
  const e=$('#lkr');if(e)e.remove();
  if(r.asHost){const a=api();if(a)a.guard(()=>a.col('lives').doc(a.uid()).delete())}
  try{if(S.tab==='videos'&&S.vmode==='live')renderVideos()}catch(e){}
 }
-async function enter(hostUid,title,asHost,item){
+async function enter(hostUid,title,asHost,item,audio){
  const a=api();
  if(!a||!window.__SB||!__SB.isIn()){if(window.__SB)__SB.signIn(asHost?'go live':'watch a live');return}
  if(R)return;
  if(S.net==='offline'){toast('Live needs a connection');return}
- R={title,item:item||null,host:hostUid,asHost,guest:false,reqs:[],guestIds:new Set(),hb:null,rm:null};
+ R={title,audio:!!audio,item:item||null,host:hostUid,asHost,guest:false,reqs:[],guestIds:new Set(),hb:null,rm:null};
  toast('Connecting…');
  try{
   await loadLK();
@@ -8111,7 +8162,7 @@ async function enter(hostUid,title,asHost,item){
   R.rm=rm;mount();wire(rm,LK);
   await rm.connect(t.url,t.token);
   if(asHost){
-   await rm.localParticipant.setCameraEnabled(true);await rm.localParticipant.setMicrophoneEnabled(true);
+   if(!R.audio)await rm.localParticipant.setCameraEnabled(true);await rm.localParticipant.setMicrophoneEnabled(true);
    publishDoc();R.hb=setInterval(publishDoc,10000);addChat('','You are live. Be kind in chat.',true);
   }else addChat('','Welcome. Be kind in chat.',true);
   count();
@@ -8145,6 +8196,10 @@ document.addEventListener('click',e=>{
  else if(k==='dec'){const id=b.dataset.id;R.reqs=R.reqs.filter(x=>x.id!==id);send({t:'no'},[id]);bar();openReqs()}
  else if(k==='item'){const it=R&&R.item;cleanup();const K=window.__MK;if(it&&K&&(K.M.mine.find(x=>x.id===it.id)||K.LST.find(x=>x.id===it.id)))window.__LSopen(it.id);else toast('That item is not available right now')}
  else if(k==='flip')flip();
+ else if(k==='wt')wtPick();
+ else if(k==='wtgo'){const v=R&&R.wtl&&R.wtl[+b.dataset.i];if(v)wtStart(v)}
+ else if(k==='wtstop')wtStop();
+ else if(k==='goa'||k==='gov'){const t=pendT||(k==='goa'?'Audio room':'Chatting with you');closeSheet();const a=api();if(a)enter(a.uid(),t,true,null,k==='goa')}
  else if(k==='fx'){if(window.__LF)window.__LF.open(R)}
  else if(k==='mic'||k==='cam')toggle(k);
  else if(k==='offstage'){try{R.rm.localParticipant.setCameraEnabled(false);R.rm.localParticipant.setMicrophoneEnabled(false)}catch(x){}R.guest=false;R.mic=true;R.cam=true;bar()}
@@ -8159,14 +8214,14 @@ const _ol=openLive;
 openLive=function(id){
  if(typeof id==='string'&&id.indexOf('rl_')===0){
   const a=api();if(a&&id.slice(3)===a.uid()){toast('You are already live');return}
-  const l=(typeof LIVES!=='undefined'?LIVES:[]).find(x=>x.id===id);enter(id.slice(3),(l&&l.title)||'Live',false,l&&l.item);return;
+  const l=(typeof LIVES!=='undefined'?LIVES:[]).find(x=>x.id===id);enter(id.slice(3),(l&&l.title)||'Live',false,l&&l.item,l&&l.audio);return;
  }
  return _ol.apply(this,arguments);
 };
 const _sh=startHost;
 startHost=function(){
  const a=api();
- if(a&&window.__SB&&__SB.isIn()){const t=($('#lvTitle')&&$('#lvTitle').value||'').trim()||'Chatting with you';closeSheet();enter(a.uid(),t,true);return}
+ if(a&&window.__SB&&__SB.isIn()){pendT=($('#lvTitle')&&$('#lvTitle').value||'').trim();openSheet('<h3>How do you want to go live?</h3><div class="lb"><div class="create"><p class="q">Video shows your camera. An audio room is voices only, with listeners and people you invite to speak.</p><button class="go" data-lk="gov">Go live with video</button><button class="go" data-lk="goa" style="margin-top:8px">Start an audio room</button></div></div>');return}
  return _sh.apply(this,arguments);
 };
 window.__LK={info:()=>R?{host:R.host,asHost:R.asHost}:null,start:(title,item)=>{const a=api();if(a)enter(a.uid(),title,true,item)},load:loadLK,refresh(sig){if(sig===last)return;last=sig;try{if(!R&&S.tab==='videos'&&S.vmode==='live'&&!document.querySelector('#scrim:not([hidden]) .sheet'))renderVideos()}catch(e){}},active:()=>!!R};
