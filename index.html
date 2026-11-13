@@ -1715,6 +1715,7 @@ html[data-halo] nav#nav button:not([aria-current="page"]):active .hn{transform:s
 .stkrow{display:flex;gap:6px;margin-top:6px}.stkrow input,#stkq{flex:1;min-width:0;padding:9px 11px;border-radius:12px;border:1px solid var(--line,#ddd);background:var(--surface,#fff);color:inherit;font:inherit}
 #stkq{width:100%;box-sizing:border-box;margin:8px 0 2px}
 .stkrow button[aria-pressed=true]{background:#1faa5a;color:#fff}
+.bkco{font-size:13.5px;opacity:.8;margin:2px 16px 8px}
 
 .wuf{display:flex;flex-direction:column;gap:10px}
 .wuf input,.wuf textarea,.wuf select{width:100%;padding:12px;border-radius:14px;background:var(--surface2);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:16px}
@@ -1827,6 +1828,20 @@ html[data-halo][data-pal][data-theme="dark"]{--bg:color-mix(in srgb,var(--pal) c
 .lgb .lgm{margin-top:20px;font-size:12.5px;opacity:.6}
 .sbterms{font-size:12.5px!important;margin:10px 0 0!important}
 .sbterms a{color:var(--accent,#5b4bff);font-weight:700;text-decoration:underline}
+
+#ejb{position:fixed;z-index:130;width:36px;height:36px;border-radius:50%;border:1px solid rgba(128,128,128,.35);background:var(--card,#222);color:inherit;font-size:19px;line-height:1;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.3);padding:0}
+#ejp{position:fixed;left:0;right:0;bottom:0;height:42vh;max-height:380px;z-index:140;background:var(--card,#1c1c1e);color:inherit;border-radius:18px 18px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.4);display:flex;flex-direction:column}
+#ejp .ejt{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(128,128,128,.25)}
+#ejp .ejt button{border:0;border-radius:999px;padding:8px 14px;background:rgba(128,128,128,.18);color:inherit;font:inherit;font-weight:600}
+#ejp .ejt button[aria-pressed=true]{background:var(--acc,#8b5cf6);color:#fff}
+#ejp .ejt [data-ej=x]{margin-left:auto}
+#ejp .ejb{overflow:auto;padding:8px 10px 16px;flex:1}
+#ejp .ejh{font-size:12px;opacity:.65;margin:10px 4px 4px;text-transform:uppercase;letter-spacing:.06em}
+#ejp .ejg{display:grid;grid-template-columns:repeat(8,1fr);gap:2px}
+#ejp .ejg button{border:0;background:none;font-size:26px;padding:6px 0;border-radius:10px}
+#ejp .ejs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:6px 2px}
+#ejp .ejs button{border:2px solid rgba(255,255,255,.85);border-radius:16px;background:linear-gradient(135deg,#ff6bb5,#8b5cf6);color:#fff;font-size:18px;font-weight:800;padding:14px 6px;transform:rotate(-2deg);box-shadow:0 3px 8px rgba(0,0,0,.3)}
+#ejp .ejs button:nth-child(even){transform:rotate(2deg);background:linear-gradient(135deg,#ffb347,#ff5e62)}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -5671,7 +5686,7 @@ Object.assign(IC,{hub:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6
 const TV=1,MINAGE=13;
 const B=window.__BK={ready:false,uid:null,ok:false};
 let db=null,user=null,uid=null,me=null,admin=false,tab='people',thread=null,unsubs=[],mounted=false,synced=new Set(),known=new Map();
-const st={svotes:[],sq:[],pins:[],vviews:[],vdis:[],pcreators:[],psess:[],presp:[],listings:[],lives:[],clips:[],videos:[],stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
+const st={collab:[],svotes:[],sq:[],pins:[],vviews:[],vdis:[],pcreators:[],psess:[],presp:[],listings:[],lives:[],clips:[],videos:[],stories:[],users:{},posts:[],likes:[],follows:[],comments:[],clikes:[],dislikes:[],msgs:[],notifs:[],hide:new Set(),ban:new Set(),reports:[],jobs:[],apps:[],verif:{},blocks:new Set(),handles:{}};
 const now=()=>Date.now();
 const rel=ts=>{const d=(now()-ts)/1000;return d<60?'now':d<3600?Math.floor(d/60)+'m':d<86400?Math.floor(d/3600)+'h':Math.floor(d/86400)+'d'};
 const rid=k=>'r_'+k;
@@ -5709,6 +5724,7 @@ function startPublic(){
  sub(col('videos').orderBy('ts','desc').limit(200),s=>{st.videos=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('clips').orderBy('ts','desc').limit(200),s=>{st.clips=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('lives').orderBy('ts','desc').limit(60),s=>{st.lives=s.docs.map(d=>({id:d.id,...d.data()}));try{liveSync()}catch(e){console.warn(e)}});
+ sub(col('collab').orderBy('ts','desc').limit(1000),s=>{st.collab=s.docs.map(d=>d.data());try{feedSync();coBanner()}catch(e){console.warn(e)}});
  sub(col('svotes').orderBy('ts','desc').limit(3000),s=>{st.svotes=s.docs.map(d=>d.data());try{window.__SY&&__SY.skRefresh()}catch(e){console.warn(e)}});
  sub(col('pins').orderBy('ts','desc').limit(300),s=>{st.pins=s.docs.map(d=>({id:d.id,...d.data()}));try{pinSync()}catch(e){console.warn(e)}});
  sub(col('vviews').orderBy('ts','desc').limit(2000),s=>{st.vviews=s.docs.map(d=>d.data());try{videoSync();if(typeof renderWatchMeta==='function'&&W&&W.id)renderWatchMeta()}catch(e){console.warn(e)}});
@@ -5727,6 +5743,7 @@ function listen(){
  sub(col('videos').orderBy('ts','desc').limit(200),s=>{st.videos=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('clips').orderBy('ts','desc').limit(200),s=>{st.clips=s.docs.map(d=>({id:d.id,...d.data()}));feedSync()});
  sub(col('lives').orderBy('ts','desc').limit(60),s=>{st.lives=s.docs.map(d=>({id:d.id,...d.data()}));try{liveSync()}catch(e){console.warn(e)}});
+ sub(col('collab').orderBy('ts','desc').limit(1000),s=>{st.collab=s.docs.map(d=>d.data());try{feedSync();coBanner()}catch(e){console.warn(e)}});
  sub(col('svotes').orderBy('ts','desc').limit(3000),s=>{st.svotes=s.docs.map(d=>d.data());try{window.__SY&&__SY.skRefresh()}catch(e){console.warn(e)}});
  sub(col('sq').orderBy('ts','desc').limit(500),s=>{st.sq=s.docs.map(d=>d.data());try{window.__SY&&__SY.skRefresh()}catch(e){console.warn(e)}});
  sub(col('pins').orderBy('ts','desc').limit(300),s=>{st.pins=s.docs.map(d=>({id:d.id,...d.data()}));try{pinSync()}catch(e){console.warn(e)}});
@@ -5898,6 +5915,44 @@ setInterval(()=>{
   guard(async()=>{const r=await col('pins').add(d);const id=(r&&r.id)||'t'+d.ts;if(!st.pins.some(x=>x.id===id))st.pins.unshift({id,...d});const i=NEAR.indexOf(n);if(i>=0)NEAR.splice(i,1);pinSync()});
  });
 },2500);
+function coPick(pid,q){
+ const d=st.posts.find(x=>x.id===pid);if(!d)return;
+ const cur=d.co||[];
+ const list=Object.keys(st.users).filter(u=>u!==uid&&!st.ban.has(u)&&!st.blocks.has(u)&&!cur.includes(u)&&(!q||(st.users[u].n+' '+st.users[u].h).toLowerCase().includes(q))).slice(0,30);
+ const st2=cur.map(u=>{const c=st.collab.find(x=>x.pid===pid&&x.uid===u);return'<div class="row"><div class="t"><b>'+esc(nameOf(u))+'</b><small>'+(c?(c.st==='acc'?'Co-author':'Declined'):'Invited, waiting')+'</small></div><button class="pill" data-bk="corm" data-id="'+pid+'" data-u="'+u+'">Remove</button></div>'}).join('');
+ const html='<h3>Co-authors</h3><div class="lb"><div class="create"><p class="q">Invite up to 3 people. When they accept, their name shows on your post.</p>'+st2+(cur.length<3?'<input id="bkcoq" class="mkfield" placeholder="Search people" value="'+esc(q||'')+'" style="width:100%;box-sizing:border-box;margin:8px 0">'+(list.length?list.map(u=>'<div class="row"><div class="t"><b>'+esc(nameOf(u))+'</b><small>@'+esc(hOf(u))+'</small></div><button class="pill on" data-bk="coadd" data-id="'+pid+'" data-u="'+u+'">Invite</button></div>').join(''):'<p class="q">No one found.</p>'):'')+'</div></div>';
+ const el=document.querySelector('#scrim .sheet');if(el&&el.querySelector('#bkcoq')!==null&&q!==undefined){el.innerHTML=html}else openSheet(html);
+}
+function coSave(pid,co){
+ const d=st.posts.find(x=>x.id===pid);if(!d)return;
+ d.co=co;const full={...d};delete full.id;
+ guard(()=>col('posts').doc(pid).set(full));feedSync();
+}
+function coBanner(){
+ if(!uid||!B.ok||document.getElementById('bkcoinv'))return;
+ const d=st.posts.find(x=>(x.co||[]).includes(uid)&&x.uid!==uid&&!st.collab.some(c=>c.pid===x.id&&c.uid===uid)&&!coSkip.has(x.id));
+ if(!d)return;
+ const e=document.createElement('div');e.id='bkcoinv';e.className='psjoin';
+ e.innerHTML='<span><b>'+esc(nameOf(d.uid))+'</b> invited you to co-author a post: “'+esc((d.text||'their post').slice(0,60))+'”</span><button class="pill on" data-bk="coyes" data-id="'+d.id+'">Accept</button><button class="pill" data-bk="cono" data-id="'+d.id+'">Decline</button>';
+ document.getElementById('app').appendChild(e);
+}
+const coSkip=new Set();
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-bk="co"],[data-bk="coadd"],[data-bk="corm"],[data-bk="coyes"],[data-bk="cono"]');if(!b)return;
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+ const k=b.dataset.bk,pid=b.dataset.id;
+ if(k==='co')coPick(pid);
+ else if(k==='coadd'){const d=st.posts.find(x=>x.id===pid);if(!d||(d.co||[]).length>=3)return;coSave(pid,[...(d.co||[]),b.dataset.u]);notify(b.dataset.u,'collab',pid);toast('Invitation sent');coPick(pid)}
+ else if(k==='corm'){const d=st.posts.find(x=>x.id===pid);if(!d)return;coSave(pid,(d.co||[]).filter(u=>u!==b.dataset.u));coPick(pid)}
+ else{
+  const x=document.getElementById('bkcoinv');if(x)x.remove();
+  const d=st.posts.find(p=>p.id===pid);if(!d)return;const doc={pid,owner:d.uid,uid,st:k==='coyes'?'acc':'dec',ts:now()};
+  st.collab.unshift(doc);feedSync();guard(()=>col('collab').doc(pid+'_'+uid).set(doc));
+  if(k==='coyes'){toast('You are now a co-author');notify(d.uid,'collabok',pid)}
+ }
+},true);
+document.addEventListener('input',e=>{if(e.target.id==='bkcoq'){const v=e.target.value.toLowerCase();const el=document.querySelector('#scrim .sheet [data-bk=coadd]');const pid=(el&&el.dataset.id)||null;if(pid){clearTimeout(window.__coT);window.__coT=setTimeout(()=>{coPick(pid,v);const i=document.getElementById('bkcoq');if(i){i.focus();i.setSelectionRange(v.length,v.length)}},250)}}},true);
+setInterval(coBanner,4000);
 function liveSync(){
  if(typeof LIVES==='undefined')return;
  for(let i=LIVES.length-1;i>=0;i--)if(LIVES[i].real)LIVES.splice(i,1);
@@ -5928,7 +5983,7 @@ function feedSync(){
  keep.forEach(p=>{
   const mineP=p.uid===uid,key=mineP?'me':rid(p.uid),idl=rid(p.id);
   if(!mineP){P[key]=P[key]||{n:nameOf(p.uid),h:hOf(p.uid),c:hue(p.uid)};P[key].n=nameOf(p.uid);P[key].h=hOf(p.uid)}
-  const o={id:idl,u:key,type:(p.vid?'video':p.img?'photo':'text'),t:rel(p.ts),text:p.text,c:hue(p.uid),likes:lk[p.id]||0,cc:st.comments.filter(c=>c.pid===p.id).length,rp:st.posts.filter(x=>x.q&&x.q.pid===p.id).length,q:p.q||null,comments:[],remote:true,doc:p.id,bg:p.bg,music:p.music,img:p.img,noCap:p.noCap,ts:p.tsx||undefined,mix:p.mix||undefined,media:(p.imgs&&p.imgs.length>1)?p.imgs.map(i=>({k:'p',img:i})):undefined};
+  const o={id:idl,u:key,type:(p.vid?'video':p.img?'photo':'text'),t:rel(p.ts),text:p.text,c:hue(p.uid),likes:lk[p.id]||0,cc:st.comments.filter(c=>c.pid===p.id).length,rp:st.posts.filter(x=>x.q&&x.q.pid===p.id).length,q:p.q||null,co:p.co||[],comments:[],remote:true,doc:p.id,bg:p.bg,music:p.music,img:p.img,noCap:p.noCap,ts:p.tsx||undefined,mix:p.mix||undefined,media:(p.imgs&&p.imgs.length>1)?p.imgs.map(i=>({k:'p',img:i})):undefined};
   if(p.vid){o.vfile={url:p.vid.u,name:p.vid.name};o.len=p.vid.len||'';o.media=[{k:'v',url:p.vid.u,name:p.vid.name,trim:p.vid.trim||undefined,ovl:p.vid.ovl||undefined}];o.mix=p.vid.mix||p.mix||undefined}
   if(mineP)synced.add(p.id),known.set('p'+p.id,p.text);
   add.push(o)
@@ -6054,6 +6109,11 @@ const _ph=postHTML;
 postHTML=function(p){
  let s=_ph(p);
  if(p.q){const q=p.q;s=s.replace('<div class="acts">',(p.remote&&!p.text?'<div class="bkrp">🔁 Reposted</div>':'')+'<div class="bkq"><b>'+esc(q.n||'Someone')+'</b> <span>@'+esc(q.h||'')+'</span><p>'+esc(q.t||'')+'</p>'+(q.k&&q.k!=='text'?'<small>'+(q.k==='video'?'🎬 Video':'📷 Photo')+'</small>':'')+'</div><div class="acts">')}
+ if(p.remote&&p.doc){
+  const acc=st.collab.filter(c=>c.pid===p.doc&&c.st==='acc'&&(p.co||[]).includes(c.uid)).map(c=>nameOf(c.uid));
+  if(acc.length)s=s.replace('<div class="acts">','<div class="bkco">👥 With <b>'+acc.map(esc).join('</b>, <b>')+'</b></div><div class="acts">');
+  if(p.u==='me')s=s.replace(/<\/article>$/,'<div class="bkfoot"><button data-bk="co" data-id="'+p.doc+'">👥 Add co-author</button></div></article>');
+ }
  if(p.remote&&p.u!=='me')s=s.replace(/<\/article>$/,`<div class="bkfoot"><button data-bk="report" data-id="${p.doc}" data-t="post">Report</button><button data-bk="block" data-u="${p.u.slice(2)}">Block @${esc(P[p.u].h)}</button></div></article>`);
  return s;
 };
@@ -6074,7 +6134,7 @@ document.addEventListener('click',async e=>{
 
 /* ---------- notifications ---------- */
 function notify(to,kind,ref){if(!to||to===uid)return;return col('notifs').add({to,from:uid,kind,ref:ref||'',ts:now(),read:false}).catch(()=>{})}
-function nText(n){const w=nameOf(n.from);return n.kind==='like'?w+' liked your post':n.kind==='repost'?w+' reposted your post':n.kind==='quote'?w+' quoted your post':n.kind==='follow'?w+' started following you':n.kind==='comment'?w+' commented on your post':n.kind==='reply'?w+' replied to your comment':n.kind==='mention'?w+' mentioned you in a comment':n.kind==='dm'?w+' sent you a message':n.kind==='psreq'?w+' requested a private session with you':n.kind==='psacc'?w+' accepted your private session':n.kind==='psdec'?w+' could not take your private session request':n.kind==='apply'?w+' applied to your job':n.kind==='verif'?'Your employer verification was '+(n.ref==='ok'?'approved':'declined'):'New activity'}
+function nText(n){const w=nameOf(n.from);return n.kind==='like'?w+' liked your post':n.kind==='collabok'?w+' accepted your co-author invitation':n.kind==='collab'?w+' invited you to co-author a post':n.kind==='repost'?w+' reposted your post':n.kind==='quote'?w+' quoted your post':n.kind==='follow'?w+' started following you':n.kind==='comment'?w+' commented on your post':n.kind==='reply'?w+' replied to your comment':n.kind==='mention'?w+' mentioned you in a comment':n.kind==='dm'?w+' sent you a message':n.kind==='psreq'?w+' requested a private session with you':n.kind==='psacc'?w+' accepted your private session':n.kind==='psdec'?w+' could not take your private session request':n.kind==='apply'?w+' applied to your job':n.kind==='verif'?'Your employer verification was '+(n.ref==='ok'?'approved':'declined'):'New activity'}
 function unread(){return st.notifs.filter(n=>!n.read).length+(admin?st.reports.filter(r=>r.status==='open').length:0)+dmUnread()}
 function dmUnread(){return st.msgs.filter(m=>m.b===uid&&!m.read).length}
 function badge(){const b=document.querySelector('.bkbtn .dot');const n=unread();if(b){b.textContent=n>9?'9+':n;b.hidden=!n}}
@@ -7227,7 +7287,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 37',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 37',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 38',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 38',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7419,9 +7479,9 @@ function stkPanel(s){
  if(k){
   f='<input id="stkq" maxlength="80" placeholder="'+(k.k==='ask'?'Ask me anything':'Your question')+'" value="'+esc(k.q||'')+'">';
   if(k.k!=='ask')f+=k.o.map((o,i)=>'<div class="stkrow"><input class="stko" data-i="'+i+'" maxlength="40" placeholder="Option '+(i+1)+'" value="'+esc(o)+'">'+(k.k==='quiz'?'<button data-sy="stkc" data-i="'+i+'" '+(k.c===i?'aria-pressed="true"':'')+' aria-label="Correct answer">✓</button>':'')+'</div>').join('')+(k.o.length<4?'<button data-sy="stkadd">+ Add option</button>':'');
-  f+=(k.k==='quiz'?'<small class="q">Tap ✓ to mark the right answer.</small>':'')+'<button data-sy="stkrm">Remove sticker</button>';
+  f+=(k.k==='quiz'?'<small class="q">Tap ✓ to mark the right answer.</small>':'')+'<button data-sy="stkrm">Remove</button>';
  }
- return '<div class="sypanel"><b class="syh">Sticker</b><div class="symus">'+kinds+'</div>'+f+'<button class="mkbtn" data-sy="odone">Done</button></div>';
+ return '<div class="sypanel"><b class="syh">Poll, question or quiz</b><div class="symus">'+kinds+'</div>'+f+'<button class="mkbtn" data-sy="odone">Done</button></div>';
 }
 function cleanStk(s){
  const k=s.stk;if(!k)return undefined;
@@ -7450,7 +7510,7 @@ function ed(){
  el.innerHTML=`<div class="sytop"><button class="ib" data-sy="close" aria-label="Close">${I('close')}</button><b>New story</b><button class="mkbtn" data-sy="share" id="syshare">${SY.busy?'Sharing…':'Share'}</button></div>
  <div class="sywrap"><div class="sy-stage" id="sySt" style="${s.k==='text'?'background:'+s.bg:''}">${inner(s,true)}${s.ov.map(x=>ovHTML(x,true)).join('')}${s.stk?skHTML(s.stk,null):''}</div></div>
  ${strip}${panel}
- <div class="sytools"><button data-sy="addtext"><b>Aa</b><small>Text</small></button><button data-sy="music"><b>♪</b><small>${SY.music?esc(SY.music.name).slice(0,12):'Music'}</small></button><button data-sy="stk"><b>◎</b><small>${s.stk?SKK[s.stk.k]:'Sticker'}</small></button>${s.k==='video'?`<button data-sy="mute"><b>${s.mute?'🔇':'🔊'}</b><small>${s.mute?'Muted':'Sound'}</small></button>`:''}</div>`;
+ <div class="sytools"><button data-sy="addtext"><b>Aa</b><small>Text</small></button><button data-sy="music"><b>♪</b><small>${SY.music?esc(SY.music.name).slice(0,12):'Music'}</small></button><button data-sy="stk"><b>◎</b><small>${s.stk?SKK[s.stk.k]:'Poll'}</small></button><button data-sy="emj"><b>😊</b><small>Stickers</small></button>${s.k==='video'?`<button data-sy="mute"><b>${s.mute?'🔇':'🔊'}</b><small>${s.mute?'Muted':'Sound'}</small></button>`:''}</div>`;
  setU();
  const ta=$('#syta');if(ta)ta.addEventListener('input',()=>{s.text=ta.value});
 }
@@ -7579,6 +7639,7 @@ document.addEventListener('click',e=>{
  }
  if(!SY)return;
  const s=SY.slides[SY.i];
+ if(k==='emj'){const s=SY.slides[SY.i];window.__EJ&&__EJ.open(t=>{const o={id:uidn(),t:t,x:30+Math.random()*40,y:30+Math.random()*30,c:'#ffffff',f:FONTS[0][1],s:16};s.ov.push(o);SY.sel=null;SY.panel=null;ed()},{mode:'sticker'});return}
  if(k==='stk'){SY.panel='stk';SY.sel=null;ed();return}
  if(k==='stkk'){const kk=b.dataset.k;const q=s.stk?s.stk.q:'';s.stk={k:kk,q,o:kk==='ask'?[]:(s.stk&&s.stk.o&&s.stk.o.length?s.stk.o:['','']),c:0};ed();return}
  if(k==='stkadd'&&s.stk&&s.stk.o.length<4){s.stk.o.push('');ed();return}
@@ -8621,6 +8682,72 @@ document.addEventListener('click',e=>{
  else open(t.dataset.lg||t.dataset.lgt);
 },true);
 window.__LG={open};
+})();
+
+</script>
+<script>
+/* ===== Emoji + sticker picker (works in every text box, and as story stickers) ===== */
+(function(){
+const CATS=[
+['😀','Smileys','😀 😃 😄 😁 😆 😅 😂 🤣 😊 😇 🙂 😉 😍 🥰 😘 😋 😛 😜 🤪 😎 🤩 🥳 😏 😒 😞 😔 😢 😭 😤 😡 🤯 😱 😴 🤔 🤗 🤭 🙄 😬 🥺 😳 🤤 😷 🤒 🤠 😈'],
+['👍','Hands','👍 👎 👏 🙌 🙏 🤝 💪 ✌️ 🤞 🤟 🤘 👌 🤌 👋 🤙 ☝️ 👆 👇 👉 👈 ✊ 👊 🫶 🫡 🫰'],
+['❤️','Hearts','❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔 ❣️ 💕 💞 💓 💗 💖 💘 💝 💯 💢 💥 💫 💦 🔥 ✨ ⭐ 🌟'],
+['🎉','Party','🎉 🎊 🎈 🎁 🎂 🍰 🥂 🍾 🎵 🎶 🎤 🎧 🎸 🥁 🏆 🥇 🎯 🎮 ⚽ 🏀 🏈 🎬 📸 🪩'],
+['🌍','Nature','🌍 🌞 🌙 ⭐ ☁️ 🌈 ⚡ ❄️ 🌊 🌴 🌸 🌹 🌻 🍀 🌿 🐶 🐱 🦁 🐯 🐘 🦒 🦓 🐒 🦋 🐝 🐢'],
+['🍔','Food','🍔 🍕 🌮 🍟 🌭 🍗 🍖 🍚 🍜 🍣 🍩 🍦 🍫 🍿 ☕ 🍵 🥤 🍺 🍷 🍎 🍌 🍉 🍓 🥭 🍍'],
+['🚗','Travel','🚗 🚕 🚌 🏍️ 🚲 ✈️ 🚀 🚢 🏠 🏝️ ⛺ 🗺️ 📍 🌆 🏖️ 🛍️ 💼 📱 💻 📷 🎥 💡 🔑 💰 💎']
+];
+const STK=['🔥 HOT','✨ WOW','💯','🎉 Party!','❤️ Love','😂 LOL','👏 Bravo','🙌 Yay','😍','🥳','💪 Strong','🙏 Thanks','🤩 Amazing','😎 Cool','🚀 Let\'s go','⭐ Star','🎂 Birthday','🏆 Winner','💃','🕺','🌈','☀️','🥂 Cheers','🇿🇦','🇳🇬','🇰🇪','🇬🇭','📍 Here','🔔 New','💖'];
+const $=s=>document.querySelector(s);
+let tgt=null,sel=[0,0],cb=null,tab=0,mode='';
+function close(){const p=$('#ejp');if(p)p.remove();cb=null}
+function ins(t){
+ if(cb){cb(t);return}
+ const f=tgt;if(!f||!document.body.contains(f))return;
+ let a=sel[0],b=sel[1];if(a>f.value.length)a=f.value.length;if(b>f.value.length||b<a)b=a;
+ const mx=f.maxLength>0?f.maxLength:1e9;
+ const v=f.value.slice(0,a)+t+f.value.slice(b);if(v.length>mx)return;
+ f.value=v;const c=a+t.length;sel=[c,c];try{f.setSelectionRange(c,c)}catch(_){}
+ f.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function open(callback,opt){
+ close();cb=callback||null;mode=(opt&&opt.mode)||'';tab=mode==='sticker'?1:0;draw();
+}
+function draw(){
+ let p=$('#ejp');if(!p){p=document.createElement('div');p.id='ejp';document.body.appendChild(p)}
+ const tabs=mode==='sticker'?'':'<button data-ej="tab" data-t="0" aria-pressed="'+(tab===0)+'">Emoji</button><button data-ej="tab" data-t="1" aria-pressed="'+(tab===1)+'">Stickers</button>';
+ let body='';
+ if(tab===0)body=CATS.map(c=>'<div class="ejh">'+c[1]+'</div><div class="ejg">'+c[2].split(' ').map(e=>'<button data-ej="in" data-v="'+e+'">'+e+'</button>').join('')+'</div>').join('');
+ else body='<div class="ejs">'+STK.map(e=>'<button data-ej="in" data-v="'+e+'">'+e+'</button>').join('')+'</div>';
+ p.innerHTML='<div class="ejt">'+tabs+'<button data-ej="x" aria-label="Close">Done</button></div><div class="ejb">'+body+'</div>';
+}
+/* keep the text box focused while tapping the picker */
+document.addEventListener('pointerdown',e=>{if(e.target.closest('#ejp,#ejb'))e.preventDefault()},true);
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-ej]');if(!b)return;
+ e.preventDefault();e.stopPropagation();
+ const k=b.dataset.ej;
+ if(k==='tab'){tab=+b.dataset.t;draw()}
+ else if(k==='x')close();
+ else if(k==='in'){const v=b.dataset.v;if(cb){const f=cb;f(v);if(mode==='sticker')close()}else ins(v)}
+ else if(k==='open'){open(null)}
+},true);
+/* the floating button beside whatever the person is typing in */
+const OK=el=>el&&((el.tagName==='TEXTAREA')||(el.tagName==='INPUT'&&/^(text|)$/.test(el.type||'')))&&!el.readOnly&&!el.disabled&&!el.closest('#ejp')&&el.id!=='syti'||(el&&el.id==='syti');
+function place(){
+ let n=$('#ejb');const f=document.activeElement;
+ if(!OK(f)||f.type==='search'||f.dataset.noej!==undefined){if(n)n.remove();return}
+ if(tgt!==f){tgt=f;sel=[f.value.length,f.value.length]}
+ if(!n){n=document.createElement('button');n.id='ejb';n.type='button';n.dataset.ej='open';n.setAttribute('aria-label','Emoji and stickers');n.textContent='😊';document.body.appendChild(n)}
+ const r=f.getBoundingClientRect();
+ n.style.top=Math.max(4,Math.min(innerHeight-44,r.top-18))+'px';
+ n.style.left=Math.max(4,Math.min(innerWidth-44,r.right-30))+'px';
+}
+document.addEventListener('selectionchange',()=>{const f=document.activeElement;if(f&&f===tgt&&f.selectionStart!=null)sel=[f.selectionStart,f.selectionEnd]});
+document.addEventListener('focusin',()=>setTimeout(place,50));
+document.addEventListener('focusout',()=>setTimeout(()=>{if(!OK(document.activeElement)){const n=$('#ejb');if(n&&!$('#ejp'))n.remove()}},200));
+window.addEventListener('resize',place);window.addEventListener('scroll',place,true);
+window.__EJ={open,close,ins,STK,CATS};
 })();
 
 </script>
