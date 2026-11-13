@@ -1858,6 +1858,14 @@ html[data-halo][data-pal][data-theme="dark"]{--bg:color-mix(in srgb,var(--pal) c
 #ejp .ejs button{border:2px solid rgba(255,255,255,.85);border-radius:16px;background:linear-gradient(135deg,#ff6bb5,#8b5cf6);color:#fff;font-size:18px;font-weight:800;padding:14px 6px;transform:rotate(-2deg);box-shadow:0 3px 8px rgba(0,0,0,.3)}
 #ejp .ejs button:nth-child(even){transform:rotate(2deg);background:linear-gradient(135deg,#ffb347,#ff5e62)}
 
+.csg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.cst{border-radius:14px;padding:12px 6px;text-align:center;background:rgba(128,128,128,.14)}
+.cst b{display:block;font-size:22px}.cst small{opacity:.7;font-size:11.5px}
+.csh{margin:12px 0 4px}
+.csc{display:flex;flex-wrap:wrap;gap:8px;padding:6px 0}
+.csc button{border:1.5px solid rgba(128,128,128,.4);background:none;color:inherit;border-radius:999px;padding:8px 14px;font:inherit}
+.csc button[aria-pressed=true]{background:var(--acc,#8b5cf6);border-color:transparent;color:#fff}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -6102,12 +6110,13 @@ document.addEventListener('click',e=>{
   if(!B.ok||!me)return;
   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
   const id=b.dataset.id,done=S.rep.has(id);
-  openSheet('<h3 style="margin:0 0 10px">Share this post</h3><div class="bkrpm"><button class="bkrpb" data-bkrp="plain" data-id="'+id+'"><b>'+(done?'Undo repost':'Repost')+'</b><small>'+(done?'Remove it from your profile':'Share it with your followers as it is')+'</small></button><button class="bkrpb" data-bkrp="quote" data-id="'+id+'"><b>Quote</b><small>Add words, a photo or a video</small></button></div>');
+  openSheet('<h3 style="margin:0 0 10px">Share this post</h3><div class="bkrpm"><button class="bkrpb" data-bkrp="plain" data-id="'+id+'"><b>'+(done?'Undo repost':'Repost')+'</b><small>'+(done?'Remove it from your profile':'Share it with your followers as it is')+'</small></button><button class="bkrpb" data-bkrp="quote" data-id="'+id+'"><b>Quote</b><small>Add words, a photo or a video</small></button><button class="bkrpb" data-bkrp="link" data-id="'+id+'"><b>Copy link</b><small>Share it outside Blend</small></button></div>');
   return;
  }
  const m=e.target.closest('[data-bkrp]');if(!m)return;
  e.preventDefault();e.stopPropagation();
  const id=m.dataset.id,k=m.dataset.bkrp;
+ if(k==='link'){closeSheet();const u=location.origin+location.pathname+'?post='+encodeURIComponent(id.replace(/^r_/,''));if(navigator.share)navigator.share({title:'Blend post',url:u}).catch(()=>{});else if(navigator.clipboard){navigator.clipboard.writeText(u).then(()=>toast('Link copied')).catch(()=>toast(u))}else toast(u);return}
  if(k==='plain'){closeSheet();if(S.rep.has(id))undoRepost(id);else sendRepost(id,'')}
  else if(k==='clear'){if(qmedia&&qmedia.url)URL.revokeObjectURL(qmedia.url);qmedia=null;qprev()}
  else if(k==='quote'){
@@ -7294,15 +7303,17 @@ const items=[
  ['pdot','Colours and background','Custom colour, fonts, transparency',()=>{const x=document.getElementById('palSw');x&&x.click()}],
  ['people','Community','Groups and shared spaces',()=>{const x=document.querySelector('#s-home .bkbtn');x&&x.click()}],
  ['share','Invite friends','Share Blend with someone',()=>{const u=location.href.split('#')[0];if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).catch(()=>{})}],
+ ['chart','Creator Studio','Your views, likes and followers',()=>{window.__CS&&window.__CS.open()}],
+ ['star','My interests','Choose what you want to see more of',()=>{window.__CS&&window.__CS.interests()}],
  ['doc','Terms, privacy and refunds','How Blend works and your rights',()=>{window.__LG&&window.__LG.open('terms')}]
 ];
 const svg=(p)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
-const icon={doc:svg('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
+const icon={chart:svg('<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>'),star:svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),doc:svg('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
 b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 39',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 39',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 40',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 40',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -8803,6 +8814,72 @@ document.addEventListener('focusin',()=>setTimeout(place,50));
 document.addEventListener('focusout',()=>setTimeout(()=>{if(!OK(document.activeElement)){const n=$('#ejb');if(n&&!$('#ejp'))n.remove()}},200));
 window.addEventListener('resize',place);window.addEventListener('scroll',place,true);
 window.__EJ={open,close,ins,STK,CATS};
+})();
+
+</script>
+<script>
+/* ===== Creator Studio, interests, shared post links ===== */
+(function(){
+const $=s=>document.querySelector(s);
+const api=()=>window.__BK&&__BK.api;
+const KEY='blend-interests';
+const TOPICS=['Music','Fashion','Food','Tech','Sport','Travel','Business','Comedy','Beauty','Faith','Art','Gaming','Health','Education','Cars','Property'];
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
+const save=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+function stats(){
+ const a=api();if(!a||!a.uid())return null;const st=a.st,u=a.uid();
+ const mine=st.posts.filter(p=>p.uid===u),ids=new Set(mine.map(p=>p.id));
+ const vids=[...(st.videos||[]),...(st.clips||[])].filter(v=>v.uid===u),vid=new Set(vids.map(v=>v.id));
+ const likes=st.likes.filter(l=>ids.has(l.p)||vid.has(l.p)).length;
+ const com=st.comments.filter(c=>ids.has((c.pid||'').replace(/^r_/,''))||vid.has((c.pid||'').replace(/^r_/,''))).length;
+ const views=st.vviews.filter(v=>vid.has(v.v)).length;
+ const dis=(st.vdis||[]).filter(v=>vid.has(v.v)).length;
+ const rep=st.posts.filter(p=>p.q&&ids.has(p.q.pid)&&p.uid!==u).length;
+ const fol=st.follows.filter(f=>f.b===u).length,fing=st.follows.filter(f=>f.a===u).length;
+ const top=mine.map(p=>({t:(p.text||'(photo or video)').slice(0,50),l:st.likes.filter(l=>l.p===p.id).length,c:st.comments.filter(c=>(c.pid||'').replace(/^r_/,'')===p.id).length})).sort((x,y)=>y.l+y.c-x.l-x.c).slice(0,3);
+ const wk=Date.now()-7*864e5,week=mine.filter(p=>(p.ts||0)>wk).length;
+ return{posts:mine.length,vids:vids.length,likes,com,views,dis,rep,fol,fing,top,week};
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function open(){
+ const s=stats();
+ if(!s){if(window.__SB)__SB.signIn('see your Creator Studio');return}
+ const tile=(n,l)=>'<div class="cst"><b>'+n+'</b><small>'+l+'</small></div>';
+ openSheet('<h3>Creator Studio</h3><div class="lb"><div class="csg">'+tile(s.fol,'Followers')+tile(s.views,'Video views')+tile(s.likes,'Likes')+tile(s.com,'Comments')+tile(s.rep,'Reposts and quotes')+tile(s.posts+s.vids,'Things you posted')+'</div><p class="q">'+s.week+' post'+(s.week===1?'':'s')+' in the last 7 days · following '+s.fing+(s.dis?' · '+s.dis+' dislikes on videos':'')+'</p>'+(s.top.length?'<h4 class="csh">Your best posts</h4>'+s.top.map(t=>'<div class="row"><div class="t"><b>'+esc(t.t)+'</b><small>'+t.l+' likes · '+t.c+' comments</small></div></div>').join(''):'')+'<p class="q">Earnings from gifts, Shop sales and Private Sessions will show here once payments are switched on.</p></div>');
+}
+function interests(){
+ const cur=load();
+ openSheet('<h3>My interests</h3><div class="lb"><p class="q">Pick what you like. Posts that mention these show first in your feed.</p><div class="csc">'+TOPICS.map(t=>'<button data-cs="int" data-t="'+t+'" aria-pressed="'+cur.includes(t)+'">'+t+'</button>').join('')+'</div></div>');
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-cs=int]');if(!b)return;
+ e.preventDefault();e.stopPropagation();
+ let cur=load();const t=b.dataset.t;cur=cur.includes(t)?cur.filter(x=>x!==t):[...cur,t];save(cur);
+ b.setAttribute('aria-pressed',String(cur.includes(t)));
+ clearTimeout(window.__csT);window.__csT=setTimeout(()=>{try{renderHome()}catch(_){}},300);
+},true);
+/* interests lift matching posts higher in Home */
+if(typeof score==='function'){
+ const _sc=score;
+ score=function(p){
+  let v=_sc.apply(this,arguments);
+  const cur=load();if(!cur.length)return v;
+  const t=((p.text||'')+' '+(p.tags||[]).join(' ')).toLowerCase();
+  cur.forEach(k=>{if(t.includes(k.toLowerCase()))v+=1000});
+  return v;
+ };
+}
+/* a shared link opens that post */
+(function(){
+ let id;try{id=new URLSearchParams(location.search).get('post')}catch(e){}
+ if(!id)return;let n=0;
+ const t=setInterval(()=>{
+  n++;const p=typeof POSTS!=='undefined'&&POSTS.find(x=>x.doc===id||x.id==='r_'+id);
+  if(p){clearInterval(t);try{openSheet('<div class="lb csone">'+postHTML(p)+'</div>')}catch(e){}}
+  else if(n>40){clearInterval(t);if(typeof toast==='function')toast('That post is not available')}
+ },750);
+})();
+window.__CS={open,interests,stats};
 })();
 
 </script>
