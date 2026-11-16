@@ -7327,7 +7327,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 45',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 45',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 46',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 46',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9004,17 +9004,12 @@ window.__BGP={apply,get,put};
 <script>
 /* ===== Launch cleanup: only real content is shown, sample content is removed ===== */
 (function(){
-const keep=(arr,fn)=>{try{for(let i=arr.length-1;i>=0;i--)if(!fn(arr[i]))arr.splice(i,1)}catch(e){}};
+const SAMPLE=new WeakSet();
+const arrs=()=>{const o=[];['POSTS','REELS','VIDS','LIVES','NEAR','STORIES'].forEach(n=>{try{const a=eval('typeof '+n+"!=='undefined'?"+n+':null');if(a)o.push(a)}catch(e){}});try{if(window.__MK&&__MK.LST&&!window.__KEEPSAMPLE)o.push(__MK.LST)}catch(e){}return o};
 const real=x=>!!(x&&(x.real||x.remote));
-function purge(){
- if(typeof POSTS!=='undefined')keep(POSTS,real);
- if(typeof REELS!=='undefined')keep(REELS,real);
- if(typeof VIDS!=='undefined')keep(VIDS,real);
- if(typeof LIVES!=='undefined')keep(LIVES,real);
- if(typeof NEAR!=='undefined')keep(NEAR,x=>real(x)||x.mine);
- if(typeof STORIES!=='undefined')keep(STORIES,g=>real(g)||g.u==='me');
- try{if(!window.__KEEPSAMPLE&&window.__MK&&__MK.LST)keep(__MK.LST,real)}catch(e){}
-}
+/* remember what is sample content right now, at start-up */
+arrs().forEach(a=>a.forEach(x=>{if(x&&typeof x==='object'&&!real(x)&&!x.mine&&!(x.u==='me'&&typeof STORIES!=='undefined'&&a===STORIES))SAMPLE.add(x)}));
+function purge(){arrs().forEach(a=>{for(let i=a.length-1;i>=0;i--)if(SAMPLE.has(a[i]))a.splice(i,1)})}
 function purgeP(){
  try{if(typeof S!=='undefined'){S.subs&&S.subs.clear&&S.subs.clear()}}catch(e){}
  try{if(typeof TRENDS!=='undefined')TRENDS.length=0}catch(e){}
