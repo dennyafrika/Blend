@@ -1873,7 +1873,7 @@ html[data-halo][data-pal][data-theme="dark"]{--bg:color-mix(in srgb,var(--pal) c
 #bgp{position:fixed;inset:0;z-index:-1;background:center/cover no-repeat}
 #bgp::after{content:"";position:absolute;inset:0;background:#fff;opacity:var(--bgp-dim,.55)}
 html[data-theme=dark] #bgp::after{background:#000}
-html[data-bgp] body,html[data-bgp] #app,html[data-bgp] .screen,html[data-bgp] .scroll{background:transparent!important}
+html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[data-bgphoto] .scroll{background:transparent!important}
 .bgpbox{margin:14px 0;padding:14px;border-radius:14px;background:rgba(128,128,128,.12);display:flex;flex-direction:column;gap:8px}
 .bgpbox small{opacity:.7}
 .bgpr{display:flex;gap:8px;flex-wrap:wrap}
@@ -7327,7 +7327,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 44',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 44',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 45',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 45',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -8962,11 +8962,11 @@ let url=null;
 function apply(blob){
  let L=$('#bgp');
  if(url){try{URL.revokeObjectURL(url)}catch(e){}url=null}
- if(!blob){if(L)L.remove();document.documentElement.removeAttribute('data-bgp');return}
- if(!L){L=document.createElement('div');L.id='bgp';L.setAttribute('aria-hidden','true');document.body.insertBefore(L,document.body.firstChild)}
+ if(!blob){if(L)L.remove();document.documentElement.removeAttribute('data-bgphoto');return}
+ if(!L){L=document.createElement('div');L.id='bgp';L.setAttribute('aria-hidden','true');document.body.appendChild(L)}
  url=URL.createObjectURL(blob);L.style.backgroundImage='url("'+url+'")';
  document.documentElement.style.setProperty('--bgp-dim',String(dim()));
- document.documentElement.setAttribute('data-bgp','1');
+ document.documentElement.setAttribute('data-bgphoto','1');
 }
 function shrink(file){return new Promise((res,rej)=>{
  const im=new Image(),u=URL.createObjectURL(file);
@@ -8977,13 +8977,13 @@ function shrink(file){return new Promise((res,rej)=>{
  }catch(e){rej(e)}};
  im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('That file is not a picture'))};
  im.src=u})}
-function box(){return '<div id="bgpbox" class="bgpbox"><b>Your photo as background</b><small>Stays on this phone. Blend never receives it, so only you ever see it.</small><div class="bgpr"><button class="pill on" data-bgp="pick">Choose a photo</button><button class="pill" data-bgp="rm">Remove</button></div><label class="bgpl">Photo brightness<input type="range" id="bgpdim" min="10" max="90" value="'+Math.round(dim()*100)+'" aria-label="Photo dimming"></label><input type="file" id="bgpf" accept="image/*" hidden></div>'}
+function box(){return '<div id="bgpbox" class="bgpbox"><b>Your photo as background</b><small>Stays on this phone. Blend never receives it, so only you ever see it.</small><div class="bgpr"><button class="pill on" data-bgpa="pick">Choose a photo</button><button class="pill" data-bgpa="rm">Remove</button></div><label class="bgpl">Photo brightness<input type="range" id="bgpdim" min="10" max="90" value="'+Math.round(dim()*100)+'" aria-label="Photo dimming"></label><input type="file" id="bgpf" accept="image/*" hidden></div>'}
 document.addEventListener('click',e=>{
  if(e.target.closest('#palSw')){setTimeout(()=>{const pv=document.querySelector('.palprev');if(pv&&!$('#bgpbox'))pv.insertAdjacentHTML('afterend',box())},60);return}
- const b=e.target.closest('[data-bgp]');if(!b)return;
+ const b=e.target.closest('[data-bgpa]');if(!b)return;
  e.preventDefault();e.stopPropagation();
- if(b.dataset.bgp==='pick')$('#bgpf').click();
- else if(b.dataset.bgp==='rm'){put(null).catch(()=>{});apply(null);toast('Background removed')}
+ if(b.dataset.bgpa==='pick')$('#bgpf').click();
+ else if(b.dataset.bgpa==='rm'){put(null).catch(()=>{});apply(null);toast('Background removed')}
 },true);
 document.addEventListener('change',async e=>{
  if(e.target.id!=='bgpf')return;const f=e.target.files&&e.target.files[0];if(!f)return;
