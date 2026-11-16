@@ -1911,6 +1911,8 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 .cxrow2{display:flex;gap:8px}.cxrow2 button{flex:1;border:1.5px solid rgba(128,128,128,.4);background:none;color:inherit;border-radius:12px;padding:9px;font:inherit}
 .fb .ptbox .ptmode,.fb .ptbox .ptl,.fb .ptbox .ptcol,.fb .ptbox .ptc2,.fb .ptbox #ptov,.fb .ptbox .ptstage:has(#ptcv){display:none!important}
 
+.cxerr{position:absolute;left:8px;right:8px;bottom:8px;padding:6px 8px;border-radius:8px;background:rgba(0,0,0,.65);color:#fff;font-size:12px;text-align:center}
+
 .avsnd{position:absolute;left:10px;bottom:46px;z-index:3;border:0;border-radius:999px;padding:7px 12px;background:rgba(0,0,0,.65);color:#fff;font:inherit;font-size:13px;font-weight:600}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
@@ -6088,11 +6090,13 @@ function mirror(){
   setTimeout(async()=>{
    try{
     if(!window.__SB||!__SB.upload)return;
+    toast('Sharing your video… keep Blend open until it finishes.');
     const bl=await (await fetch(p.vfile.url)).blob();
     if(bl.size>52428800){toast('That video is over 50 MB, so only you can see it for now.');p.sync=false;p.noShare=true;return}
     const u=await __SB.upload(new File([bl],p.vfile.name||'video',{type:bl.type||'video/mp4'}),'post');
     const m0=(p.media&&p.media[0])||{};
     await guard(()=>col('posts').doc().set({uid,text:String(p.text||'').slice(0,2000),ts:now(),tsx:(p.ts||null),mix:p.mix||null,music:p.music||null,vid:{u,name:p.vfile.name||'',len:p.len||'',trim:m0.trim||null,ovl:m0.ovl||null}}));
+    toast('Your video is shared ✓');
    }catch(e){p.sync=false;p.noShare=true;toast('Could not share your video: '+((e&&(e.message||e.error))||'unknown error').toString().slice(0,80))}
   },350);
  });
@@ -7361,7 +7365,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 49',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 49',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 50',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 50',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9106,13 +9110,22 @@ function refresh(){
  if(sig!==lastSig||!w.firstChild){
   lastSig=sig;
   const strip=PT.items.length>1||PT.items.length<10?'<div class="cxstrip">'+PT.items.map((x,i)=>'<span class="cxth"><button data-cx="sel" data-i="'+i+'" aria-pressed="'+(i===PT.cur)+'" aria-label="Item '+(i+1)+'">'+(x.k==='p'?'<img src="'+A.thumb(x,96)+'" alt="">':'▶')+'</button><button class="cxrm" data-fb="rm" data-i="'+i+'" aria-label="Remove">×</button></span>').join('')+(PT.items.length<10?'<button class="cxth cxadd" data-fb="media" aria-label="Add more">+</button>':'')+'</div>':'';
-  const media=it.k==='p'?'<img class="cxmedia" src="'+A.thumb(it,900)+'" alt="">':'<video class="cxmedia" src="'+it.url+'#t=0.1" muted playsinline preload="metadata"></video><button class="cxplay" data-cx="play" aria-label="Play or pause">▶</button>';
+  const media=it.k==='p'?'<img class="cxmedia" src="'+A.thumb(it,900)+'" alt="">':'<video class="cxmedia" src="'+it.url+'" muted playsinline webkit-playsinline preload="auto" loop></video><button class="cxplay" data-cx="play" aria-label="Play or pause">▶</button>';
   w.innerHTML=strip+'<div class="cxst" id="cxst">'+media+'<div class="cxov" id="cxov" contenteditable="true" spellcheck="false" data-ph="Tap to write on it"></div></div><div class="cxtools" id="cxtools">'+toolsHTML(it)+'</div>';
   const ov=$('#cxov');ov.textContent=it.ovl.t||'';bind(ov,it);
+  const vd=$('#cxst video');if(vd)vidBind(vd,it);
  }else{
-  const t=$('#cxtools');if(t)t.innerHTML=toolsHTML(it);
+  const t=$('#cxtools'),th=toolsHTML(it);if(t&&t.dataset.h!==th){t.innerHTML=th;t.dataset.h=th}
  }
  const st=$('#cxst'),ov=$('#cxov');if(st&&ov)ov.style.cssText=ovlCss(it,st);
+}
+function vidBind(v,it){
+ const pb=$('.cxplay');const sync=()=>{if(pb)pb.textContent=v.paused?'▶':'❚❚'};
+ v.addEventListener('loadedmetadata',()=>{if(!it.vd){it.vd=v.duration||0;it.vs=0;it.ve=it.vd}try{v.currentTime=Math.max(.05,it.vs||0)}catch(_){}});
+ v.addEventListener('loadeddata',()=>{try{if(v.paused&&v.currentTime<.05)v.currentTime=.1}catch(_){}});
+ v.addEventListener('timeupdate',()=>{if(it.ve&&v.currentTime>=it.ve-.05){v.currentTime=it.vs||0}});
+ v.addEventListener('play',sync);v.addEventListener('pause',sync);v.addEventListener('error',()=>{const st=$('#cxst');if(st&&!$('.cxerr')){const d=document.createElement('div');d.className='cxerr';d.textContent='This video could not be previewed here, but you can still post it.';st.appendChild(d)}});
+ sync();
 }
 function bind(ov,it){
  const st=$('#cxst');let down=false,moved=false,sx=0,sy=0;
@@ -9138,7 +9151,7 @@ document.addEventListener('click',e=>{
  else if(k==='lg'){it.ovl.s=clamp((it.ovl.s||1)+.2,.5,3);refresh()}
  else if(k==='clr'){it.ovl.t='';const ov=$('#cxov');if(ov)ov.textContent=''}
  else if(k==='sel'){PT.cur=+b.dataset.i;lastSig='';refresh()}
- else if(k==='play'){const v=$('.cxmedia');if(v&&v.tagName==='VIDEO'){if(v.paused){v.currentTime=Math.max(v.currentTime,it.vs||0);v.play()}else v.pause()}}
+ else if(k==='play'){const v=$('.cxmedia');if(v&&v.tagName==='VIDEO'){if(v.paused){if(v.currentTime<(it.vs||0)||(it.ve&&v.currentTime>=it.ve-.1))v.currentTime=it.vs||0;const p=v.play();if(p&&p.catch)p.catch(()=>{})}else v.pause()}}
 },true);
 /* hook into the existing screen */
 let hooked=false;
