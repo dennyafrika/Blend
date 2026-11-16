@@ -7190,17 +7190,17 @@ new MutationObserver(()=>{const b=document.querySelector('#nav [data-k=me] .ei')
 
 </script>
 <script>
-/* Home shows only short videos posted straight to Home. Long videos that live in Watch stay in Watch. */
-(function(){
-const isWatchVideo=p=>p&&p.type==='video'&&!!p.vid;
-const _rh=renderHome;
-renderHome=function(){
- const all=POSTS.slice();
- for(let i=POSTS.length-1;i>=0;i--)if(isWatchVideo(POSTS[i]))POSTS.splice(i,1);
- try{return _rh.apply(this,arguments)}finally{POSTS.length=0;POSTS.push(...all)}
-};
-window.__HV={isWatchVideo};
-})();
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch(),ctx=await b.newContext({viewport:{width:390,height:844},hasTouch:true});
+await ctx.route('**/supabase.js',r=>r.fulfill({contentType:'application/javascript',body:fs.readFileSync(__dirname+'/fakesb.js','utf8')}));
+await ctx.route('**/livekit-client*',r=>r.fulfill({contentType:'application/javascript',body:fs.readFileSync(__dirname+'/fakelk.js','utf8')}));
+await ctx.route('**/fonts.g*/**',r=>r.abort());
+const a=await ctx.newPage();
+await a.goto('file://'+__dirname+'/web/index.html');await a.waitForTimeout(6000);
+await a.evaluate(u=>{POSTS.unshift({id:'n1',u:'me',type:'video',t:'now',text:'clip',c:30,len:'0:03',likes:0,cc:0,rp:0,comments:[],vfile:{url:u,name:'c.webm'}});setTab('home');renderHome()},'file://'+__dirname+'/clip.webm');
+await a.waitForTimeout(2500);await a.screenshot({path:'refs/hv.png'});
+console.log(await a.evaluate(()=>[...document.querySelectorAll('button,[data-a],[data-pg],[data-lf],[data-vs]')].filter(e=>{const r=e.getBoundingClientRect();return r.top<140&&r.left>250&&r.width>0}).map(e=>e.outerHTML.slice(0,160)).join('\n')));
+await b.close()})();
 
 </script>
 <script>
@@ -7365,7 +7365,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 50',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 50',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 51',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 51',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7986,6 +7986,10 @@ function openClips(id){
 window.__CL.openClips=openClips;
 document.addEventListener('click',e=>{
  const pv=e.target.closest&&e.target.closest('.pvid,.pms');if(!pv||pv.closest('.sheet,.aip,#bkp'))return;
+ if(e.target.closest('button,a,input,.avsnd,.cxplay'))return;
+ const vv=pv.querySelector('video');if(vv){const r=vv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  /* the phone's own sound / play bar and the top-right corner belong to the video player, not to Clips */
+  if(y>r.height-70||y<64&&x>r.width-110||y<64&&x<90)return}
  const v=pv.querySelector('video'),id=v&&v.dataset.pv;if(!id||!REELS.some(r=>r.id===id))return;
  e.preventDefault();e.stopPropagation();openClips(id);
 },true);
