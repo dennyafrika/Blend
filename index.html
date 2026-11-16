@@ -1879,6 +1879,38 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 .bgpr{display:flex;gap:8px;flex-wrap:wrap}
 .bgpl{display:flex;flex-direction:column;gap:4px;font-size:13px}
 
+.fbta.bg{filter:none!important}
+.fbta.cxm{position:relative;min-height:270px;display:block}
+.fbta.cxm textarea{position:absolute;transform:translate(-50%,-50%);width:84%;min-height:0!important;overflow:hidden}
+.cxgrip{position:absolute;right:8px;bottom:8px;border:0;border-radius:999px;padding:6px 12px;background:rgba(0,0,0,.45);color:#fff;font:inherit;font-size:13px;touch-action:none}
+.pcard.cxp{position:relative;min-height:270px;display:block}
+.pcard.cxp .ptext{position:absolute;left:var(--cx);top:var(--cy);transform:translate(-50%,-50%);width:var(--cw,84%)}
+#fbmedia.cxh{display:none!important}
+#cxwrap{margin:4px 0 10px}
+.cxst{position:relative;border-radius:14px;overflow:hidden;background:#000;touch-action:pan-y}
+.cxmedia{display:block;width:100%;max-height:56vh;object-fit:contain;background:#000}
+.cxov{position:absolute;transform:translate(-50%,-50%);font-weight:800;line-height:1.2;outline:0;min-width:40px;padding:2px 6px;cursor:grab;touch-action:none;white-space:pre-wrap;word-break:break-word;-webkit-user-select:text;user-select:text}
+.cxov:empty:before{content:attr(data-ph);opacity:.75;font-weight:600}
+.cxplay{position:absolute;left:10px;top:10px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff}
+.cxstrip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px}
+.cxth{position:relative;flex:0 0 auto;width:48px;height:48px;border-radius:10px;border:2px solid transparent;overflow:hidden;background:rgba(128,128,128,.2);padding:0;color:inherit;display:grid;place-items:center}
+.cxth button:first-child{border:0;background:none;padding:0;width:100%;height:100%;color:inherit}
+.cxth img{width:100%;height:100%;object-fit:cover;display:block}
+.cxth:has([aria-pressed=true]){border-color:var(--acc,#7c6cf0)}
+.cxrm{position:absolute;top:0;right:0;width:18px;height:18px;border:0;border-radius:0 0 0 8px;background:rgba(0,0,0,.65);color:#fff;font-size:13px;line-height:1;padding:0}
+.cxadd{font-size:24px;border:2px dashed rgba(128,128,128,.5)}
+.cxtools{display:flex;flex-direction:column;gap:8px;padding-top:8px}
+.cxfonts{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.cxfonts button{flex:0 0 auto;border:1.5px solid rgba(128,128,128,.4);background:none;color:inherit;border-radius:999px;padding:6px 12px;font-size:14px}
+.cxfonts button[aria-pressed=true]{background:var(--acc,#7c6cf0);border-color:transparent;color:#fff}
+.cxrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cxcols{display:flex;gap:8px;flex-wrap:wrap}
+.cxcols button{width:26px;height:26px;border-radius:50%;border:2px solid rgba(128,128,128,.5);padding:0}
+.cxcols button[aria-pressed=true]{border-color:var(--acc,#7c6cf0);box-shadow:0 0 0 2px var(--acc,#7c6cf0)}
+.cxbtns{display:flex;gap:6px}.cxbtns button{border:1.5px solid rgba(128,128,128,.4);background:none;color:inherit;border-radius:10px;padding:4px 10px;font-weight:700}
+.cxrow2{display:flex;gap:8px}.cxrow2 button{flex:1;border:1.5px solid rgba(128,128,128,.4);background:none;color:inherit;border-radius:12px;padding:9px;font:inherit}
+.fb .ptbox .ptmode,.fb .ptbox .ptl,.fb .ptbox .ptcol,.fb .ptbox .ptc2,.fb .ptbox #ptov,.fb .ptbox .ptstage:has(#ptcv){display:none!important}
+
 .avsnd{position:absolute;left:10px;bottom:46px;z-index:3;border:0;border-radius:999px;padding:7px 12px;background:rgba(0,0,0,.65);color:#fff;font:inherit;font-size:13px;font-weight:600}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
@@ -7329,7 +7361,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 48',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 48',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 49',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 49',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -8918,11 +8950,11 @@ function addBtns(root){
   el.dataset.trd='1';
   const t=(el.textContent||'').trim();if(t.length<4)return;
   const b=document.createElement('button');b.type='button';b.className='trb';b.dataset.tr='go';b.textContent='Translate';
-  el.insertAdjacentElement('afterend',b);
+  (el.closest('.pcard')||el).insertAdjacentElement('afterend',b);
  });
 }
 async function go(b){
- const el=b.previousElementSibling;if(!el)return;
+ let el=b.previousElementSibling;if(el&&el.classList.contains('pcard'))el=el.querySelector('.ptext');if(!el)return;
  if(el.dataset.orig!==undefined){el.innerHTML=el.dataset.orig;delete el.dataset.orig;b.textContent='Translate';return}
  const to=lang(),txt=(el.textContent||'').trim(),ck=to+'|'+txt;
  const now=Date.now();stamps=stamps.filter(x=>now-x<60000);
@@ -9000,6 +9032,137 @@ document.addEventListener('input',e=>{
 },true);
 get().then(b=>{if(b)apply(b)}).catch(()=>{});
 window.__BGP={apply,get,put};
+})();
+
+</script>
+<script>
+/* ===== Simpler post editor: write straight on the picture, move text on colour cards ===== */
+(function(){
+const $=s=>document.querySelector(s),PT=window.__PT,PS=window.__PS;
+if(!PT||!PS)return;
+const A=PT.api,FONTS=A.FONTS;
+const COLS=['#ffffff','#111111','#ff3d8b','#ff7a2f','#ffc933','#12b886','#2b8cff','#7c4dff'];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mwOf=x=>Math.max(30,Math.min(86,2*Math.min(x,100-x)));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let lastSig='';
+/* ---------- text on the colour card: drag it where you want ---------- */
+function bgPos(){const b=PS.CP().bg;return b&&b.pos?b.pos:{x:50,y:50}}
+function applyBgPos(){
+ const w=$('.fbta'),ta=$('#newText');if(!w||!ta)return;
+ const b=PS.CP().bg;
+ if(!b||b.k!=='c'){w.classList.remove('cxm');ta.style.cssText=ta.style.cssText.replace(/(left|top|transform|position|width)[^;]*;?/g,'');return}
+ w.classList.add('cxm');const p=bgPos();
+ ta.style.left=p.x+'%';ta.style.top=p.y+'%';ta.style.width=mwOf(p.x)+'%';
+ ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,w.clientHeight*0.9)+'px';
+ ensureHandle(w);
+}
+function ensureHandle(w){
+ if(w.querySelector('.cxgrip'))return;
+ const g=document.createElement('button');g.type='button';g.className='cxgrip';g.setAttribute('aria-label','Move the text');g.textContent='✥ Move';
+ w.appendChild(g);
+ let down=false;
+ g.addEventListener('pointerdown',e=>{down=true;g.setPointerCapture(e.pointerId);e.preventDefault()});
+ g.addEventListener('pointermove',e=>{
+  if(!down)return;const r=w.getBoundingClientRect(),b=PS.CP().bg;if(!b)return;
+  b.pos={x:clamp((e.clientX-r.left)/r.width*100,12,88),y:clamp((e.clientY-r.top)/r.height*100,14,86)};applyBgPos();e.preventDefault()});
+ g.addEventListener('pointerup',()=>{down=false});g.addEventListener('pointercancel',()=>{down=false});
+}
+/* keep the position when another colour is picked */
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-fb=bg]');if(!b)return;
+ const old=PS.CP().bg&&PS.CP().bg.pos;
+ setTimeout(()=>{const n=PS.CP().bg;if(n&&old&&!n.pos)n.pos=old;applyBgPos();const g=$('.cxgrip');if(g)g.style.display=n?'':'none'},0);
+},true);
+document.addEventListener('input',e=>{if(e.target.id==='newText')applyBgPos()},true);
+/* ---------- a picture or video you write on directly ---------- */
+function wrap(){
+ const m=$('#fbmedia');if(!m)return null;
+ let w=$('#cxwrap');
+ if(!w){w=document.createElement('div');w.id='cxwrap';m.after(w)}
+ return w;
+}
+function ovlCss(it,st){
+ const o=it.ovl,t=PT.ts,f=FONTS[t.f]||FONTS.clean,W=st.clientWidth||340;
+ return 'left:'+o.x+'%;top:'+o.y+'%;color:'+o.c+';font-family:'+f[1]+';font-weight:'+(t.b?900:Math.max(700,+f[2]||700))+';font-style:'+(t.i?'italic':'normal')+';text-decoration:'+(t.u?'underline':'none')+';text-transform:'+((t.caps||f[3]==='uppercase')?'uppercase':'none')+';font-size:'+(W*0.075*(o.s||1)).toFixed(1)+'px;max-width:'+mwOf(o.x)+'%;text-align:center;text-shadow:0 1px 6px '+(o.c==='#111111'?'rgba(255,255,255,.6)':'rgba(0,0,0,.6)');
+}
+function sigOf(it){return PT.cur+'|'+PT.items.length+'|'+it.k+'|'+(it.url||'')+'|'+JSON.stringify(it.adj||0)+JSON.stringify(it.crop||0)+(it.rot||0)}
+function toolsHTML(it){
+ const t=PT.ts;
+ return '<div class="cxfonts" role="listbox" aria-label="Font">'+Object.keys(FONTS).map(k=>{const f=FONTS[k];return '<button data-cx="font" data-k="'+k+'" aria-pressed="'+(t.f===k)+'" style="font-family:'+f[1]+';font-weight:'+f[2]+'">'+esc(f[0])+'</button>'}).join('')+'</div>'
+ +'<div class="cxrow"><div class="cxcols">'+COLS.map(c=>'<button data-cx="col" data-c="'+c+'" style="background:'+c+'" aria-pressed="'+(it.ovl.c===c)+'" aria-label="Text colour"></button>').join('')+'</div>'
+ +'<div class="cxbtns"><button data-cx="sm" aria-label="Smaller text">A−</button><button data-cx="lg" aria-label="Bigger text">A+</button></div></div>'
+ +'<div class="cxrow2"><button class="cxadj" data-fb="edit" data-i="'+PT.cur+'">'+(it.k==='p'?'Crop and filters':'Trim')+'</button><button data-cx="clr">Clear text</button></div>';
+}
+function refresh(){
+ const m=$('#fbmedia'),n=PT.items.length;
+ if(!m)return;
+ let w=$('#cxwrap');
+ if(!n){if(w)w.remove();m.classList.remove('cxh');lastSig='';return}
+ if(PT.mode==='cap')PT.mode='both';
+ m.classList.add('cxh');w=wrap();
+ const it=PT.items[PT.cur]||PT.items[0];if(!it)return;if(!it.ovl)it.ovl={t:'',x:50,y:78,c:'#ffffff',s:1};
+ const sig=sigOf(it);
+ if(sig!==lastSig||!w.firstChild){
+  lastSig=sig;
+  const strip=PT.items.length>1||PT.items.length<10?'<div class="cxstrip">'+PT.items.map((x,i)=>'<span class="cxth"><button data-cx="sel" data-i="'+i+'" aria-pressed="'+(i===PT.cur)+'" aria-label="Item '+(i+1)+'">'+(x.k==='p'?'<img src="'+A.thumb(x,96)+'" alt="">':'▶')+'</button><button class="cxrm" data-fb="rm" data-i="'+i+'" aria-label="Remove">×</button></span>').join('')+(PT.items.length<10?'<button class="cxth cxadd" data-fb="media" aria-label="Add more">+</button>':'')+'</div>':'';
+  const media=it.k==='p'?'<img class="cxmedia" src="'+A.thumb(it,900)+'" alt="">':'<video class="cxmedia" src="'+it.url+'#t=0.1" muted playsinline preload="metadata"></video><button class="cxplay" data-cx="play" aria-label="Play or pause">▶</button>';
+  w.innerHTML=strip+'<div class="cxst" id="cxst">'+media+'<div class="cxov" id="cxov" contenteditable="true" spellcheck="false" data-ph="Tap to write on it"></div></div><div class="cxtools" id="cxtools">'+toolsHTML(it)+'</div>';
+  const ov=$('#cxov');ov.textContent=it.ovl.t||'';bind(ov,it);
+ }else{
+  const t=$('#cxtools');if(t)t.innerHTML=toolsHTML(it);
+ }
+ const st=$('#cxst'),ov=$('#cxov');if(st&&ov)ov.style.cssText=ovlCss(it,st);
+}
+function bind(ov,it){
+ const st=$('#cxst');let down=false,moved=false,sx=0,sy=0;
+ ov.addEventListener('input',()=>{it.ovl.t=ov.textContent.slice(0,120)});
+ ov.addEventListener('paste',e=>{e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData('text').replace(/\s+/g,' ');document.execCommand('insertText',false,t)});
+ ov.addEventListener('keydown',e=>{if(e.key==='Enter')e.preventDefault()});
+ ov.addEventListener('pointerdown',e=>{down=true;moved=false;sx=e.clientX;sy=e.clientY});
+ ov.addEventListener('pointermove',e=>{
+  if(!down)return;
+  if(!moved){if(Math.hypot(e.clientX-sx,e.clientY-sy)<8)return;moved=true;ov.blur();ov.setPointerCapture(e.pointerId)}
+  const r=st.getBoundingClientRect();
+  it.ovl.x=clamp((e.clientX-r.left)/r.width*100,8,92);it.ovl.y=clamp((e.clientY-r.top)/r.height*100,6,94);
+  ov.style.left=it.ovl.x+'%';ov.style.top=it.ovl.y+'%';ov.style.maxWidth=mwOf(it.ovl.x)+'%';e.preventDefault()});
+ const up=()=>{down=false};ov.addEventListener('pointerup',up);ov.addEventListener('pointercancel',up);
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-cx]');if(!b)return;
+ e.preventDefault();e.stopPropagation();
+ const it=PT.items[PT.cur];if(!it)return;const k=b.dataset.cx;
+ if(k==='font'){PT.ts.f=b.dataset.k;try{A.draw()}catch(_){}refresh()}
+ else if(k==='col'){it.ovl.c=b.dataset.c;refresh()}
+ else if(k==='sm'){it.ovl.s=clamp((it.ovl.s||1)-.2,.5,3);refresh()}
+ else if(k==='lg'){it.ovl.s=clamp((it.ovl.s||1)+.2,.5,3);refresh()}
+ else if(k==='clr'){it.ovl.t='';const ov=$('#cxov');if(ov)ov.textContent=''}
+ else if(k==='sel'){PT.cur=+b.dataset.i;lastSig='';refresh()}
+ else if(k==='play'){const v=$('.cxmedia');if(v&&v.tagName==='VIDEO'){if(v.paused){v.currentTime=Math.max(v.currentTime,it.vs||0);v.play()}else v.pause()}}
+},true);
+/* hook into the existing screen */
+let hooked=false;
+function hook(){
+ const sh=$('#scrim .sheet .create.fb');
+ if(!sh){hooked=false;lastSig='';return}
+ if(!hooked){hooked=true;const old=PT.onDraw;PT.onDraw=function(){if(old)old.apply(this,arguments);refresh();applyBgPos()};refresh();applyBgPos()}
+}
+new MutationObserver(()=>hook()).observe(document.body,{childList:true,subtree:true});
+setInterval(()=>{if(hooked)refresh()},1500);
+/* words written on the picture are not repeated as a caption above it */
+window.addEventListener('click',e=>{
+ if(!e.target.closest||!e.target.closest('[data-a=post2]'))return;
+ const ta=$('#newText');if(!ta||!PT.items.length)return;
+ if(!ta.value.trim()&&PT.items.some(x=>x.ovl&&x.ovl.t&&x.ovl.t.trim()))ta.value='\u200b';
+},true);
+/* text on a colour card shows where it was placed */
+const _ph=postHTML;
+postHTML=function(p){
+ let h=_ph.apply(this,arguments);
+ try{if(p&&p.bg&&p.bg.pos&&p.bg.k==='c')h=h.replace('<div class="pcard" style="','<div class="pcard cxp" style="--cx:'+(+p.bg.pos.x||50)+'%;--cy:'+(+p.bg.pos.y||50)+'%;--cw:'+mwOf(+p.bg.pos.x||50)+'%;')}catch(e){}
+ return h;
+};
+window.__CED={refresh};
 })();
 
 </script>
