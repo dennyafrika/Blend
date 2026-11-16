@@ -1879,6 +1879,8 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 .bgpr{display:flex;gap:8px;flex-wrap:wrap}
 .bgpl{display:flex;flex-direction:column;gap:4px;font-size:13px}
 
+.avsnd{position:absolute;left:10px;bottom:46px;z-index:3;border:0;border-radius:999px;padding:7px 12px;background:rgba(0,0,0,.65);color:#fff;font:inherit;font-size:13px;font-weight:600}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7327,7 +7329,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 47',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 47',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 48',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 48',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9002,26 +9004,42 @@ window.__BGP={apply,get,put};
 
 </script>
 <script>
-/* ===== Videos in the feed start by themselves (muted) when you scroll to them ===== */
+/* ===== Videos in the feed start by themselves, with sound when the phone allows it ===== */
 (function(){
 const SEL='video[data-pv]:not([data-pv=draft])';
+let cur=null;const mark=v=>{v.__pt=Date.now()};
 const eligible=v=>!v.dataset.ts&&!v.dataset.user&&!(v.closest('article')&&v.closest('article').querySelector('.pmus'));
+function hint(v,on){
+ const h=v.parentElement;if(!h)return;let b=h.querySelector('.avsnd');
+ if(!on){if(b)b.remove();return}
+ if(b)return;
+ if(getComputedStyle(h).position==='static')h.style.position='relative';
+ b=document.createElement('button');b.type='button';b.className='avsnd';b.setAttribute('aria-label','Turn sound on');b.textContent='🔇 Tap for sound';
+ b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();mark(v);v.muted=false;delete v.dataset.nosound;hint(v,false);v.play().catch(()=>{})});
+ h.appendChild(b);
+}
+function start(v){
+ if(cur&&cur!==v&&!cur.paused){cur.__sp=true;cur.pause()}
+ cur=v;v.loop=true;v.playsInline=true;
+ mark(v);v.muted=!!v.dataset.nosound;
+ const p=v.play();
+ const mutedPlay=()=>{mark(v);v.muted=true;const q=v.play();if(q&&q.catch)q.catch(()=>{});if(!v.dataset.nosound)hint(v,true)};
+ if(p&&p.catch)p.catch(mutedPlay);
+ v.__ap=true;
+ if(!v.muted)hint(v,false);
+}
 const io=('IntersectionObserver' in window)?new IntersectionObserver(es=>{
  es.forEach(en=>{
   const v=en.target;
-  if(en.isIntersecting&&en.intersectionRatio>=.55){
-   if(!eligible(v))return;
-   v.muted=true;v.loop=true;v.playsInline=true;
-   const p=v.play();if(p&&p.catch)p.catch(()=>{});v.__ap=true;
-  }else if(v.__ap&&!v.paused){v.__sp=true;v.pause();v.__ap=false}
+  if(en.isIntersecting&&en.intersectionRatio>=.55){if(eligible(v))start(v)}
+  else if(v.__ap&&!v.paused){v.__sp=true;v.pause();v.__ap=false;hint(v,false)}
  });
 },{threshold:[0,.55,1]}):null;
 function setup(v){
  if(v.__avd)return;v.__avd=true;
- /* show the first picture instead of a black box */
- try{const s=v.getAttribute('src')||'';if(s&&s.indexOf('#t=')<0){v.setAttribute('src',s+'#t=0.1')}}catch(e){}
+ try{const s=v.getAttribute('src')||'';if(s&&s.indexOf('#t=')<0)v.setAttribute('src',s+'#t=0.1')}catch(e){}
  v.preload='auto';
- v.addEventListener('volumechange',()=>{if(!v.muted)v.dataset.user='1'});
+ v.addEventListener('volumechange',()=>{if(Date.now()-(v.__pt||0)<600)return;if(v.muted){v.dataset.nosound='1';hint(v,false)}else hint(v,false)});
  v.addEventListener('pause',()=>{if(v.__sp){v.__sp=false;return}if(v.__ap&&!v.ended)v.dataset.user='1'});
  if(io)io.observe(v);
 }
