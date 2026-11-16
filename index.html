@@ -1870,6 +1870,15 @@ html[data-halo][data-pal][data-theme="dark"]{--bg:color-mix(in srgb,var(--pal) c
 .cm .trb{margin-left:0}
 .trb:disabled{opacity:.6}
 
+#bgp{position:fixed;inset:0;z-index:-1;background:center/cover no-repeat}
+#bgp::after{content:"";position:absolute;inset:0;background:#fff;opacity:var(--bgp-dim,.55)}
+html[data-theme=dark] #bgp::after{background:#000}
+html[data-bgp] body,html[data-bgp] #app,html[data-bgp] .screen,html[data-bgp] .scroll{background:transparent!important}
+.bgpbox{margin:14px 0;padding:14px;border-radius:14px;background:rgba(128,128,128,.12);display:flex;flex-direction:column;gap:8px}
+.bgpbox small{opacity:.7}
+.bgpr{display:flex;gap:8px;flex-wrap:wrap}
+.bgpl{display:flex;flex-direction:column;gap:4px;font-size:13px}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7318,7 +7327,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 42',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 42',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 43',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 43',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -8937,6 +8946,58 @@ let tm=null;
 new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(()=>addBtns(),150)}).observe(document.body,{childList:true,subtree:true});
 addBtns();
 window.__TR={pick,lang,addBtns};
+})();
+
+</script>
+<script>
+/* ===== Your own photo as the app background (kept on this phone only) ===== */
+(function(){
+const DB='blend-bgp',ST='k',KEY='photo',DIMK='blend-bgp-dim';
+const $=s=>document.querySelector(s);
+function idb(){return new Promise((res,rej)=>{try{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(ST);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
+async function put(v){const d=await idb();return new Promise((res,rej)=>{const t=d.transaction(ST,'readwrite');v==null?t.objectStore(ST).delete(KEY):t.objectStore(ST).put(v,KEY);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}
+async function get(){const d=await idb();return new Promise((res,rej)=>{const q=d.transaction(ST).objectStore(ST).get(KEY);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)})}
+const dim=()=>{try{const v=parseFloat(localStorage.getItem(DIMK));return isNaN(v)?0.55:Math.min(.9,Math.max(.1,v))}catch(e){return .55}};
+let url=null;
+function apply(blob){
+ let L=$('#bgp');
+ if(url){try{URL.revokeObjectURL(url)}catch(e){}url=null}
+ if(!blob){if(L)L.remove();document.documentElement.removeAttribute('data-bgp');return}
+ if(!L){L=document.createElement('div');L.id='bgp';L.setAttribute('aria-hidden','true');document.body.insertBefore(L,document.body.firstChild)}
+ url=URL.createObjectURL(blob);L.style.backgroundImage='url("'+url+'")';
+ document.documentElement.style.setProperty('--bgp-dim',String(dim()));
+ document.documentElement.setAttribute('data-bgp','1');
+}
+function shrink(file){return new Promise((res,rej)=>{
+ const im=new Image(),u=URL.createObjectURL(file);
+ im.onload=()=>{try{
+  const M=1280,s=Math.min(1,M/Math.max(im.width,im.height)),w=Math.round(im.width*s),h=Math.round(im.height*s);
+  const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);
+  URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(new Error('fail')),'image/jpeg',.78)
+ }catch(e){rej(e)}};
+ im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('That file is not a picture'))};
+ im.src=u})}
+function box(){return '<div id="bgpbox" class="bgpbox"><b>Your photo as background</b><small>Stays on this phone. Blend never receives it, so only you ever see it.</small><div class="bgpr"><button class="pill on" data-bgp="pick">Choose a photo</button><button class="pill" data-bgp="rm">Remove</button></div><label class="bgpl">Photo brightness<input type="range" id="bgpdim" min="10" max="90" value="'+Math.round(dim()*100)+'" aria-label="Photo dimming"></label><input type="file" id="bgpf" accept="image/*" hidden></div>'}
+document.addEventListener('click',e=>{
+ if(e.target.closest('#palSw')){setTimeout(()=>{const pv=document.querySelector('.palprev');if(pv&&!$('#bgpbox'))pv.insertAdjacentHTML('afterend',box())},60);return}
+ const b=e.target.closest('[data-bgp]');if(!b)return;
+ e.preventDefault();e.stopPropagation();
+ if(b.dataset.bgp==='pick')$('#bgpf').click();
+ else if(b.dataset.bgp==='rm'){put(null).catch(()=>{});apply(null);toast('Background removed')}
+},true);
+document.addEventListener('change',async e=>{
+ if(e.target.id!=='bgpf')return;const f=e.target.files&&e.target.files[0];if(!f)return;
+ try{const b=await shrink(f);await put(b);apply(b);toast('Background set')}
+ catch(err){toast(err&&err.message&&/picture/.test(err.message)?err.message:'Could not use that photo')}
+ e.target.value='';
+},true);
+document.addEventListener('input',e=>{
+ if(e.target.id!=='bgpdim')return;
+ const v=Math.min(.9,Math.max(.1,e.target.value/100));try{localStorage.setItem(DIMK,String(v))}catch(_){}
+ document.documentElement.style.setProperty('--bgp-dim',String(v));
+},true);
+get().then(b=>{if(b)apply(b)}).catch(()=>{});
+window.__BGP={apply,get,put};
 })();
 
 </script>
