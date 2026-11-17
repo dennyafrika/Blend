@@ -7377,7 +7377,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 57',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 57',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 58',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 58',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9136,8 +9136,13 @@ function refresh(){
 }
 function autoplay(v,it){
  if(v.__ap2)return;v.__ap2=true;
- const go=()=>{if(v.__user)return;try{v.muted=true;const q=v.play();if(q&&q.catch)q.catch(()=>{})}catch(_){}};
- if(v.readyState>=2)setTimeout(go,150);else v.addEventListener('loadeddata',()=>setTimeout(go,150),{once:true});
+ let tries=0;
+ const go=()=>{if(v.__user||!v.paused)return;try{v.muted=true;v.defaultMuted=true;const q=v.play();if(q&&q.catch)q.catch(()=>{})}catch(_){}};
+ /* phones do not preload video by themselves, so ask right away and keep asking until it runs */
+ try{v.load()}catch(_){}
+ go();
+ ['loadedmetadata','loadeddata','canplay','canplaythrough'].forEach(n=>v.addEventListener(n,go));
+ const iv=setInterval(()=>{if(!v.isConnected||v.__user||!v.paused||++tries>25){clearInterval(iv);return}go()},400);
  v.addEventListener('pause',()=>{if(v.__byBtn)v.__user=true});
 }
 function prime(v){
@@ -9152,9 +9157,9 @@ function vidBind(v,it){
  const st=v.parentElement;let sp=st.querySelector('.cxspin');
  if(!sp){sp=document.createElement('div');sp.className='cxspin';sp.setAttribute('role','status');sp.setAttribute('aria-label','Loading video');sp.innerHTML='<i></i><span>Loading video…</span>';st.appendChild(sp)}
  const off=()=>sp.classList.add('off'),on=()=>sp.classList.remove('off');
- if(v.readyState>=3)off();
- ['canplay','playing','loadeddata'].forEach(n=>v.addEventListener(n,()=>{if(v.readyState>=3||n==='playing')off()}));
- v.addEventListener('waiting',on);v.addEventListener('error',off);
+ if(v.readyState>=2||!v.paused)off();
+ ['canplay','playing','loadeddata','timeupdate','loadedmetadata'].forEach(n=>v.addEventListener(n,off));
+ v.addEventListener('error',off);setTimeout(off,5000);
  const pb=$('.cxplay');const sync=()=>{if(pb)pb.textContent=v.paused?'▶':'❚❚'};
  v.addEventListener('loadedmetadata',()=>{if(!it.vd){it.vd=v.duration||0;it.vs=0;it.ve=it.vd}try{v.currentTime=Math.max(.05,it.vs||0)}catch(_){}});
  v.addEventListener('loadeddata',()=>{try{if(v.paused&&v.currentTime<.05)v.currentTime=.1}catch(_){}});
@@ -9177,6 +9182,7 @@ function bind(ov,it){
  const up=()=>{down=false};ov.addEventListener('pointerup',up);ov.addEventListener('pointercancel',up);
 }
 document.addEventListener('click',e=>{
+ if(e.target.closest('.cxadj')){const sv=document.querySelector('#cxst video');if(sv){sv.__user=true;sv.pause()}}
  const b=e.target.closest('[data-cx]');if(!b)return;
  e.preventDefault();e.stopPropagation();
  const it=PT.items[PT.cur];if(!it)return;const k=b.dataset.cx;
@@ -9193,7 +9199,7 @@ document.addEventListener('change',e=>{
  const i=e.target;if(!i||i.id!=='fbfile'||!i.files||![...i.files].some(f=>/^video\//.test(f.type)))return;
  const m=$('#fbmedia');if(!m||$('#cxwait'))return;
  const d=document.createElement('div');d.id='cxwait';d.className='cxwait';d.setAttribute('role','status');d.innerHTML='<i></i><span>Loading your video…</span>';
- m.after(d);setTimeout(()=>{const x=$('#cxwait');if(x)x.remove()},25000);
+ m.after(d);setTimeout(()=>{const x=$('#cxwait');if(x)x.remove()},6000);
 },true);
 /* hook into the existing screen */
 let hooked=false;
@@ -9202,7 +9208,7 @@ function hook(){
  if(!sh){hooked=false;lastSig='';return}
  if(!hooked){hooked=true;const old=PT.onDraw;PT.onDraw=function(){if(old)old.apply(this,arguments);refresh();applyBgPos()};refresh();applyBgPos()}
 }
-new MutationObserver(()=>{hook();const t=document.getElementById('ptvid');if(t&&!t.__pr){t.__pr=true;t.setAttribute('preload','auto');t.muted=true;const st=()=>{const b=document.querySelector('[data-pt=play]');if(t.paused&&b&&!t.__u)b.click()};if(t.readyState>=2)setTimeout(st,300);else t.addEventListener('loadeddata',()=>setTimeout(st,300),{once:true});t.addEventListener('pause',()=>{})}}).observe(document.body,{childList:true,subtree:true});
+new MutationObserver(()=>{hook();const t=document.getElementById('ptvid');if(t&&!t.__pr){t.__pr=true;t.setAttribute('preload','auto');t.muted=true;t.addEventListener('pause',()=>{})}}).observe(document.body,{childList:true,subtree:true});
 setInterval(()=>{if(hooked)refresh()},1500);
 /* words written on the picture are not repeated as a caption above it */
 window.addEventListener('click',e=>{
@@ -9288,8 +9294,8 @@ function spin(v){
  const d=document.createElement('div');d.className='avspin';d.setAttribute('role','status');d.setAttribute('aria-label','Loading video');d.innerHTML='<i></i>';
  h.appendChild(d);
  const off=()=>d.classList.add('off'),on=()=>d.classList.remove('off');
- if(v.readyState>=3)off();
- ['canplay','playing'].forEach(n=>v.addEventListener(n,off));v.addEventListener('waiting',on);v.addEventListener('error',off);
+ if(v.readyState>=2||!v.paused)off();
+ ['canplay','playing','loadeddata','loadedmetadata','timeupdate'].forEach(n=>v.addEventListener(n,off));v.addEventListener('error',off);setTimeout(off,5000);
 }
 function scan(){document.querySelectorAll(SEL).forEach(setup)}
 let tm=null;
