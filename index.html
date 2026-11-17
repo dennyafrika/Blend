@@ -1915,6 +1915,9 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 
 .avsnd{position:absolute;left:10px;bottom:46px;z-index:3;border:0;border-radius:999px;padding:7px 12px;background:rgba(0,0,0,.65);color:#fff;font:inherit;font-size:13px;font-weight:600}
 
+.avc{position:absolute;left:50%;bottom:58px;transform:translateX(-50%);z-index:3;display:flex;gap:8px}
+.avc button{border:0;border-radius:999px;padding:7px 12px;min-width:44px;background:rgba(0,0,0,.6);color:#fff;font:inherit;font-size:13px;font-weight:700}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7190,17 +7193,17 @@ new MutationObserver(()=>{const b=document.querySelector('#nav [data-k=me] .ei')
 
 </script>
 <script>
-const {chromium}=require('playwright');const fs=require('fs');
-(async()=>{const b=await chromium.launch(),ctx=await b.newContext({viewport:{width:390,height:844},hasTouch:true});
-await ctx.route('**/supabase.js',r=>r.fulfill({contentType:'application/javascript',body:fs.readFileSync(__dirname+'/fakesb.js','utf8')}));
-await ctx.route('**/livekit-client*',r=>r.fulfill({contentType:'application/javascript',body:fs.readFileSync(__dirname+'/fakelk.js','utf8')}));
-await ctx.route('**/fonts.g*/**',r=>r.abort());
-const a=await ctx.newPage();
-await a.goto('file://'+__dirname+'/web/index.html');await a.waitForTimeout(6000);
-await a.evaluate(u=>{POSTS.unshift({id:'n1',u:'me',type:'video',t:'now',text:'clip',c:30,len:'0:03',likes:0,cc:0,rp:0,comments:[],vfile:{url:u,name:'c.webm'}});setTab('home');renderHome()},'file://'+__dirname+'/clip.webm');
-await a.waitForTimeout(2500);await a.screenshot({path:'refs/hv.png'});
-console.log(await a.evaluate(()=>[...document.querySelectorAll('button,[data-a],[data-pg],[data-lf],[data-vs]')].filter(e=>{const r=e.getBoundingClientRect();return r.top<140&&r.left>250&&r.width>0}).map(e=>e.outerHTML.slice(0,160)).join('\n')));
-await b.close()})();
+/* Home shows only short videos posted straight to Home. Long videos that live in Watch stay in Watch. */
+(function(){
+const isWatchVideo=p=>p&&p.type==='video'&&!!p.vid;
+const _rh=renderHome;
+renderHome=function(){
+ const all=POSTS.slice();
+ for(let i=POSTS.length-1;i>=0;i--)if(isWatchVideo(POSTS[i]))POSTS.splice(i,1);
+ try{return _rh.apply(this,arguments)}finally{POSTS.length=0;POSTS.push(...all)}
+};
+window.__HV={isWatchVideo};
+})();
 
 </script>
 <script>
@@ -7365,7 +7368,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 51',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 51',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 52',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 52',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9123,7 +9126,15 @@ function refresh(){
  }
  const st=$('#cxst'),ov=$('#cxov');if(st&&ov)ov.style.cssText=ovlCss(it,st);
 }
+function prime(v){
+ if(v.__pr)return;v.__pr=true;
+ const snap=()=>{try{if(!v.videoWidth)return;const c=document.createElement('canvas');c.width=Math.min(640,v.videoWidth);c.height=Math.round(c.width*v.videoHeight/v.videoWidth);c.getContext('2d').drawImage(v,0,0,c.width,c.height);v.poster=c.toDataURL('image/jpeg',.7)}catch(_){}};
+ const go=()=>{try{v.muted=true;const q=v.play();if(q&&q.then)q.then(()=>{setTimeout(()=>{v.pause();try{v.currentTime=Math.max(.1,(v.__it&&v.__it.vs)||0)}catch(_){}setTimeout(snap,250)},120)}).catch(()=>{try{v.currentTime=.1}catch(_){}setTimeout(snap,400)});else snap()}catch(_){}};
+ if(v.readyState>=2)go();else v.addEventListener('loadeddata',go,{once:true});
+ v.addEventListener('seeked',()=>{if(v.paused&&!v.poster)snap()});
+}
 function vidBind(v,it){
+ v.__it=it;prime(v);
  const pb=$('.cxplay');const sync=()=>{if(pb)pb.textContent=v.paused?'▶':'❚❚'};
  v.addEventListener('loadedmetadata',()=>{if(!it.vd){it.vd=v.duration||0;it.vs=0;it.ve=it.vd}try{v.currentTime=Math.max(.05,it.vs||0)}catch(_){}});
  v.addEventListener('loadeddata',()=>{try{if(v.paused&&v.currentTime<.05)v.currentTime=.1}catch(_){}});
@@ -9164,7 +9175,7 @@ function hook(){
  if(!sh){hooked=false;lastSig='';return}
  if(!hooked){hooked=true;const old=PT.onDraw;PT.onDraw=function(){if(old)old.apply(this,arguments);refresh();applyBgPos()};refresh();applyBgPos()}
 }
-new MutationObserver(()=>hook()).observe(document.body,{childList:true,subtree:true});
+new MutationObserver(()=>{hook();const t=document.getElementById('ptvid');if(t&&!t.__pr){t.setAttribute('preload','auto');t.muted=true;prime(t)}}).observe(document.body,{childList:true,subtree:true});
 setInterval(()=>{if(hooked)refresh()},1500);
 /* words written on the picture are not repeated as a caption above it */
 window.addEventListener('click',e=>{
@@ -9222,6 +9233,22 @@ function setup(v){
  v.addEventListener('volumechange',()=>{if(Date.now()-(v.__pt||0)<600)return;if(v.muted){v.dataset.nosound='1';hint(v,false)}else hint(v,false)});
  v.addEventListener('pause',()=>{if(v.__sp){v.__sp=false;return}if(v.__ap&&!v.ended)v.dataset.user='1'});
  if(io)io.observe(v);
+ ctl(v);
+}
+function ctl(v){
+ const h=v.parentElement;if(!h||h.querySelector('.avc')||h.closest('.sheet,.aip,#bkp'))return;
+ if(getComputedStyle(h).position==='static')h.style.position='relative';
+ const d=document.createElement('div');d.className='avc';
+ d.innerHTML='<button type="button" data-av="-10" aria-label="Back 10 seconds">⏪ 10</button><button type="button" data-av="pp" aria-label="Play or pause">❚❚</button><button type="button" data-av="10" aria-label="Forward 10 seconds">10 ⏩</button>';
+ const pp=d.querySelector('[data-av=pp]'),sync=()=>{pp.textContent=v.paused?'▶':'❚❚'};
+ d.addEventListener('click',e=>{const b=e.target.closest('[data-av]');if(!b)return;e.preventDefault();e.stopPropagation();
+  const k=b.dataset.av;
+  if(k==='pp'){if(v.paused){v.dataset.user='1';mark(v);const q=v.play();if(q&&q.catch)q.catch(()=>{})}else{v.dataset.user='1';v.pause()}}
+  else{const t=v.currentTime+(+k),end=v.duration||1e9;v.currentTime=Math.max(0,Math.min(t,end-.1))}
+  sync()});
+ d.addEventListener('pointerdown',e=>e.stopPropagation());
+ v.addEventListener('play',sync);v.addEventListener('pause',sync);
+ h.appendChild(d);sync();
 }
 function scan(){document.querySelectorAll(SEL).forEach(setup)}
 let tm=null;
