@@ -7367,7 +7367,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 54',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 54',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 55',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 55',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9123,15 +9123,21 @@ function refresh(){
  }
  const st=$('#cxst'),ov=$('#cxov');if(st&&ov)ov.style.cssText=ovlCss(it,st);
 }
+function autoplay(v,it){
+ if(v.__ap2)return;v.__ap2=true;
+ const go=()=>{if(v.__user)return;try{v.muted=true;const q=v.play();if(q&&q.catch)q.catch(()=>{})}catch(_){}};
+ if(v.readyState>=2)setTimeout(go,150);else v.addEventListener('loadeddata',()=>setTimeout(go,150),{once:true});
+ v.addEventListener('pause',()=>{if(v.__byBtn)v.__user=true});
+}
 function prime(v){
  if(v.__pr)return;v.__pr=true;
  const snap=()=>{try{if(!v.videoWidth)return;const c=document.createElement('canvas');c.width=Math.min(640,v.videoWidth);c.height=Math.round(c.width*v.videoHeight/v.videoWidth);c.getContext('2d').drawImage(v,0,0,c.width,c.height);v.poster=c.toDataURL('image/jpeg',.7)}catch(_){}};
- const go=()=>{try{v.muted=true;const q=v.play();if(q&&q.then)q.then(()=>{setTimeout(()=>{v.pause();try{v.currentTime=Math.max(.1,(v.__it&&v.__it.vs)||0)}catch(_){}setTimeout(snap,250)},120)}).catch(()=>{try{v.currentTime=.1}catch(_){}setTimeout(snap,400)});else snap()}catch(_){}};
+ const go=()=>{if(v.__ap2&&!v.paused)return;try{v.muted=true;const q=v.play();if(q&&q.then)q.then(()=>{setTimeout(()=>{if(v.__ap2&&!v.__user)return;v.pause();try{v.currentTime=Math.max(.1,(v.__it&&v.__it.vs)||0)}catch(_){}setTimeout(snap,250)},120)}).catch(()=>{try{v.currentTime=.1}catch(_){}setTimeout(snap,400)});else snap()}catch(_){}};
  if(v.readyState>=2)go();else v.addEventListener('loadeddata',go,{once:true});
  v.addEventListener('seeked',()=>{if(v.paused&&!v.poster)snap()});
 }
 function vidBind(v,it){
- v.__it=it;prime(v);
+ v.__it=it;prime(v);autoplay(v,it);
  const pb=$('.cxplay');const sync=()=>{if(pb)pb.textContent=v.paused?'▶':'❚❚'};
  v.addEventListener('loadedmetadata',()=>{if(!it.vd){it.vd=v.duration||0;it.vs=0;it.ve=it.vd}try{v.currentTime=Math.max(.05,it.vs||0)}catch(_){}});
  v.addEventListener('loadeddata',()=>{try{if(v.paused&&v.currentTime<.05)v.currentTime=.1}catch(_){}});
@@ -9163,7 +9169,7 @@ document.addEventListener('click',e=>{
  else if(k==='lg'){it.ovl.s=clamp((it.ovl.s||1)+.2,.5,3);refresh()}
  else if(k==='clr'){it.ovl.t='';const ov=$('#cxov');if(ov)ov.textContent=''}
  else if(k==='sel'){PT.cur=+b.dataset.i;lastSig='';refresh()}
- else if(k==='play'){const v=$('.cxmedia');if(v&&v.tagName==='VIDEO'){if(v.paused){if(v.currentTime<(it.vs||0)||(it.ve&&v.currentTime>=it.ve-.1))v.currentTime=it.vs||0;const p=v.play();if(p&&p.catch)p.catch(()=>{})}else v.pause()}}
+ else if(k==='play'){const v=$('.cxmedia');if(v&&v.tagName==='VIDEO'){if(v.paused){if(v.currentTime<(it.vs||0)||(it.ve&&v.currentTime>=it.ve-.1))v.currentTime=it.vs||0;const p=v.play();if(p&&p.catch)p.catch(()=>{})}else{v.__byBtn=true;v.pause()}}}
 },true);
 /* hook into the existing screen */
 let hooked=false;
@@ -9172,7 +9178,7 @@ function hook(){
  if(!sh){hooked=false;lastSig='';return}
  if(!hooked){hooked=true;const old=PT.onDraw;PT.onDraw=function(){if(old)old.apply(this,arguments);refresh();applyBgPos()};refresh();applyBgPos()}
 }
-new MutationObserver(()=>{hook();const t=document.getElementById('ptvid');if(t&&!t.__pr){t.setAttribute('preload','auto');t.muted=true;prime(t)}}).observe(document.body,{childList:true,subtree:true});
+new MutationObserver(()=>{hook();const t=document.getElementById('ptvid');if(t&&!t.__pr){t.__pr=true;t.setAttribute('preload','auto');t.muted=true;const st=()=>{const b=document.querySelector('[data-pt=play]');if(t.paused&&b&&!t.__u)b.click()};if(t.readyState>=2)setTimeout(st,300);else t.addEventListener('loadeddata',()=>setTimeout(st,300),{once:true});t.addEventListener('pause',()=>{})}}).observe(document.body,{childList:true,subtree:true});
 setInterval(()=>{if(hooked)refresh()},1500);
 /* words written on the picture are not repeated as a caption above it */
 window.addEventListener('click',e=>{
