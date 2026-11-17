@@ -7367,7 +7367,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 53',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 53',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 54',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 54',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9230,13 +9230,27 @@ function setup(v){
  v.addEventListener('volumechange',()=>{if(Date.now()-(v.__pt||0)<600)return;if(v.muted){v.dataset.nosound='1';hint(v,false)}else hint(v,false)});
  v.addEventListener('pause',()=>{if(v.__sp){v.__sp=false;return}if(v.__ap&&!v.ended)v.dataset.user='1'});
  if(io)io.observe(v);
- ctl(v);
+ ctl(v);still(v);
 }
 function ctl(v){
  const h=v.parentElement;if(!h||h.querySelector('.avclp')||h.closest('.sheet,.aip,#bkp'))return;
  if(getComputedStyle(h).position==='static')h.style.position='relative';
  const b=document.createElement('button');b.type='button';b.className='avclp';b.setAttribute('aria-label','Open in Clips');b.textContent='⤢ Clips';
  h.appendChild(b);
+}
+/* a feed video always shows its first picture, even when it is not playing (never a blank box) */
+function still(v){
+ if(v.__st)return;v.__st=true;
+ const snap=()=>{try{if(!v.videoWidth||v.poster)return;const c=document.createElement('canvas');c.width=Math.min(480,v.videoWidth);c.height=Math.round(c.width*v.videoHeight/v.videoWidth);c.getContext('2d').drawImage(v,0,0,c.width,c.height);v.poster=c.toDataURL('image/jpeg',.7)}catch(_){}};
+ const go=()=>{
+  if(!v.paused||v.__ap||v.dataset.user)return;
+  try{mark(v);v.muted=true;const q=v.play();
+   const back=()=>{if(v.__ap)return;v.__sp=true;v.pause();try{v.currentTime=.1}catch(_){}setTimeout(snap,250)};
+   if(q&&q.then)q.then(()=>setTimeout(back,100)).catch(()=>{try{v.currentTime=.1}catch(_){}});
+  }catch(_){}
+ };
+ if(v.readyState>=2)setTimeout(go,300);else v.addEventListener('loadeddata',()=>setTimeout(go,300),{once:true});
+ v.addEventListener('seeked',()=>{if(v.paused)snap()});
 }
 function scan(){document.querySelectorAll(SEL).forEach(setup)}
 let tm=null;
