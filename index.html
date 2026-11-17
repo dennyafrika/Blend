@@ -1913,9 +1913,19 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 
 .cxerr{position:absolute;left:8px;right:8px;bottom:8px;padding:6px 8px;border-radius:8px;background:rgba(0,0,0,.65);color:#fff;font-size:12px;text-align:center}
 
+/*cxspin*/.cxspin{position:absolute;top:10px;right:10px;width:auto;display:flex;align-items:center;gap:7px;padding:5px 10px 5px 6px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;font-weight:600;pointer-events:none;z-index:2}
+.cxspin.off{display:none}
+.cxspin i{width:16px;height:16px;border-radius:50%;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;animation:cxsp .8s linear infinite}.avspin i{width:22px;height:22px;border-radius:50%;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;animation:cxsp .8s linear infinite}
+@keyframes cxsp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.cxspin i,.avspin i{animation-duration:2.4s}}
+
+.cxwait{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:220px;border-radius:14px;background:#000;color:#fff;font-size:13px;font-weight:600}
+.cxwait i{width:38px;height:38px;border-radius:50%;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;animation:cxsp .8s linear infinite}
+
 .avsnd{position:absolute;left:10px;bottom:46px;z-index:3;border:0;border-radius:999px;padding:7px 12px;background:rgba(0,0,0,.65);color:#fff;font:inherit;font-size:13px;font-weight:600}
 
 .avclp{position:absolute;left:10px;top:10px;z-index:3;border:0;border-radius:999px;padding:6px 11px;background:rgba(0,0,0,.55);color:#fff;font:inherit;font-size:12px;font-weight:700}
+.avspin{position:absolute;right:10px;top:10px;z-index:2;pointer-events:none}.avspin.off{display:none}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -7367,7 +7377,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 55',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 55',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 57',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 57',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9116,6 +9126,7 @@ function refresh(){
   const strip=PT.items.length>1||PT.items.length<10?'<div class="cxstrip">'+PT.items.map((x,i)=>'<span class="cxth"><button data-cx="sel" data-i="'+i+'" aria-pressed="'+(i===PT.cur)+'" aria-label="Item '+(i+1)+'">'+(x.k==='p'?'<img src="'+A.thumb(x,96)+'" alt="">':'▶')+'</button><button class="cxrm" data-fb="rm" data-i="'+i+'" aria-label="Remove">×</button></span>').join('')+(PT.items.length<10?'<button class="cxth cxadd" data-fb="media" aria-label="Add more">+</button>':'')+'</div>':'';
   const media=it.k==='p'?'<img class="cxmedia" src="'+A.thumb(it,900)+'" alt="">':'<video class="cxmedia" src="'+it.url+'" muted playsinline webkit-playsinline preload="auto" loop></video><button class="cxplay" data-cx="play" aria-label="Play or pause">▶</button>';
   w.innerHTML=strip+'<div class="cxst" id="cxst">'+media+'<div class="cxov" id="cxov" contenteditable="true" spellcheck="false" data-ph="Tap to write on it"></div></div><div class="cxtools" id="cxtools">'+toolsHTML(it)+'</div>';
+  const wt=$('#cxwait');if(wt)wt.remove();
   const ov=$('#cxov');ov.textContent=it.ovl.t||'';bind(ov,it);
   const vd=$('#cxst video');if(vd)vidBind(vd,it);
  }else{
@@ -9138,6 +9149,12 @@ function prime(v){
 }
 function vidBind(v,it){
  v.__it=it;prime(v);autoplay(v,it);
+ const st=v.parentElement;let sp=st.querySelector('.cxspin');
+ if(!sp){sp=document.createElement('div');sp.className='cxspin';sp.setAttribute('role','status');sp.setAttribute('aria-label','Loading video');sp.innerHTML='<i></i><span>Loading video…</span>';st.appendChild(sp)}
+ const off=()=>sp.classList.add('off'),on=()=>sp.classList.remove('off');
+ if(v.readyState>=3)off();
+ ['canplay','playing','loadeddata'].forEach(n=>v.addEventListener(n,()=>{if(v.readyState>=3||n==='playing')off()}));
+ v.addEventListener('waiting',on);v.addEventListener('error',off);
  const pb=$('.cxplay');const sync=()=>{if(pb)pb.textContent=v.paused?'▶':'❚❚'};
  v.addEventListener('loadedmetadata',()=>{if(!it.vd){it.vd=v.duration||0;it.vs=0;it.ve=it.vd}try{v.currentTime=Math.max(.05,it.vs||0)}catch(_){}});
  v.addEventListener('loadeddata',()=>{try{if(v.paused&&v.currentTime<.05)v.currentTime=.1}catch(_){}});
@@ -9170,6 +9187,13 @@ document.addEventListener('click',e=>{
  else if(k==='clr'){it.ovl.t='';const ov=$('#cxov');if(ov)ov.textContent=''}
  else if(k==='sel'){PT.cur=+b.dataset.i;lastSig='';refresh()}
  else if(k==='play'){const v=$('.cxmedia');if(v&&v.tagName==='VIDEO'){if(v.paused){if(v.currentTime<(it.vs||0)||(it.ve&&v.currentTime>=it.ve-.1))v.currentTime=it.vs||0;const p=v.play();if(p&&p.catch)p.catch(()=>{})}else{v.__byBtn=true;v.pause()}}}
+},true);
+/* the moment a video is chosen, show a loading ring instead of a blank space */
+document.addEventListener('change',e=>{
+ const i=e.target;if(!i||i.id!=='fbfile'||!i.files||![...i.files].some(f=>/^video\//.test(f.type)))return;
+ const m=$('#fbmedia');if(!m||$('#cxwait'))return;
+ const d=document.createElement('div');d.id='cxwait';d.className='cxwait';d.setAttribute('role','status');d.innerHTML='<i></i><span>Loading your video…</span>';
+ m.after(d);setTimeout(()=>{const x=$('#cxwait');if(x)x.remove()},25000);
 },true);
 /* hook into the existing screen */
 let hooked=false;
@@ -9236,7 +9260,7 @@ function setup(v){
  v.addEventListener('volumechange',()=>{if(Date.now()-(v.__pt||0)<600)return;if(v.muted){v.dataset.nosound='1';hint(v,false)}else hint(v,false)});
  v.addEventListener('pause',()=>{if(v.__sp){v.__sp=false;return}if(v.__ap&&!v.ended)v.dataset.user='1'});
  if(io)io.observe(v);
- ctl(v);still(v);
+ ctl(v);spin(v);still(v);
 }
 function ctl(v){
  const h=v.parentElement;if(!h||h.querySelector('.avclp')||h.closest('.sheet,.aip,#bkp'))return;
@@ -9257,6 +9281,15 @@ function still(v){
  };
  if(v.readyState>=2)setTimeout(go,300);else v.addEventListener('loadeddata',()=>setTimeout(go,300),{once:true});
  v.addEventListener('seeked',()=>{if(v.paused)snap()});
+}
+function spin(v){
+ const h=v.parentElement;if(!h||h.querySelector('.avspin')||h.closest('.sheet,.aip,#bkp'))return;
+ if(getComputedStyle(h).position==='static')h.style.position='relative';
+ const d=document.createElement('div');d.className='avspin';d.setAttribute('role','status');d.setAttribute('aria-label','Loading video');d.innerHTML='<i></i>';
+ h.appendChild(d);
+ const off=()=>d.classList.add('off'),on=()=>d.classList.remove('off');
+ if(v.readyState>=3)off();
+ ['canplay','playing'].forEach(n=>v.addEventListener(n,off));v.addEventListener('waiting',on);v.addEventListener('error',off);
 }
 function scan(){document.querySelectorAll(SEL).forEach(setup)}
 let tm=null;
