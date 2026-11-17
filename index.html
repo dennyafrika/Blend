@@ -1922,6 +1922,10 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 .cxwait{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:220px;border-radius:14px;background:#000;color:#fff;font-size:13px;font-weight:600}
 .cxwait i{width:38px;height:38px;border-radius:50%;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;animation:cxsp .8s linear infinite}
 
+.fb .ptbox{padding-bottom:96px}
+.ptrange input[type=range]{height:40px;accent-color:#6d4aff;touch-action:pan-y}
+.cxprev{margin-top:8px;width:100%;padding:11px;border:0;border-radius:12px;background:#6d4aff;color:#fff;font:inherit;font-weight:700}
+
 .avsnd{position:absolute;left:10px;bottom:46px;z-index:3;border:0;border-radius:999px;padding:7px 12px;background:rgba(0,0,0,.65);color:#fff;font:inherit;font-size:13px;font-weight:600}
 
 .avclp{position:absolute;left:10px;top:10px;z-index:3;border:0;border-radius:999px;padding:6px 11px;background:rgba(0,0,0,.55);color:#fff;font:inherit;font-size:12px;font-weight:700}
@@ -7377,7 +7381,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 58',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 58',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 59',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 59',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9192,6 +9196,7 @@ document.addEventListener('click',e=>{
  else if(k==='lg'){it.ovl.s=clamp((it.ovl.s||1)+.2,.5,3);refresh()}
  else if(k==='clr'){it.ovl.t='';const ov=$('#cxov');if(ov)ov.textContent=''}
  else if(k==='sel'){PT.cur=+b.dataset.i;lastSig='';refresh()}
+ else if(k==='prev'){const v=$('#ptvid');if(v){v.muted=true;v.currentTime=it.vs||0;const q=v.play();if(q&&q.catch)q.catch(()=>{})}}
  else if(k==='play'){const v=$('.cxmedia');if(v&&v.tagName==='VIDEO'){if(v.paused){if(v.currentTime<(it.vs||0)||(it.ve&&v.currentTime>=it.ve-.1))v.currentTime=it.vs||0;const p=v.play();if(p&&p.catch)p.catch(()=>{})}else{v.__byBtn=true;v.pause()}}}
 },true);
 /* the moment a video is chosen, show a loading ring instead of a blank space */
@@ -9201,6 +9206,32 @@ document.addEventListener('change',e=>{
  const d=document.createElement('div');d.id='cxwait';d.className='cxwait';d.setAttribute('role','status');d.innerHTML='<i></i><span>Loading your video…</span>';
  m.after(d);setTimeout(()=>{const x=$('#cxwait');if(x)x.remove()},6000);
 },true);
+/* ---------- trimming: clear times, a preview button, always reachable ---------- */
+const tf=t=>(Math.max(0,t||0)).toFixed(1)+' s';
+function trimLabels(it){
+ const r=$('#ptrt'),n=$('#ptvn');if(!it||!it.vd)return;
+ if(r)r.textContent=tf(it.vs)+' to '+tf(it.ve);
+ if(n)n.textContent=(it.vs<.05&&it.ve>=it.vd-.05)?'Drag the sliders to cut the start or the end. Leave both at the ends to keep the whole video.':'Only '+tf(it.ve-it.vs)+' of '+tf(it.vd)+' will play. Tap Preview to see it.';
+}
+window.addEventListener('input',e=>{
+ const t=e.target;if(!(t&&t.dataset&&t.dataset.ptv))return;
+ const it=PT.items[PT.cur],v=$('#ptvid');
+ if(it&&!it.vd&&v&&isFinite(v.duration)&&v.duration>0){it.vd=v.duration;it.vs=0;it.ve=v.duration}
+},true);
+document.addEventListener('input',e=>{
+ const t=e.target;if(!(t&&t.dataset&&t.dataset.ptv))return;
+ const it=PT.items[PT.cur];trimLabels(it);
+ const v=$('#ptvid');if(v&&it){try{v.pause()}catch(_){}}
+});
+function trimUI(){
+ const rg=document.querySelector('#ptbox .ptrange');if(!rg||rg.dataset.cxt)return;
+ rg.dataset.cxt='1';
+ const it=PT.items[PT.cur];
+ const b=document.createElement('button');b.type='button';b.className='cxprev';b.dataset.cx='prev';b.textContent='▶ Preview the trimmed video';
+ rg.appendChild(b);
+ const v=$('#ptvid');if(it&&!it.vd&&v){const f=()=>{if(isFinite(v.duration)&&v.duration>0&&!it.vd){it.vd=v.duration;it.vs=0;it.ve=v.duration}trimLabels(it)};v.addEventListener('loadedmetadata',f);f()}else trimLabels(it);
+ setTimeout(()=>trimLabels(PT.items[PT.cur]),400);setTimeout(()=>{try{rg.scrollIntoView({block:'center',behavior:'smooth'})}catch(_){}},250);
+}
 /* hook into the existing screen */
 let hooked=false;
 function hook(){
@@ -9208,7 +9239,7 @@ function hook(){
  if(!sh){hooked=false;lastSig='';return}
  if(!hooked){hooked=true;const old=PT.onDraw;PT.onDraw=function(){if(old)old.apply(this,arguments);refresh();applyBgPos()};refresh();applyBgPos()}
 }
-new MutationObserver(()=>{hook();const t=document.getElementById('ptvid');if(t&&!t.__pr){t.__pr=true;t.setAttribute('preload','auto');t.muted=true;t.addEventListener('pause',()=>{})}}).observe(document.body,{childList:true,subtree:true});
+new MutationObserver(()=>{hook();trimUI();const t=document.getElementById('ptvid');if(t&&!t.__pr){t.__pr=true;t.setAttribute('preload','auto');t.muted=true;t.addEventListener('pause',()=>{})}}).observe(document.body,{childList:true,subtree:true});
 setInterval(()=>{if(hooked)refresh()},1500);
 /* words written on the picture are not repeated as a caption above it */
 window.addEventListener('click',e=>{
