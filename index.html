@@ -1915,8 +1915,7 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 
 .avsnd{position:absolute;left:10px;bottom:46px;z-index:3;border:0;border-radius:999px;padding:7px 12px;background:rgba(0,0,0,.65);color:#fff;font:inherit;font-size:13px;font-weight:600}
 
-.avc{position:absolute;left:50%;bottom:58px;transform:translateX(-50%);z-index:3;display:flex;gap:8px}
-.avc button{border:0;border-radius:999px;padding:7px 12px;min-width:44px;background:rgba(0,0,0,.6);color:#fff;font:inherit;font-size:13px;font-weight:700}
+.avclp{position:absolute;left:10px;top:10px;z-index:3;border:0;border-radius:999px;padding:6px 11px;background:rgba(0,0,0,.55);color:#fff;font:inherit;font-size:12px;font-weight:700}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -7368,7 +7367,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 52',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 52',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 53',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 53',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -7989,10 +7988,8 @@ function openClips(id){
 window.__CL.openClips=openClips;
 document.addEventListener('click',e=>{
  const pv=e.target.closest&&e.target.closest('.pvid,.pms');if(!pv||pv.closest('.sheet,.aip,#bkp'))return;
- if(e.target.closest('button,a,input,.avsnd,.cxplay'))return;
- const vv=pv.querySelector('video');if(vv){const r=vv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
-  /* the phone's own sound / play bar and the top-right corner belong to the video player, not to Clips */
-  if(y>r.height-70||y<64&&x>r.width-110||y<64&&x<90)return}
+ /* only the "Clips" button opens Clips; taps on the video itself belong to the video player (pause, 10 s, sound) */
+ if(!e.target.closest('.avclp'))return;
  const v=pv.querySelector('video'),id=v&&v.dataset.pv;if(!id||!REELS.some(r=>r.id===id))return;
  e.preventDefault();e.stopPropagation();openClips(id);
 },true);
@@ -9236,19 +9233,10 @@ function setup(v){
  ctl(v);
 }
 function ctl(v){
- const h=v.parentElement;if(!h||h.querySelector('.avc')||h.closest('.sheet,.aip,#bkp'))return;
+ const h=v.parentElement;if(!h||h.querySelector('.avclp')||h.closest('.sheet,.aip,#bkp'))return;
  if(getComputedStyle(h).position==='static')h.style.position='relative';
- const d=document.createElement('div');d.className='avc';
- d.innerHTML='<button type="button" data-av="-10" aria-label="Back 10 seconds">⏪ 10</button><button type="button" data-av="pp" aria-label="Play or pause">❚❚</button><button type="button" data-av="10" aria-label="Forward 10 seconds">10 ⏩</button>';
- const pp=d.querySelector('[data-av=pp]'),sync=()=>{pp.textContent=v.paused?'▶':'❚❚'};
- d.addEventListener('click',e=>{const b=e.target.closest('[data-av]');if(!b)return;e.preventDefault();e.stopPropagation();
-  const k=b.dataset.av;
-  if(k==='pp'){if(v.paused){v.dataset.user='1';mark(v);const q=v.play();if(q&&q.catch)q.catch(()=>{})}else{v.dataset.user='1';v.pause()}}
-  else{const t=v.currentTime+(+k),end=v.duration||1e9;v.currentTime=Math.max(0,Math.min(t,end-.1))}
-  sync()});
- d.addEventListener('pointerdown',e=>e.stopPropagation());
- v.addEventListener('play',sync);v.addEventListener('pause',sync);
- h.appendChild(d);sync();
+ const b=document.createElement('button');b.type='button';b.className='avclp';b.setAttribute('aria-label','Open in Clips');b.textContent='⤢ Clips';
+ h.appendChild(b);
 }
 function scan(){document.querySelectorAll(SEL).forEach(setup)}
 let tm=null;
