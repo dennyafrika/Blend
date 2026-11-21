@@ -1931,27 +1931,6 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 .avclp{position:absolute;left:10px;top:10px;z-index:3;border:0;border-radius:999px;padding:6px 11px;background:rgba(0,0,0,.55);color:#fff;font:inherit;font-size:12px;font-weight:700}
 .avspin{position:absolute;right:10px;top:10px;z-index:2;pointer-events:none}.avspin.off{display:none}
 
-/* ===== design pass 1 ===== */
-html[data-halo][data-theme="light"]{--accent:#6A3DF0;--link:#6A3DF0;--bg:#F6F4FF;--surface2:#EFEAFF;--line:#E9E4FA;--ink:#17132B;--muted:#7B7794}
-html[data-halo][data-theme="dark"]{--accent:#8B5CF6;--link:#A78BFA;--bg:#0E0A1F;--surface:#171231;--surface2:#221B45;--line:#2B2450;--muted:#A39FC4;--ink:#F3F0FF}
-#mkfab{display:none!important}
-html[data-halo]{--emnav:84px}
-html[data-halo] nav#nav[data-ds]{left:0;right:0;bottom:0;border-radius:0;border:0;border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));gap:0;background:var(--surface);box-shadow:0 -6px 22px rgba(60,30,140,.08);align-items:center;justify-content:space-around}
-html[data-halo] nav#nav[data-ds] .dsb{flex:1 1 0;min-width:0;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:14px;background:none;color:var(--muted);font-size:11px;font-weight:600}
-html[data-halo] nav#nav[data-ds] .dsb .dsi{display:grid;place-items:center}
-html[data-halo] nav#nav[data-ds] .dsb .dsl{max-width:none;opacity:1}
-html[data-halo] nav#nav[data-ds] .dsb[aria-current="page"]{background:none;color:var(--accent);font-weight:800;flex-grow:1}
-html[data-halo] nav#nav[data-ds] .dsb[aria-current="page"] svg{stroke-width:2.3}
-html[data-halo] nav#nav[data-ds] .dsplus{flex:0 0 auto;width:50px;height:50px;border-radius:50%;margin:0 6px;background:var(--accent);color:#fff;display:grid;place-items:center;box-shadow:0 8px 18px rgba(106,61,240,.45)}
-html[data-halo] nav#nav[data-ds] .dsplus:active{transform:scale(.95)}
-.dshub{padding:10px 14px 4px}
-.dshero{border-radius:20px;background:linear-gradient(135deg,#4b2bd6,#8b5cf6);color:#fff;padding:16px 18px;margin-bottom:10px}
-.dshero h3{margin:0 0 4px;font-size:22px;line-height:1.15}.dshero small{opacity:.85}
-.dsgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.dstile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:12px 4px;border-radius:16px;background:var(--surface2);color:var(--ink);text-align:center;min-height:86px}
-.dstile .dstic{color:var(--accent)}.dstile b{font-size:13px}.dstile small{font-size:10.5px;color:var(--muted)}
-.dstile:active{transform:scale(.97)}
-
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7402,7 +7381,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 60',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 60',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 61',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 61',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9354,72 +9333,6 @@ let tm=null;
 new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(scan,120)}).observe(document.body,{childList:true,subtree:true});
 scan();
 window.__AV={scan};
-})();
-
-</script>
-<script>
-/* Design system pass 1: violet brand colour, classic 5-tab bar (Home, Explore, +, Inbox, Profile), Explore hub tiles */
-(function(){
-const $=s=>document.querySelector(s);
-const ic={
- home:'<path d="M4.5 10.9 12 4.2l7.5 6.7V18a2.5 2.5 0 0 1-2.5 2.5H7A2.5 2.5 0 0 1 4.5 18z"/>',
- explore:'<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
- inbox:'<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-4 3.5V17h-.5A2.5 2.5 0 0 1 4 14.5z"/>',
- me:'<circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>',
- live:'<circle cx="12" cy="12" r="2.2"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9M16.5 7.5a6.4 6.4 0 0 1 0 9M4.7 4.7a10.4 10.4 0 0 0 0 14.6M19.3 4.7a10.4 10.4 0 0 1 0 14.6"/>',
- play:'<rect x="3.5" y="5" width="17" height="14" rx="4"/><path d="m10.5 9.3 4 2.7-4 2.7z"/>',
- bag:'<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
- spark:'<path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M18.5 16.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
- lock:'<rect x="5" y="10.5" width="14" height="9.5" rx="3"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>',
- clip:'<rect x="6.5" y="3" width="11" height="18" rx="3.5"/><path d="m11 9.3 3 2.7-3 2.7z"/>'
-};
-const svg=(k,s)=>'<svg width="'+(s||24)+'" height="'+(s||24)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ic[k]+'</svg>';
-function build(){
- const nav=$('#nav');if(!nav||nav.dataset.ds==='1')return;
- nav.dataset.emb='1';nav.dataset.ds='1';
- const b=(k,l,attrs)=>'<button class="dsb" '+attrs+' data-dk="'+k+'" aria-label="'+l+'"><span class="dsi">'+svg(k,24)+'</span><span class="dsl">'+l+'</span></button>';
- nav.innerHTML=b('home','Home','data-a="tab" data-t="home"')+b('explore','Explore','data-a="tab" data-t="explore"')+
-  '<button class="dsplus" data-a="create" data-dk="create" aria-label="Create a post"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+
-  b('inbox','Inbox','data-a="msgs"')+b('me','Profile','data-a="tab" data-t="me"');
- mark();
-}
-function mark(){
- const nav=$('#nav');if(!nav||nav.dataset.ds!=='1')return;
- const t=(typeof S!=='undefined'&&S.tab)||'home',ai=!!document.getElementById('aip');
- const cur={home:t==='home'&&!ai,explore:(t==='explore'||t==='videos'||t==='market')||ai,me:t==='me'&&!ai};
- nav.querySelectorAll('.dsb').forEach(x=>{const k=x.dataset.dk;if(cur[k])x.setAttribute('aria-current','page');else x.removeAttribute('aria-current')});
-}
-function hold(){build();mark()}
-const nv=$('#nav');
-if(nv)new MutationObserver(hold).observe(nv,{childList:true});
-const _rn=window.renderNav;
-if(typeof _rn==='function'){window.renderNav=function(){const r=_rn.apply(this,arguments);hold();return r}}
-new MutationObserver(mark).observe($('#app')||document.body,{childList:true});
-document.addEventListener('click',()=>setTimeout(mark,120),true);
-hold();
-/* Explore hub tiles */
-const tile=(k,l,sub)=>'<button class="dstile" data-ds="'+k+'"><span class="dstic">'+svg(k==='clips'?'clip':k,26)+'</span><b>'+l+'</b><small>'+sub+'</small></button>';
-function hub(){
- const body=document.getElementById('exploreBody'),sc=document.getElementById('s-explore');
- if(!sc||!body||sc.querySelector('.dshub'))return;
- const seg=sc.querySelector(':scope > .seg');
- const h=document.createElement('div');h.className='dshub';
- h.innerHTML='<div class="dshero"><h3>Discover<br>amazing content</h3><small>Videos · Live · Shop · Private sessions</small></div><div class="dsgrid">'+tile('live','Live','Join rooms')+tile('play','Watch','Videos')+tile('clips','Clips','Short videos')+tile('bag','Market','Buy &amp; sell')+tile('lock','Sessions','Private 1-to-1')+tile('spark','Ask AI','Assistant')+'</div>';
- (seg?seg:sc).insertAdjacentElement(seg?'afterend':'afterbegin',h);
-}
-const _re=window.renderExplore;
-if(typeof _re==='function'){window.renderExplore=function(){const r=_re.apply(this,arguments);try{hub()}catch(_){}return r}}
-document.addEventListener('click',e=>{
- const b=e.target.closest('[data-ds]');if(!b||!b.classList.contains('dstile'))return;
- const k=b.dataset.ds;
- if(k==='live'){S.vmode='live';setTab('videos')}
- else if(k==='play'){S.vmode='watch';setTab('videos')}
- else if(k==='clips'){S.vmode='clips';setTab('videos')}
- else if(k==='bag')setTab('market');
- else if(k==='lock'){if(window.__PV&&__PV.open)__PV.open();else{const x=document.querySelector('[data-pv=open],[data-psv]');x&&x.click()}}
- else if(k==='spark'){const x=document.querySelector('[data-ai=open]')||document.querySelector('.emask');x&&x.click();if(!x&&typeof openAI==='function')openAI()}
-});
-window.__DS={build,mark};
 })();
 
 </script>
