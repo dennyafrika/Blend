@@ -1931,9 +1931,23 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 .avclp{position:absolute;left:10px;top:10px;z-index:3;border:0;border-radius:999px;padding:6px 11px;background:rgba(0,0,0,.55);color:#fff;font:inherit;font-size:12px;font-weight:700}
 .avspin{position:absolute;right:10px;top:10px;z-index:2;pointer-events:none}.avspin.off{display:none}
 
-/* ===== Black & Gold look (colours, shapes, surfaces only – nothing moves) ===== */
-html[data-halo][data-theme="dark"]{--bg:#09090A;--surface:#141413;--surface2:#1E1C18;--ink:#F6F2E9;--muted:#9C978B;--line:#2A2722;--accent:#E8C77F;--accent-ink:#1B1406;--link:#E8C77F;--grad:linear-gradient(135deg,#F4DBA4 0%,#D9AE5E 55%,#B98A3E 100%);--gold-glow:rgba(232,199,127,.28);--gold-soft:rgba(232,199,127,.12)}
-html[data-halo][data-theme="light"]{--bg:#F8F4EA;--surface:#FFFFFF;--surface2:#F2EBDA;--ink:#17140D;--muted:#7A7467;--line:#E8E0CE;--accent:#C9A24F;--accent-ink:#1B1406;--link:#8A6420;--grad:linear-gradient(135deg,#F0D48F 0%,#D4AA58 55%,#B07D2E 100%);--gold-glow:rgba(176,125,46,.3);--gold-soft:rgba(201,162,79,.16)}
+.rtrow{display:flex;align-items:center;gap:10px;padding:6px 16px 2px}
+.rts{display:inline-flex;gap:1px}
+.rts button{border:0;background:none;padding:2px 3px;font-size:22px;line-height:1;color:var(--line);min-width:30px;min-height:30px;display:grid;place-items:center;cursor:pointer;transition:transform .12s}
+.rts button.on{color:#FFB629;text-shadow:0 0 10px rgba(255,182,41,.35)}
+.rts button:not(.on):not(:disabled){color:var(--muted);opacity:.55}
+.rts button:active:not(:disabled){transform:scale(1.25)}
+.rts button:disabled{cursor:default}
+.rtt{font-size:12.5px;color:var(--muted);font-weight:600}
+.rtrow.own .rts button{pointer-events:none}
+
+.rtreel{position:absolute;left:10px;top:64px;z-index:6;border-radius:999px;background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.rtreel .rtrow{padding:2px 10px}.rtreel .rtt{color:#fff}.rtreel .rts button{font-size:20px;min-width:26px;min-height:26px}
+.vc>.rtrow{padding:0 16px 10px}.wm>.rtrow{padding:6px 0}
+
+/* ===== Violet-on-black look (colours, shapes, surfaces only – nothing moves) ===== */
+html[data-halo][data-theme="dark"]{--bg:#0A0712;--surface:#140F20;--surface2:#1E1730;--ink:#F4F0FF;--muted:#A59DBF;--line:#2A2140;--accent:#8B3DFF;--accent-ink:#FFFFFF;--link:#B590FF;--grad:linear-gradient(135deg,#A266FF 0%,#7B35F5 55%,#5E27D9 100%);--gold-glow:rgba(139,61,255,.42);--gold-soft:rgba(139,61,255,.16)}
+html[data-halo][data-theme="light"]{--bg:#F6F3FF;--surface:#FFFFFF;--surface2:#EEE8FF;--ink:#16102B;--muted:#6E6788;--line:#E4DCF8;--accent:#7A35F0;--accent-ink:#FFFFFF;--link:#6A2BD8;--grad:linear-gradient(135deg,#9560FF 0%,#7A35F0 55%,#5A27D4 100%);--gold-glow:rgba(122,53,240,.32);--gold-soft:rgba(122,53,240,.13)}
 /* text that was white on violet becomes dark on gold */
 html[data-halo] .haplus,html[data-halo] .mkfab,html[data-halo] .mkbtn,html[data-halo] .dmbtn,html[data-halo] .wgo,html[data-halo] .rtgo,html[data-halo] .fbdone,html[data-halo] .mkpill.fil,html[data-halo] .wlbal,html[data-halo] .aip .af button,html[data-halo] .aip .am.u,.lgt.on,.skbtn{color:var(--accent-ink)}
 html[data-halo] .wlbal :is(small,span,div,b,h1,h2,h3){color:inherit}
@@ -1946,10 +1960,10 @@ html[data-halo] .aip .af button{box-shadow:0 6px 16px var(--gold-glow)}
 .skbtn{background:var(--grad)}.sysk>small{color:var(--accent)}
 /* page + cards */
 html[data-halo] body,html[data-halo] .screen{background:var(--bg)}
-html[data-theme="dark"][data-halo] #app{background:radial-gradient(120% 50% at 50% -8%,rgba(232,199,127,.08),transparent 60%),var(--bg)}
+html[data-theme="dark"][data-halo] #app{background:radial-gradient(120% 50% at 50% -8%,rgba(139,61,255,.16),transparent 60%),var(--bg)}
 html[data-halo] .post,html[data-halo] .pcard,html[data-halo] .card{border-radius:22px}
 html[data-halo][data-theme="dark"] .post{background:var(--surface);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.45)}
-html[data-halo][data-theme="light"] .post{border:1px solid var(--line);box-shadow:0 8px 24px rgba(120,90,30,.08)}
+html[data-halo][data-theme="light"] .post{border:1px solid var(--line);box-shadow:0 8px 24px rgba(90,40,200,.08)}
 /* pills / segmented tabs: selected = gold */
 html[data-halo] .seg{background:var(--surface2);border:1px solid var(--line)}
 html[data-halo] .seg button[aria-selected="true"]{background:var(--grad);color:var(--accent-ink);font-weight:800;box-shadow:0 4px 14px var(--gold-glow)}
@@ -1958,7 +1972,7 @@ html[data-halo] .emseg button[aria-pressed=true]{background:var(--grad);color:va
 html[data-halo] .chip[aria-pressed="true"],html[data-halo] .chip.on,html[data-halo] .fchip.on{background:var(--grad);color:var(--accent-ink);border-color:transparent}
 html[data-halo] .chip,html[data-halo] .fchip{background:var(--surface);border:1px solid var(--line)}
 /* bottom bar: same pill, same place, black-and-gold finish */
-html[data-halo][data-theme="dark"] nav#nav{background:rgba(20,20,19,.94);border:1px solid rgba(232,199,127,.22);box-shadow:0 14px 34px rgba(0,0,0,.6)}
+html[data-halo][data-theme="dark"] nav#nav{background:rgba(20,15,32,.94);border:1px solid rgba(139,61,255,.35);box-shadow:0 14px 34px rgba(0,0,0,.6)}
 html[data-halo] nav#nav button[aria-current="page"],html[data-halo] nav#nav .emask[aria-current="page"]{background:var(--grad);color:var(--accent-ink);box-shadow:0 6px 16px var(--gold-glow)}
 html[data-halo] nav .create,.plus,html[data-halo] .plus{background:var(--grad);color:var(--accent-ink)}
 .dot,html[data-halo] .dot{background:var(--grad)}
@@ -7435,7 +7449,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 62',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 62',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 64',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 64',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9387,6 +9401,53 @@ let tm=null;
 new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(scan,120)}).observe(document.body,{childList:true,subtree:true});
 scan();
 window.__AV={scan};
+})();
+
+</script>
+<script>
+/* Star ratings for photos and videos (1-5 stars, one rating per person, can be changed or removed) */
+(function(){
+const $=s=>document.querySelector(s);
+const A=()=>window.__BK&&window.__BK.api;
+let R=[],subd=false;
+function ensure(){const a=A();if(!a||!a.on||!a.on()||subd)return;subd=true;
+ try{a.col('ratings').limit(5000).onSnapshot(s=>{R=s.docs.map(d=>d.data());refresh()},e=>console.warn('rt',e&&e.code))}catch(e){console.warn(e);subd=false}}
+setInterval(ensure,1000);
+function stats(id){const a=A(),l=R.filter(r=>r.t===id),n=l.length,avg=n?l.reduce((s,r)=>s+r.v,0)/n:0;
+ const me=a&&a.uid&&a.uid();const mine=me?(l.find(r=>r.u===me)||{}).v||0:0;return{n,avg,mine}}
+function html(id,own){
+ const s=stats(id),shown=s.mine||Math.round(s.avg);
+ let b='';for(let i=1;i<=5;i++)b+='<button type="button" data-rtv="'+i+'" class="'+(i<=shown?'on':'')+(s.mine?' mine':'')+'" role="radio" aria-checked="'+(s.mine===i)+'" aria-label="'+i+(i===1?' star':' stars')+'"'+(own?' disabled':'')+'>★</button>';
+ const t=s.n?(s.avg.toFixed(1)+' · '+s.n+(s.n===1?' rating':' ratings')):(own?'No ratings yet':'Rate this');
+ return '<div class="rtrow'+(own?' own':'')+'" data-rt="'+id+'" data-own="'+(own?1:0)+'"><span class="rts" role="radiogroup" aria-label="Star rating">'+b+'</span><span class="rtt">'+t+(s.mine?' · you gave '+s.mine:'')+'</span></div>';
+}
+function refresh(){document.querySelectorAll('.rtrow').forEach(r=>{const h=html(r.dataset.rt,r.dataset.own==='1');const t=document.createElement('div');t.innerHTML=h;r.replaceWith(t.firstChild)})}
+const _ph=postHTML;
+postHTML=function(p){
+ let s=_ph(p);
+ try{if(p&&p.remote&&p.doc&&(p.type==='photo'||p.type==='video')&&s.indexOf('<div class="acts">')>-1)s=s.replace('<div class="acts">',html(p.doc,p.u==='me')+'<div class="acts">')}catch(e){}
+ return s;
+};
+const _vc=vcard;
+vcard=function(v){let h=_vc(v);try{if(v&&v.real&&v.docid)h=h.replace(/<\/article>\s*$/,html(v.docid,v.u==='me')+'</article>')}catch(e){}return h};
+const _rm=renderWatchMeta;
+renderWatchMeta=function(){_rm.apply(this,arguments);try{const el=document.getElementById('wMeta'),v=VIDS.find(x=>x.id===W.id);if(el&&v&&v.real&&v.docid&&!el.querySelector('.rtrow')){const a=el.querySelector('.vact');if(a)a.insertAdjacentHTML('beforebegin',html(v.docid,v.u==='me'))}}catch(e){}};
+const _rh=reelHTML;
+reelHTML=function(r){let h=_rh(r);try{if(r&&r.real&&r.docid)h=h.replace(/<\/section>\s*$/,'<div class="rtreel">'+html(r.docid,r.u==='me')+'</div></section>')}catch(e){}return h};
+function ownerOf(id){const a=A();if(!a)return null;const st=a.st;for(const k of ['posts','videos','clips']){const d=(st[k]||[]).find(x=>x.id===id);if(d)return d.uid}return null}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.rtrow [data-rtv]');if(!b)return;
+ e.preventDefault();e.stopPropagation();
+ const row=b.closest('.rtrow'),id=row.dataset.rt,a=A(),v=+b.dataset.rtv;
+ if(!a||!a.on||!a.on()){toast('Join Blend to rate');return}
+ const uid=a.uid();if(ownerOf(id)===uid||row.dataset.own==='1'){toast('You cannot rate your own post');return}
+ const cur=(R.find(r=>r.t===id&&r.u===uid)||{}).v||0,key=id+'_'+uid;
+ R=R.filter(r=>!(r.t===id&&r.u===uid));
+ if(cur===v){a.guard(()=>a.col('ratings').doc(key).delete());toast('Rating removed')}
+ else{const d={t:id,u:uid,v,o:ownerOf(id)||'',ts:a.now()};R.push(d);a.guard(()=>a.col('ratings').doc(key).set(d));toast('You gave '+v+(v===1?' star':' stars'))}
+ refresh();
+},true);
+window.__RT={html,stats,refresh,list:()=>R};
 })();
 
 </script>
