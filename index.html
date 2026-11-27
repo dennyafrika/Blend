@@ -1931,6 +1931,13 @@ html[data-bgphoto] body,html[data-bgphoto] #app,html[data-bgphoto] .screen,html[
 .avclp{position:absolute;left:10px;top:10px;z-index:3;border:0;border-radius:999px;padding:6px 11px;background:rgba(0,0,0,.55);color:#fff;font:inherit;font-size:12px;font-weight:700}
 .avspin{position:absolute;right:10px;top:10px;z-index:2;pointer-events:none}.avspin.off{display:none}
 
+html[data-halo] nav#nav button svg.nvs{filter:none;stroke:var(--nvl,#fff);fill:none}
+html[data-halo] nav#nav button svg.nvs *{stroke:inherit;stroke-dasharray:none;stroke-dashoffset:0;animation:none}
+html[data-halo] nav#nav button svg.nvs .nvf{fill:var(--nvl,#fff);fill-opacity:.2}
+html[data-halo] nav#nav button svg.nvs path:not(.x),html[data-halo] nav#nav button svg.nvs circle,html[data-halo] nav#nav button svg.nvs rect{vector-effect:none}
+html[data-halo] nav#nav button svg.nvs>:not(.nvf){fill:none}
+html[data-halo][data-theme="light"] nav#nav button:not([aria-current="page"]){--nvl:#4B22C9}
+
 .rtrow{display:flex;align-items:center;gap:10px;padding:6px 16px 2px}
 .rts{display:inline-flex;gap:1px}
 .rts button{border:0;background:none;padding:2px 3px;font-size:22px;line-height:1;color:var(--line);min-width:30px;min-height:30px;display:grid;place-items:center;cursor:pointer;transition:transform .12s}
@@ -2040,10 +2047,10 @@ html[data-halo] .edbtn,html[data-halo] .wlmini{border:0;background:var(--rface);
 html[data-halo] :is(.ib,.srchbtn,.act,.edbtn,.wlmini):active{transform:translateY(2px);box-shadow:inset 0 2px 5px rgba(0,0,0,.4)}
 html[data-halo] .haplus{box-shadow:var(--rselsh);background:var(--rsel)}
 /* ===== bottom bar icons: neon glow ===== */
-html[data-halo] nav#nav button svg{filter:drop-shadow(0 0 2.5px currentColor) drop-shadow(0 0 8px currentColor)}
+html[data-halo] nav#nav button svg{filter:none}
 html[data-halo] nav#nav button:not([aria-current="page"]){color:#D9CFF5}
 html[data-halo][data-theme="light"] nav#nav button:not([aria-current="page"]){color:#7A35F0}
-html[data-halo] nav#nav button[aria-current="page"] svg{filter:drop-shadow(0 0 2.5px rgba(255,255,255,.95)) drop-shadow(0 0 9px rgba(255,255,255,.7))}
+html[data-halo] nav#nav button[aria-current="page"] svg{filter:none}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -7495,7 +7502,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 67',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 67',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 69',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 69',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9447,6 +9454,37 @@ let tm=null;
 new MutationObserver(()=>{clearTimeout(tm);tm=setTimeout(scan,120)}).observe(document.body,{childList:true,subtree:true});
 scan();
 window.__AV={scan};
+})();
+
+</script>
+<script>
+/* Bottom bar icons: "new set" in a violet-to-pink gradient (no glow). Positions and tabs unchanged. */
+(function(){
+const P={
+ home:['<path d="M3.5 11.4 12 4l8.5 7.4"/>','<path d="M6 10v8.5A1.5 1.5 0 0 0 7.5 20h9a1.5 1.5 0 0 0 1.5-1.5V10M9.5 20v-4.5a2.5 2.5 0 0 1 5 0V20"/>'],
+ videos:['<rect x="2.5" y="6.5" width="13" height="11" rx="3"/>','<path d="m15.5 10.8 5.5-3.3v9l-5.5-3.3z"/>'],
+ ask:['<path d="M5 19 15.5 8.5"/>','<path d="M15 3.5l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9zM19.5 11l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6zM8.5 4.5l.5 1.1 1.1.5-1.1.5-.5 1.1-.5-1.1-1.1-.5 1.1-.5z"/>'],
+ market:['<path d="M2.8 4h2.6l2.1 11h10.1l2-8H6.4"/>','<circle cx="9.2" cy="19" r="1.5"/><circle cx="16.8" cy="19" r="1.5"/>'],
+ me:['<circle cx="12" cy="12" r="9"/>','<circle cx="12" cy="9.6" r="3"/><path d="M6.4 18.3c1.4-2 3.4-3 5.6-3s4.2 1 5.6 3"/>']
+};
+function defs(){
+ if(document.getElementById('nvg'))return;
+ const d=document.createElement('div');d.style.cssText='position:absolute;width:0;height:0;overflow:hidden';d.setAttribute('aria-hidden','true');
+ d.innerHTML='<svg width="0" height="0"><defs><linearGradient id="nvg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C9A6FF"/><stop offset="1" stop-color="#FF7AD9"/></linearGradient></defs></svg>';
+ document.body.appendChild(d);
+}
+function apply(){
+ const nav=document.getElementById('nav');if(!nav)return;
+ nav.querySelectorAll('button[data-k]').forEach(b=>{
+  const k=b.dataset.k,p=P[k];if(!p)return;
+  const ei=b.querySelector('.ei');if(!ei||ei.dataset.nvi==='2')return;
+  ei.innerHTML='<svg class="hn nvs" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="nvf">'+p[0]+'</g>'+p[1]+'</svg>';
+  ei.dataset.nvi='2';
+ });
+}
+const nav=document.getElementById('nav');
+if(nav)new MutationObserver(apply).observe(nav,{childList:true,subtree:true});
+apply();setTimeout(apply,500);setTimeout(apply,2000);
 })();
 
 </script>
