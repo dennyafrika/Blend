@@ -2066,6 +2066,20 @@ html[data-halo] nav#nav>button[aria-current="page"] svg.nvs{stroke-width:2}
 html[data-halo] .seg.nv3{gap:8px!important;padding:3px 6px!important}
 html[data-halo] .seg.nv3 button{flex:1 1 0;margin:0}
 
+/* Top bar: same bar-of-keys design as the bottom bar, no logo, search last */
+html[data-halo] .topbar .logo{display:none}
+html[data-halo] .topbar{padding:max(10px,env(safe-area-inset-top,0px)) 12px 6px}
+html[data-halo] .topbar .icons{display:flex;flex:1 1 100%;width:100%;margin:0;background:var(--navbar);gap:6px;padding:5px 6px;border-radius:30px;align-items:stretch;box-shadow:0 6px 18px rgba(60,40,120,.12)}
+html[data-halo] .topbar .icons>*:not([hidden]){order:1}
+html[data-halo] .topbar .icons>.srchbtn{order:99}
+html[data-halo] .topbar .icons>:is(.ib,.haplus,.theme,.palbtn){flex:1 1 0;min-width:0;width:auto;height:46px;display:grid;place-items:center;padding:0;margin:0;border:0;border-radius:9px;background:var(--rface);box-shadow:var(--r1);color:var(--nvl);position:relative}
+html[data-halo] .topbar .icons>.tb1{border-radius:26px 9px 9px 26px}
+html[data-halo] .topbar .icons>.tb2{border-radius:9px 26px 26px 9px}
+html[data-halo] .topbar .icons>:is(.ib,.haplus,.theme,.palbtn):active{transform:translateY(1px)}
+html[data-halo] .topbar .icons>:is(.ib,.haplus) svg{stroke:var(--nvl);filter:none;width:24px;height:24px}
+html[data-halo] .topbar .icons>.theme .tk{transform:scale(.9)}
+html[data-halo] .topbar .icons>.ib .dot{position:absolute;top:8px;right:calc(50% - 20px)}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7516,7 +7530,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 73',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 73',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 74',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 74',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9547,6 +9561,13 @@ function apply(){
 const nav=document.getElementById('nav');
 if(nav)new MutationObserver(apply).observe(nav,{childList:true,subtree:true});
 apply();setTimeout(apply,500);setTimeout(apply,2000);
+
+/* top bar: mark first/last visible key so the bar ends are rounded */
+function tbMark(){try{const ic=document.querySelector('.topbar .icons');if(!ic)return;
+ const v=[...ic.children].filter(x=>x.offsetParent!==null||getComputedStyle(x).display!=='none').sort((a,b)=>(+getComputedStyle(a).order)-(+getComputedStyle(b).order));
+ ic.querySelectorAll('.tb1,.tb2').forEach(x=>x.classList.remove('tb1','tb2'));
+ if(v.length){v[0].classList.add('tb1');v[v.length-1].classList.add('tb2')}}catch(e){}}
+setInterval(tbMark,700);tbMark();
 })();
 
 </script>
