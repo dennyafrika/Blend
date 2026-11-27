@@ -2155,6 +2155,11 @@ html[data-halo] .topbar .icons>.ib>span:not(.dot){grid-area:1/1;display:grid;pla
 html[data-halo] .topbar .icons>.ib>span:not(.dot)>svg{margin:0;display:block}
 html[data-halo] .topbar .icons>.ib>.dot{position:absolute!important}
 
+/* red count badge */
+html[data-halo] .topbar .icons>.ib>.dot.cnt{position:absolute!important;top:-5px;right:-4px;min-width:15px;height:15px;width:auto;padding:0 4px;border-radius:99px;background:#E5322D;background-image:none;color:#fff;font-size:9.5px;font-weight:800;line-height:1;display:grid;place-items:center;border:1.5px solid var(--bg);box-sizing:border-box;font-variant-numeric:tabular-nums;box-shadow:0 2px 4px rgba(150,20,20,.35)}
+html[data-halo] .topbar .icons>.ib>.dot.cnt[hidden]{display:none}
+html[data-halo] .topbar .icons>.ib{overflow:visible}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7607,7 +7612,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 88',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 88',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 89',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 89',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9655,6 +9660,23 @@ setInterval(tbMark,700);tbMark();
   t.classList.toggle('tbfade',hid)},true);
  setTimeout(tbh,300);setTimeout(tbh,1500);window.addEventListener('resize',tbh);
 })();
+
+/* red count badges (1-9, then 9+) on the top notification + message keys */
+function cnt(){
+ let nn=0,mm=0;
+ try{const B=window.__BK&&window.__BK.api;if(B&&B.on&&B.on()){const st=B.st,u=B.uid();
+   nn=(st.notifs||[]).filter(n=>!n.read).length;
+   mm=(st.msgs||[]).filter(m=>m.b===u&&!m.read).length}}catch(e){}
+ try{if(!mm&&typeof unreadN==='function')mm=unreadN()}catch(e){}
+ [['notif',nn],['msgs',mm]].forEach(([a,n])=>{
+  const b=document.querySelector('.topbar .icons>[data-a="'+a+'"]');if(!b)return;
+  let d=b.querySelector('.dot');if(!d){d=document.createElement('span');d.className='dot';b.appendChild(d)}
+  const t=n>9?'9+':String(n);
+  if(d.textContent!==(n?t:''))d.textContent=n?t:'';
+  d.hidden=!n;d.classList.add('cnt');
+  b.setAttribute('aria-label',(a==='notif'?'Notifications':'Messages')+(n?' ('+t+' new)':''))});
+}
+setInterval(cnt,1000);setTimeout(cnt,1500);
 })();
 
 </script>
