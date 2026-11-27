@@ -2212,6 +2212,10 @@ html[data-halo] *:has(>input[type="search"],>input[placeholder*="earch" i],>inpu
 
 html[data-halo] .topbar .icons>[data-a="msgs"] svg{width:16px;height:16px}
 
+/* bottom bar icons use the theme violet by default (follow a chosen colour via acc.css) */
+html[data-halo][data-theme="light"]{--nvl:var(--ac,#5A27D4)}
+html[data-halo][data-theme="dark"]{--nvl:#B9A0FF}
+
 /* test shop photos */
 .mkth.tpph{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#f3f3f3}
 .mkth.tpph::before{display:none!important}
@@ -7694,7 +7698,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 106',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 106',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 107',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 107',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9768,6 +9772,26 @@ function envFix(){try{
   i.setAttribute('autocomplete','off');i.setAttribute('autocorrect','off');i.setAttribute('autocapitalize','off');i.setAttribute('spellcheck','false');i.setAttribute('enterkeyhint','search');i.setAttribute('data-form-type','other')})
 }catch(e){}}
 setInterval(envFix,500);envFix();
+
+/* Swipe a pop-up sheet down to close it (drag from the handle, the top, or anywhere while its content is scrolled to the top) */
+(function(){let sc=null,sh=null,y0=0,t0=0,dy=0,on=false,x0=0,sk=false;
+ function scroller(el){while(el&&el!==sh){if(el.scrollHeight>el.clientHeight+2){const o=getComputedStyle(el).overflowY;if(o==='auto'||o==='scroll')return el}el=el.parentElement}return null}
+ document.addEventListener('touchstart',e=>{sc=document.getElementById('scrim');if(!sc||sc.hidden||!sc.contains(e.target)){sh=null;return}
+  sh=sc.querySelector('.sheet');if(!sh||!sh.contains(e.target)){sh=null;return}
+  const t=e.touches[0];y0=t.clientY;x0=t.clientX;t0=Date.now();dy=0;on=false;
+  const tg=e.target;sk=!!(tg.closest&&tg.closest('input[type="range"],input[type="color"],textarea,[data-nodrag]'));
+  const r=sh.getBoundingClientRect();const top=(t.clientY-r.top)<64;
+  const s=scroller(tg);sk=sk||(!top&&s&&s.scrollTop>1)},{passive:true});
+ document.addEventListener('touchmove',e=>{if(!sh||sk)return;const t=e.touches[0];const d=t.clientY-y0,dx=Math.abs(t.clientX-x0);
+  if(!on){if(d>10&&d>dx*1.4){on=true;sh.style.transition='none';sh.style.animation='none'}else return}
+  dy=Math.max(0,d);e.cancelable&&e.preventDefault();sh.style.transform='translateY('+dy+'px)';sc.style.background='rgba(5,8,15,'+Math.max(.05,.5*(1-dy/500))+')'},{passive:false});
+ function end(){if(!sh||!on){sh=null;return}const v=dy/Math.max(1,Date.now()-t0);const s=sh,c=sc;on=false;
+  if(dy>110||v>.55){s.style.transition='transform .2s ease-in';s.style.transform='translateY(110%)';c.style.transition='background .2s';c.style.background='rgba(5,8,15,0)';
+   setTimeout(()=>{try{closeSheet()}catch(e){}c.style.background='';c.style.transition=''},190)}
+  else{s.style.transition='transform .22s ease-out';s.style.transform='';c.style.transition='background .22s';c.style.background='';setTimeout(()=>{s.style.transition='';s.style.animation='';c.style.transition=''},240)}
+  sh=null}
+ document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true});
+})();
 })();
 
 </script>
