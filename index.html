@@ -2173,6 +2173,10 @@ html[data-halo] .topbar .icons>.theme .tk{transform:none!important;width:32px;he
 html[data-halo] .topbar .icons>.theme .kn{top:1.5px;left:1.5px;width:13px;height:13px}
 html[data-halo] .topbar .icons>.theme .kn svg{width:9px;height:9px}
 html[data-halo] .topbar .icons>.theme[aria-checked="true"] .kn{transform:translateX(13px)}
+html[data-halo] .topbar .icons>.theme .tk{width:38px;height:22px}
+html[data-halo] .topbar .icons>.theme .kn{top:1.5px;left:1.5px;width:16px;height:16px}
+html[data-halo] .topbar .icons>.theme .kn svg{width:11px;height:11px}
+html[data-halo] .topbar .icons>.theme[aria-checked="true"] .kn{transform:translateX(16px)}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -7626,7 +7630,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 90',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 90',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 91',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 91',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
