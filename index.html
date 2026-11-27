@@ -2088,6 +2088,15 @@ html[data-halo] #s-home .topbar.tbfade .icons{pointer-events:auto}
 html[data-halo] #s-home .topbar.tbfade .logo{opacity:0}
 html[data-halo] #s-home .scroll{padding-top:var(--tbh,62px)}
 
+/* Posts: less gap between posts; smaller, spaced action pills spread across the width */
+html[data-halo] #homeBody .post{margin:4px 14px}
+html[data-halo] .post .acts{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:2px 12px 8px}
+html[data-halo] .post .acts .sp{display:none}
+html[data-halo] .post .acts>.act{flex:1 1 auto;justify-content:center;gap:4px;padding:5px 6px;font-size:12px;min-width:0}
+html[data-halo] .post .acts>.act:not(:has(span)):not(.lk):not([data-a=comments]):not(.rp){flex:0 0 auto}
+html[data-halo] .post .acts>.act svg{width:16px;height:16px}
+html[data-halo] .post .acts>.act.sv{flex:0 0 auto;padding:5px 9px}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7538,7 +7547,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 77',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 77',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 79',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 79',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
