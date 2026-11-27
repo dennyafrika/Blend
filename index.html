@@ -2198,6 +2198,8 @@ html[data-halo] .mkfab:active{transform:scale(.95)}
 html[data-halo][data-acc]:not(#x){--accent:var(--ac);--accent-ink:var(--acink);--ac-l:color-mix(in srgb,var(--ac) 62%,#fff);--ac-d:color-mix(in srgb,var(--ac) 62%,#000);--grad:linear-gradient(135deg,var(--ac-l) 0%,var(--ac) 55%,var(--ac-d) 100%);--gold-glow:color-mix(in srgb,var(--ac) 42%,transparent);--gold-soft:color-mix(in srgb,var(--ac) 14%,transparent)}
 html[data-halo][data-acc][data-theme="dark"]:not(#x){--link:var(--ac-l)}
 html[data-halo][data-acc][data-theme="light"]:not(#x){--link:var(--ac-d)}
+/* your own avatar ("Y") follows the accent colour */
+html[data-halo][data-acc] .av[style*="--c:200;"]:not(#x),html[data-halo][data-acc] .tpav:not([style*="background-image"]):not(#x){background:linear-gradient(135deg,var(--ac-l),var(--ac-d))}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -7660,7 +7662,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 99',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 99',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 100',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 100',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
