@@ -2210,6 +2210,8 @@ html[data-halo] input[type="search"],html[data-halo] input[placeholder*="earch" 
 html[data-halo] input[type="search"]:focus,html[data-halo] input[placeholder*="earch" i]:focus,html[data-halo] input[aria-label*="earch" i]:focus,html[data-halo] input[id*="earch" i]:focus,html[data-halo] input[id*="srch" i]:focus{outline:none!important;box-shadow:none!important;border-color:transparent!important}
 html[data-halo] *:has(>input[type="search"],>input[placeholder*="earch" i],>input[aria-label*="earch" i]):focus-within{border-color:color-mix(in srgb,var(--accent) 55%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent)}
 
+html[data-halo] .topbar .icons>[data-a="msgs"] svg{width:16px;height:16px}
+
 /* test shop photos */
 .mkth.tpph{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#f3f3f3}
 .mkth.tpph::before{display:none!important}
@@ -7689,7 +7691,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 104',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 104',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 105',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 105',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9754,6 +9756,15 @@ function cnt(){
   b.setAttribute('aria-label',(a==='notif'?'Notifications':'Messages')+(n?' ('+t+' new)':''))});
 }
 setInterval(cnt,1000);setTimeout(cnt,1500);
+
+/* Messages key shows an envelope; search boxes opt out of iOS emoji/autocorrect helpers */
+function envFix(){try{
+ document.querySelectorAll('[data-a="msgs"]').forEach(b=>{const s=b.querySelector('#ic-send,span:not(.dot)');if(!s||s.dataset.env)return;s.dataset.env='1';
+  s.innerHTML='<svg class="hn" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3.8 7.2 12 13.2l8.2-6"/></svg>'});
+ document.querySelectorAll('input[type="search"],input[placeholder*="earch" i],input[id*="srch" i]').forEach(i=>{if(i.dataset.noem)return;i.dataset.noem='1';
+  i.setAttribute('autocomplete','off');i.setAttribute('autocorrect','off');i.setAttribute('autocapitalize','off');i.setAttribute('spellcheck','false');i.setAttribute('enterkeyhint','search');i.setAttribute('data-form-type','other')})
+}catch(e){}}
+setInterval(envFix,500);envFix();
 })();
 
 </script>
