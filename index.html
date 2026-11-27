@@ -2160,6 +2160,20 @@ html[data-halo] .topbar .icons>.ib>.dot.cnt{position:absolute!important;top:-5px
 html[data-halo] .topbar .icons>.ib>.dot.cnt[hidden]{display:none}
 html[data-halo] .topbar .icons>.ib{overflow:visible}
 
+/* dark/light switch: centred with even space inside its key */
+html[data-halo] .topbar .icons>.theme{flex:0 0 44px;width:44px;min-width:44px;display:grid;place-items:center;overflow:hidden}
+html[data-halo] .topbar .icons>.theme .tk{transform:scale(.68);transform-origin:center;margin:0}
+html[data-halo] .topbar .icons>.theme .tk{transform:none;zoom:.68;margin:0}
+html[data-halo] .topbar .icons>.theme{flex:0 0 auto;width:42px;min-width:42px}
+html[data-halo] .topbar .icons>.theme .tk{zoom:.62}
+
+/* light/dark switch: smaller, centred with even margin inside its key */
+html[data-halo] .topbar .icons>.theme{width:46px;display:grid;place-items:center}
+html[data-halo] .topbar .icons>.theme .tk{transform:none!important;width:32px;height:19px;border-width:1.5px;margin:0;box-sizing:border-box}
+html[data-halo] .topbar .icons>.theme .kn{top:1.5px;left:1.5px;width:13px;height:13px}
+html[data-halo] .topbar .icons>.theme .kn svg{width:9px;height:9px}
+html[data-halo] .topbar .icons>.theme[aria-checked="true"] .kn{transform:translateX(13px)}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7612,7 +7626,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 89',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 89',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 90',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 90',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
