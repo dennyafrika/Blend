@@ -2112,6 +2112,29 @@ html[data-halo] .topbar .icons>:is(.ib,.haplus) svg{width:17px;height:17px}
 html[data-halo] .topbar .icons>.ib .dot{top:3px;right:4px;width:7px;height:7px}
 html[data-halo] .topbar .icons>.theme .tk{transform:scale(.72)}
 
+/* 1) smaller new-post button */
+html[data-halo] .mkfab{width:46px;height:46px}
+html[data-halo] .mkfab svg{width:22px;height:22px}
+/* 2) floating top bar: when scrolled, only the keys stay; the big grey bar behind disappears */
+html[data-halo] .topbar .icons{transition:background .25s,box-shadow .25s}
+html[data-halo] #s-home .topbar.tbfade .icons{background:transparent;box-shadow:none}
+/* 3) trim the empty space under each post's action row */
+html[data-halo] #homeBody .post{padding-bottom:0}
+html[data-halo] #homeBody .post .why{padding:0 76px 2px 16px;font-size:10px;line-height:1.1;min-height:0}
+html[data-halo] .post .acts{padding:2px 12px 4px}
+
+/* Video play button: glassy, translucent 3D */
+html[data-halo] .playbadge span{width:60px;height:60px;border-radius:50%;color:#fff;border:1px solid rgba(255,255,255,.55);
+ background:radial-gradient(circle at 32% 24%,rgba(255,255,255,.55) 0,rgba(255,255,255,.16) 38%,rgba(255,255,255,.06) 62%,rgba(0,0,0,.22) 100%);
+ backdrop-filter:blur(7px) saturate(1.3);-webkit-backdrop-filter:blur(7px) saturate(1.3);
+ box-shadow:inset 0 2px 3px rgba(255,255,255,.65),inset 0 -5px 9px rgba(0,0,0,.28),0 8px 18px rgba(0,0,0,.38),0 1px 0 rgba(255,255,255,.25);
+ transition:transform .15s,box-shadow .15s}
+html[data-halo] .playbadge span svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.45)) drop-shadow(0 -1px 0 rgba(255,255,255,.35));margin-left:3px}
+html[data-halo] .playbadge:active span{transform:scale(.94);box-shadow:inset 0 3px 6px rgba(0,0,0,.35),0 3px 8px rgba(0,0,0,.3)}
+html[data-halo] .playbadge span{position:relative}
+html[data-halo] .playbadge span svg{display:none}
+html[data-halo] .playbadge span::after{content:"";width:0;height:0;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent rgba(255,255,255,.96);margin-left:5px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4));border-radius:2px}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7536,6 +7559,7 @@ const logo=el.querySelector('.splogo');logo&&logo.addEventListener('animationsta
 setTimeout(go,900);setTimeout(finish,9000);
 })();
 
+
 </script>
 <script>
 /* ===== Halo refinements: header plus menu ===== */
@@ -7562,7 +7586,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 83',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 83',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 85',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 85',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
