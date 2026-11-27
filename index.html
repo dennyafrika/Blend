@@ -2079,6 +2079,15 @@ html[data-halo] .topbar .icons>.palbtn .pd{transform:scale(.8)}
 html[data-halo] .topbar .icons>.ib .dot{position:absolute;top:4px;right:6px;width:8px;height:8px}
 html[data-halo] .topbar .icons>.palbtn{display:none!important}
 
+/* Home: floating top bar */
+html[data-halo] #s-home{position:absolute}
+html[data-halo] #s-home .topbar{position:absolute;top:0;left:0;right:0;z-index:30;background:var(--bg);transition:background .25s;pointer-events:auto}
+html[data-halo] #s-home .topbar .logo{transition:opacity .25s}
+html[data-halo] #s-home .topbar.tbfade{background:transparent;pointer-events:none}
+html[data-halo] #s-home .topbar.tbfade .icons{pointer-events:auto}
+html[data-halo] #s-home .topbar.tbfade .logo{opacity:0}
+html[data-halo] #s-home .scroll{padding-top:var(--tbh,62px)}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7529,7 +7538,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 76',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 76',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 77',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 77',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
@@ -9567,6 +9576,16 @@ function tbMark(){try{const ic=document.querySelector('.topbar .icons');if(!ic)r
  ic.querySelectorAll('.tb1,.tb2').forEach(x=>x.classList.remove('tb1','tb2'));
  if(v.length){v[0].classList.add('tb1');v[v.length-1].classList.add('tb2')}}catch(e){}}
 setInterval(tbMark,700);tbMark();
+
+/* floating top bar on Home: scrolling into the feed -> clear background + logo fades, icon bar stays; scrolling back -> returns */
+(function(){let last=0,hid=false;
+ function tbh(){const t=document.querySelector('#s-home .topbar');if(t)document.documentElement.style.setProperty('--tbh',Math.round(t.getBoundingClientRect().height)+'px')}
+ document.addEventListener('scroll',e=>{const s=e.target;if(!s||s.id!=='homeScroll')return;
+  const y=s.scrollTop,d=y-last;last=y;const t=document.querySelector('#s-home .topbar');if(!t)return;
+  if(y<30){hid=false}else if(d>6){hid=true}else if(d<-6){hid=false}
+  t.classList.toggle('tbfade',hid)},true);
+ setTimeout(tbh,300);setTimeout(tbh,1500);window.addEventListener('resize',tbh);
+})();
 })();
 
 </script>
