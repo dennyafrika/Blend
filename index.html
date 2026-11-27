@@ -2077,6 +2077,7 @@ html[data-halo] .topbar .icons>:is(.ib,.haplus) svg{stroke:var(--nvl);filter:non
 html[data-halo] .topbar .icons>.theme .tk{transform:scale(.8)}
 html[data-halo] .topbar .icons>.palbtn .pd{transform:scale(.8)}
 html[data-halo] .topbar .icons>.ib .dot{position:absolute;top:4px;right:6px;width:8px;height:8px}
+html[data-halo] .topbar .icons>.palbtn{display:none!important}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -7528,7 +7529,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 75',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 75',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 76',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 76',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
