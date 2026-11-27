@@ -2200,6 +2200,9 @@ html[data-halo][data-acc][data-theme="dark"]:not(#x){--link:var(--ac-l)}
 html[data-halo][data-acc][data-theme="light"]:not(#x){--link:var(--ac-d)}
 /* your own avatar ("Y") follows the accent colour */
 html[data-halo][data-acc] .av[style*="--c:200;"]:not(#x),html[data-halo][data-acc] .tpav:not([style*="background-image"]):not(#x){background:linear-gradient(135deg,var(--ac-l),var(--ac-d))}
+/* Dark and light surfaces take on the chosen colour (a deep version of it in dark mode) */
+html[data-halo][data-acc][data-theme="dark"]:not(#x){--bg:color-mix(in srgb,var(--ac) 8%,#000);--surface:color-mix(in srgb,var(--ac) 14%,#000);--surface2:color-mix(in srgb,var(--ac) 21%,#000);--line:color-mix(in srgb,var(--ac) 30%,#000);--ink:color-mix(in srgb,var(--ac) 7%,#fff);--muted:color-mix(in srgb,var(--ac) 22%,#b3b3b3);--navbar:color-mix(in srgb,var(--ac) 16%,#1d1d20);--pface:linear-gradient(180deg,color-mix(in srgb,var(--ac) 9%,#000),color-mix(in srgb,var(--ac) 15%,#050505))}
+html[data-halo][data-acc][data-theme="light"]:not(#x){--bg:color-mix(in srgb,var(--ac) 8%,#fff);--surface:#fff;--surface2:color-mix(in srgb,var(--ac) 13%,#fff);--line:color-mix(in srgb,var(--ac) 22%,#fff);--ink:color-mix(in srgb,var(--ac) 14%,#0a0a0a);--muted:color-mix(in srgb,var(--ac) 30%,#6a6a6a);--navbar:color-mix(in srgb,var(--ac) 10%,#e6e6e6);--rface:linear-gradient(180deg,#fff,color-mix(in srgb,var(--ac) 11%,#fff));--r1:inset 0 1px 0 #fff,inset 0 -2px 0 color-mix(in srgb,var(--ac) 16%,transparent),0 6px 14px color-mix(in srgb,var(--ac) 24%,transparent);--pface:linear-gradient(180deg,color-mix(in srgb,var(--ac) 18%,#d8d8d8),color-mix(in srgb,var(--ac) 9%,#ececec))}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
@@ -7662,7 +7665,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 100',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 100',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 101',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 101',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
