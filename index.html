@@ -2135,6 +2135,17 @@ html[data-halo] .playbadge span{position:relative}
 html[data-halo] .playbadge span svg{display:none}
 html[data-halo] .playbadge span::after{content:"";width:0;height:0;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent rgba(255,255,255,.96);margin-left:5px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4));border-radius:2px}
 
+/* play button smaller */
+html[data-halo] .playbadge span{width:48px;height:48px}
+html[data-halo] .playbadge span::after{border-width:9px 0 9px 15px;margin-left:4px}
+/* new-post button: middle size, glossy 3D */
+html[data-halo] .mkfab{width:51px;height:51px;border:0;color:#fff;
+ background:radial-gradient(circle at 32% 22%,rgba(255,255,255,.5) 0,rgba(255,255,255,0) 42%),linear-gradient(160deg,#A464FF 0%,#7A35F0 55%,#5A1FC4 100%);
+ box-shadow:inset 0 2px 3px rgba(255,255,255,.55),inset 0 -5px 9px rgba(40,10,110,.5),0 9px 18px rgba(90,40,200,.45),0 2px 0 rgba(255,255,255,.12)}
+html[data-halo] .mkfab svg{width:24px;height:24px;filter:drop-shadow(0 1.5px 1.5px rgba(40,10,110,.55))}
+html[data-halo] .mkfab:active{transform:scale(.95);box-shadow:inset 0 3px 7px rgba(40,10,110,.55),0 4px 9px rgba(90,40,200,.4)}
+html[data-halo] .mkfab.on{background:var(--surface);color:var(--accent);box-shadow:inset 0 2px 3px rgba(255,255,255,.4),0 8px 18px rgba(0,0,0,.25)}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7586,7 +7597,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 85',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 85',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 86',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 86',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
