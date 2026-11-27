@@ -2097,6 +2097,13 @@ html[data-halo] .post .acts>.act:not(:has(span)):not(.lk):not([data-a=comments])
 html[data-halo] .post .acts>.act svg{width:16px;height:16px}
 html[data-halo] .post .acts>.act.sv{flex:0 0 auto;padding:5px 9px}
 
+/* Top icons: engraved into the key (tone-on-tone, no black lining) */
+html[data-halo]{--eng:rgba(70,48,140,.62);--engh:rgba(255,255,255,.95)}
+html[data-halo][data-theme="dark"]{--eng:rgba(0,0,0,.85);--engh:rgba(255,255,255,.34)}
+html[data-halo] .topbar .icons>:is(.ib,.haplus) svg{stroke:var(--eng)!important;stroke-width:2.4;fill:none;filter:drop-shadow(0 1.2px 0 var(--engh)) drop-shadow(0 -.6px 0 rgba(0,0,0,.18))}
+html[data-halo] .topbar .icons>:is(.ib,.haplus) svg *{stroke:var(--eng)!important}
+html[data-halo] .topbar .icons>:is(.ib,.haplus) svg .nvf{fill:var(--eng)!important;fill-opacity:.25}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7547,7 +7554,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 79',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 79',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 80',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 80',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
