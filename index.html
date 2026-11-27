@@ -2104,6 +2104,12 @@ html[data-halo] .topbar .icons>:is(.ib,.haplus) svg{stroke:var(--eng)!important;
 html[data-halo] .topbar .icons>:is(.ib,.haplus) svg *{stroke:var(--eng)!important}
 html[data-halo] .topbar .icons>:is(.ib,.haplus) svg .nvf{fill:var(--eng)!important;fill-opacity:.25}
 
+/* engraving: thicker + clearer; light icons in dark mode */
+html[data-halo]{--eng:rgba(60,38,130,.8)}
+html[data-halo][data-theme="dark"]{--eng:#E4DDF7;--engh:rgba(0,0,0,.85)}
+html[data-halo] .topbar .icons>:is(.ib,.haplus) svg{stroke-width:3.2;width:21px;height:21px;filter:drop-shadow(0 1.5px 0 var(--engh))}
+html[data-halo][data-theme="dark"] .topbar .icons>:is(.ib,.haplus) svg{filter:drop-shadow(0 1.5px 0 var(--engh)) drop-shadow(0 -.6px 0 rgba(255,255,255,.25))}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sbars i.cur b{width:100%}}
 </style>
 
@@ -7554,7 +7560,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 80',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 80',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 81',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 81',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
