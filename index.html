@@ -2205,6 +2205,11 @@ html[data-halo] .topbar .icons>.ib>.dot.cnt{border-color:color-mix(in srgb,var(-
 html[data-halo] .topbar .icons>:is(.ib,.haplus) svg,html[data-halo] .topbar .icons>:is(.ib,.haplus) svg *{filter:none!important;drop-shadow:none;text-shadow:none}
 html[data-halo] .topbar .icons>:is(.ib,.haplus),html[data-halo] .topbar .icons>:is(.ib,.haplus) span{filter:none!important;text-shadow:none}
 
+/* Search boxes: no rectangle line around the field when typing; the pill itself shows a soft highlight */
+html[data-halo] input[type="search"],html[data-halo] input[placeholder*="earch" i],html[data-halo] input[aria-label*="earch" i],html[data-halo] input[id*="earch" i],html[data-halo] input[id*="srch" i]{outline:none!important;box-shadow:none!important;background:transparent!important;border-color:transparent!important;border-radius:inherit}
+html[data-halo] input[type="search"]:focus,html[data-halo] input[placeholder*="earch" i]:focus,html[data-halo] input[aria-label*="earch" i]:focus,html[data-halo] input[id*="earch" i]:focus,html[data-halo] input[id*="srch" i]:focus{outline:none!important;box-shadow:none!important;border-color:transparent!important}
+html[data-halo] *:has(>input[type="search"],>input[placeholder*="earch" i],>input[aria-label*="earch" i]):focus-within{border-color:color-mix(in srgb,var(--accent) 55%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent)}
+
 /* test shop photos */
 .mkth.tpph{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#f3f3f3}
 .mkth.tpph::before{display:none!important}
@@ -7684,7 +7689,7 @@ b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 103',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 103',()=>window.__SB.signIn()]]):items;cur=all;
+ const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 104',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 104',()=>window.__SB.signIn()]]):items;cur=all;
  menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
