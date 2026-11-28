@@ -10229,7 +10229,7 @@ document.addEventListener('click',async e=>{
  if(k==='delask')return delAsk(id);
  if(k==='delgo'){const v=(document.getElementById('admdel')||{}).value||'';if(v.trim().toLowerCase()!==uname(U[id]).toLowerCase()){say('Type the name exactly to confirm');return}
   return run('owner_delete_user',{p_user:id},'Account deleted',()=>accounts(Q))}
- if(k==='rename'){const nn=prompt('New name',uname(U[id]));if(nn&&nn.trim())return run('docs_merge',{p_col:'users',p_id:id,p_patch:{n:nn.trim().slice(0,40)}},'Name updated',()=>user(id));return}
+ if(k==='rename'){const nn=prompt('New name',uname(U[id]));if(nn&&nn.trim())return run('owner_rename_user',{p_user:id,p_name:nn.trim().slice(0,40)},'Name updated',()=>user(id));return}
  if(k==='tcoins')return run('owner_give_test_coins',{p_user:id,p_coins:500},'500 test coins given',()=>user(id));
  if(k==='reachform')return reachForm(id);
  if(k==='reachme'){const u=window.__BK&&__BK.api&&__BK.api.uid&&__BK.api.uid();if(u){const q=await (await dbc()).from('docs').select('id,data').eq('col','users').eq('id',u);U[u]=(q.data&&q.data[0]&&q.data[0].data)||{};reachForm(u)}return}
