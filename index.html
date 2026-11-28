@@ -9109,6 +9109,7 @@ function finish(){
  if(stat(x)==='live'||stat(x)==='accepted'){
   if(c.role==='creator')put('presp',c.sid,{st:'end',t1:Date.now()});else put('psess',c.sid,{st:'end',t1:Date.now()});
  }
+ setTimeout(()=>{try{window.__SB&&__SB.rpc&&__SB.rpc('settle_private_session',{p_sid:c.sid}).catch(()=>{})}catch(e){}},1500);
  setTimeout(()=>{const y=rows().find(z=>z.id===c.sid);if(!y)return;const cc=calc(y.s.price,y.s.over,secs(y),y.r&&y.r.ot);
   if(c.role==='creator')toast('Session finished. You earned '+M(cc.net)+' (demo)');
   else{toast('Session finished. Total '+M(cc.total));if(!y.s.rate)rateSheet(c.sid)}},400);
