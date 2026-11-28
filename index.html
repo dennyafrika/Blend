@@ -2267,6 +2267,7 @@ html[data-halo][data-theme="dark"]{--nvl:#B9A0FF}
 .ern .ernfee{display:flex;align-items:center;gap:6px;color:var(--muted)}
 .ern .ernfee input{width:64px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:15px;text-align:right}
 .ern .ernfee button{border:0;border-radius:99px;padding:6px 12px;background:var(--grad);color:#fff;font:inherit;font-size:13px}
+.ern a.ernlinkrow{text-decoration:none}
 
 /* test shop photos */
 .mkth.tpph{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#f3f3f3}
@@ -2510,7 +2511,7 @@ function deleteUI(){
   if(r.error){er.textContent='Could not delete right now. Try again, or contact support.';return}
   try{await sb.auth.signOut()}catch(e){}try{localStorage.clear()}catch(e){}location.reload()};
 }
-window.__SB={rpc:async(n,a)=>{await ready();const r=await sb.rpc(n,a||{});if(r.error)throw r.error;return r.data},client:()=>ready().then(()=>sb),newPass:()=>ready().then(()=>newPassUI(false)),deleteAcc:()=>ready().then(deleteUI),fn,upload,signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
+window.__SB={email:()=>(session&&session.user&&session.user.email)||'',rpc:async(n,a)=>{await ready();const r=await sb.rpc(n,a||{});if(r.error)throw r.error;return r.data},client:()=>ready().then(()=>sb),newPass:()=>ready().then(()=>newPassUI(false)),deleteAcc:()=>ready().then(deleteUI),fn,upload,signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
 /* visitors can look around; liking, commenting, following, posting and messages ask them to sign in */
 const WALL='[data-a="like"],[data-a="comments"],[data-a="follow"],[data-a="repost"],[data-a="save"],[data-a="create"],[data-a="notif"],[data-a="msgs"],[data-a="vlike"],[data-a="vdis"],[data-a="vsub"],[data-a="vbell"],[data-a="join"],[data-a="gift"],[data-a="sendgift"],[data-a="golive"],[data-a="livetab"],[data-a="liveopen"],[data-a="startlive"],[data-a="heart"],[data-a="going"],[data-a="vlater"],[data-a="coins"],[data-a="buycoins"],[data-a="revive"],[data-cx="clike"],[data-cx="reply"],[data-cx="cdel"],[data-cx="crep"],[data-a="cform"],[data-a="cform2"],[data-a="post"],[data-a="post2"],.bkbtn';
 document.addEventListener('submit',e=>{if(session)return;const f=e.target;if(f&&f.dataset&&['cform','cform2','lvform','mform'].includes(f.dataset.a)||f.dataset.cx==='form'){e.preventDefault();e.stopImmediatePropagation();ready().then(()=>authUI('Sign in or create an account to comment.'))}},true);
@@ -7778,7 +7779,7 @@ const ACT={
  lang:()=>window.__TR&&window.__TR.pick(),
  int:()=>window.__CS&&window.__CS.interests(),
  inv:()=>{const u=location.href.split('#')[0];const done=()=>{try{window.toast&&window.toast('Link copied')}catch(e){}};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(done,()=>{});else if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{})},
- earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
+ earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),links:()=>window.__ERN&&window.__ERN.links(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
 };
 const OPEN=new Set(['terms','refunds','close']);
 b.addEventListener('click',e=>{
@@ -7786,7 +7787,7 @@ b.addEventListener('click',e=>{
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
  menu.innerHTML=build();
- if(isIn()&&window.__ERN)window.__ERN.isOwner().then(ok=>{const g=menu&&menu.querySelector('[data-hm=pass]');if(ok&&g)g.parentNode.insertAdjacentHTML('afterbegin',row('owner','shield','Owner Dashboard',''))});
+ if(isIn()&&window.__ERN){const em=((window.__SB.email&&window.__SB.email())||'').toLowerCase()==='d.munyuni@gmail.com';const put=ok=>{const g=menu&&menu.querySelector('[data-hm=pass]');if(!g)return;const p=g.parentNode;if(ok&&!p.querySelector('[data-hm=owner]'))p.insertAdjacentHTML('afterbegin',row('owner','shield','Owner Dashboard',''));if((ok||em)&&!p.querySelector('[data-hm=links]'))p.insertAdjacentHTML('afterbegin',row('links','share','Owner Links',''))};if(em)put(false);window.__ERN.isOwner().then(put)}
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
 });
@@ -9966,6 +9967,18 @@ async function earnings(){
  sheet('<h3>My Earnings</h3>'+card(real,false)+'<p class="ernp">Pending money becomes available after the payment period. Withdrawals open when payouts are switched on.</p>'+(hasTest?'<div class="erntest">'+card(test,true)+'</div>':''));
 }
 
+
+/* ---------- Owner links (plain web addresses, no secrets) ---------- */
+const P='https://supabase.com/dashboard/project/huarbxmwpnvpwnolyzxm';
+const LINKS=[
+ ['Blend app',[['Live site','https://dennyafrika.github.io/Blend','Open Blend as users see it'],['Upload a new build','https://github.com/dennyafrika/Blend/upload/main','Add index.html, then Commit changes'],['Build progress','https://github.com/dennyafrika/Blend/actions','Wait for the green tick'],['GitHub repository','https://github.com/dennyafrika/Blend','All the code and history']]],
+ ['Supabase (database)',[['Dashboard','https://supabase.com/dashboard/project/huarbxmwpnvpwnolyzxm','Project home'],['Run SQL',P+'/sql/new','Paste and run SQL files'],['Tables',P+'/editor','Browse the data'],['Accounts',P+'/auth/users','Sign-ups and emails'],['Secrets',P+'/functions/secrets','Where API keys go. Type them here yourself'],['Billing and usage','https://supabase.com/dashboard/org/_/billing','Plan, upgrade and quota']]],
+ ['Services',[['Anthropic console','https://console.anthropic.com','AI keys and usage'],['LiveKit','https://cloud.livekit.io','Live video and calls'],['Paystack','https://dashboard.paystack.com','Payments. Account to be opened later']]]
+];
+function links(dash){
+ sheet((dash?back():'')+'<h3>Owner links</h3><p class="ernp">One tap to the places you manage Blend from. They open in a new tab.</p>'+LINKS.map(([t,l])=>'<div class="ernsec">'+t+'</div><div class="erncard">'+l.map(([n,u,d])=>`<a class="ernrow ernlinkrow" href="${u}" target="_blank" rel="noopener noreferrer"><span class="ernt">${esc(n)}<small>${esc(d)}</small></span><span class="ernchev">↗</span></a>`).join('')+'</div>').join(''));
+}
+
 /* ---------- Owner dashboard ---------- */
 let D=null;
 async function load(){
@@ -9988,6 +10001,7 @@ async function owner_(view,arg){
  if(view==='fees')return fees();
  if(view==='test')return test();
  if(view==='log')return log();
+ if(view==='links')return links(true);
  if(view==='confirm')return confirm_(arg);
  if(view==='confirmg')return confirmG(arg);
  const on=D.products.filter(p=>p.status==='active').length;
@@ -9998,7 +10012,7 @@ async function owner_(view,arg){
  for(const k of ['social','commerce','business']){
   h+=`<div class="ernsec">${ECO[k]}</div><div class="erncard">`+D.products.filter(p=>p.ecosystem===k).map(p=>`<button class="ernrow" data-e="prod" data-ea="${esc(p.code)}"><span class="ernt">${esc(p.label)}</span><span class="ernchip ${p.status}">${ST[p.status]||esc(p.status)}</span></button>`).join('')+'</div>';
  }
- h+=`<div class="ernsec">Tools</div><div class="erncard"><button class="ernrow" data-e="view" data-ea="fees"><span class="ernt">Fees and commissions</span><span class="ernchev">›</span></button><button class="ernrow" data-e="view" data-ea="test"><span class="ernt">Try it with fake money</span><span class="ernchev">›</span></button><button class="ernrow" data-e="view" data-ea="log"><span class="ernt">Recent activity</span><span class="ernchev">›</span></button></div>`;
+ h+=`<div class="ernsec">Tools</div><div class="erncard"><button class="ernrow" data-e="view" data-ea="links"><span class="ernt">Owner links</span><span class="ernchev">›</span></button><button class="ernrow" data-e="view" data-ea="fees"><span class="ernt">Fees and commissions</span><span class="ernchev">›</span></button><button class="ernrow" data-e="view" data-ea="test"><span class="ernt">Try it with fake money</span><span class="ernchev">›</span></button><button class="ernrow" data-e="view" data-ea="log"><span class="ernt">Recent activity</span><span class="ernchev">›</span></button></div>`;
  sheet(h);
 }
 function back(){return '<button class="ernback" data-e="view" data-ea="home">‹ Back</button>'}
@@ -10055,7 +10069,7 @@ document.addEventListener('click',e=>{
  else if(k==='fee'){const i=document.querySelector('.ern [data-fee="'+a+'"]');act('set_fee',{p_code:a,p_percent:Number(i.value),p_fixed:(D.fees.find(f=>f.code===a)||{}).fixed_cents||0},'Fee saved',['fees'])}
  else if(k==='tsale'){const u=window.__BK&&__BK.api&&__BK.api.uid&&__BK.api.uid();act('owner_test_sale',{p_product:a,p_payee:u,p_gross:10000},'Test payment posted. See My Earnings',['test'])}
 });
-window.__ERN={earnings,owner:()=>owner_(),isOwner};
+window.__ERN={links:()=>links(false),earnings,owner:()=>owner_(),isOwner};
 })();
 
 </script>
