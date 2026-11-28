@@ -2240,6 +2240,34 @@ html[data-halo] .topbar .icons>[data-a="msgs"] svg{width:16px;height:16px}
 html[data-halo][data-theme="light"]{--nvl:var(--ac,#5A27D4)}
 html[data-halo][data-theme="dark"]{--nvl:#B9A0FF}
 
+/* ===== earnings + owner dashboard ===== */
+.ern{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;padding:0 14px 14px}
+.ern h3{font-size:20px;font-weight:600;margin:4px 0 8px;color:var(--ink)}
+.ern .ernp{font-size:13.5px;color:var(--muted);line-height:1.45;margin:6px 0 10px}
+.ern .ernbig{padding:16px;border-radius:20px;background:var(--grad);color:#fff;margin:6px 0 10px}
+.ern .ernbig small{display:block;font-size:13px;opacity:.85}.ern .ernbig b{font-size:30px;font-weight:600}
+.ern .erngrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ern .erngrid>div{padding:10px;border-radius:16px;background:color-mix(in srgb,var(--accent) 9%,var(--surface));text-align:center}
+.ern .erngrid small{display:block;font-size:11.5px;color:var(--muted)}.ern .erngrid b{font-size:15px;font-weight:600;color:var(--ink)}
+.ern .erntest{margin-top:14px;padding-top:6px;border-top:1px dashed var(--line);opacity:.75}
+.ern .ernsec{font-size:12.5px;color:var(--muted);margin:14px 6px 4px}
+.ern .erncard{border-radius:18px;background:color-mix(in srgb,var(--accent) 6%,var(--surface));border:1px solid var(--line);overflow:hidden;margin-bottom:8px}
+.ern .ernrow{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:11px 14px;border:0;background:none;color:var(--ink);font:inherit;font-size:15px;text-align:left}
+.ern .erncard>.ernrow+.ernrow{border-top:1px solid color-mix(in srgb,var(--ink) 9%,transparent)}
+.ern .ernt{flex:1;min-width:0}.ern .ernt small{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.ern .ernchev{color:var(--muted);font-size:14px}
+.ern .ernchip{flex:none;padding:3px 10px;border-radius:99px;font-size:12px;background:color-mix(in srgb,var(--ink) 8%,var(--surface));color:var(--muted)}
+.ern .ernchip.on,.ern .ernchip.active{background:#1fa971;color:#fff}.ern .ernchip.ready{background:color-mix(in srgb,var(--accent) 20%,var(--surface));color:var(--accent)}
+.ern .ernchip.requires_attention,.ern .ernchip.waiting_external{background:#f3a712;color:#222}.ern .ernchip.paused{background:#8c8c93;color:#fff}
+.ern .ernbtns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.ern .ernbtns button{flex:1;min-width:120px;padding:11px 14px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--ink);font:inherit;font-size:14.5px}
+.ern .ernbtns button.p{background:var(--grad);color:#fff;border:0}.ern .ernbtns button:disabled{opacity:.5}
+.ern .ernback,.ern .ernlink{border:0;background:none;color:var(--accent);font:inherit;font-size:14.5px;padding:2px 0}
+.ern .ernlist>div{padding:8px 14px;font-size:14px;line-height:1.4;color:var(--ink)}
+.ern .ernfee{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.ern .ernfee input{width:64px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:15px;text-align:right}
+.ern .ernfee button{border:0;border-radius:99px;padding:6px 12px;background:var(--grad);color:#fff;font:inherit;font-size:13px}
+
 /* test shop photos */
 .mkth.tpph{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#f3f3f3}
 .mkth.tpph::before{display:none!important}
@@ -2482,7 +2510,7 @@ function deleteUI(){
   if(r.error){er.textContent='Could not delete right now. Try again, or contact support.';return}
   try{await sb.auth.signOut()}catch(e){}try{localStorage.clear()}catch(e){}location.reload()};
 }
-window.__SB={newPass:()=>ready().then(()=>newPassUI(false)),deleteAcc:()=>ready().then(deleteUI),fn,upload,signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
+window.__SB={rpc:async(n,a)=>{await ready();const r=await sb.rpc(n,a||{});if(r.error)throw r.error;return r.data},client:()=>ready().then(()=>sb),newPass:()=>ready().then(()=>newPassUI(false)),deleteAcc:()=>ready().then(deleteUI),fn,upload,signOut:async()=>{try{await ready();await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('blend-acct')}catch(e){}location.reload()},ready,isIn:()=>!!session,signIn:why=>{ready().then(()=>authUI(why))}};
 /* visitors can look around; liking, commenting, following, posting and messages ask them to sign in */
 const WALL='[data-a="like"],[data-a="comments"],[data-a="follow"],[data-a="repost"],[data-a="save"],[data-a="create"],[data-a="notif"],[data-a="msgs"],[data-a="vlike"],[data-a="vdis"],[data-a="vsub"],[data-a="vbell"],[data-a="join"],[data-a="gift"],[data-a="sendgift"],[data-a="golive"],[data-a="livetab"],[data-a="liveopen"],[data-a="startlive"],[data-a="heart"],[data-a="going"],[data-a="vlater"],[data-a="coins"],[data-a="buycoins"],[data-a="revive"],[data-cx="clike"],[data-cx="reply"],[data-cx="cdel"],[data-cx="crep"],[data-a="cform"],[data-a="cform2"],[data-a="post"],[data-a="post2"],.bkbtn';
 document.addEventListener('submit',e=>{if(session)return;const f=e.target;if(f&&f.dataset&&['cform','cform2','lvform','mform'].includes(f.dataset.a)||f.dataset.cx==='form'){e.preventDefault();e.stopImmediatePropagation();ready().then(()=>authUI('Sign in or create an account to comment.'))}},true);
@@ -7708,7 +7736,7 @@ const th=document.getElementById('themeSw');if(th&&th.parentNode===ic)ic.insertB
 let menu=null;
 const close=()=>{if(menu){menu.remove();menu=null;b.setAttribute('aria-expanded','false')}};
 const svg=(p)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
-const IC={pal:svg('<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.2-1-1.4-1-2.5 0-.9.7-1.7 1.8-1.7H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="14.5" cy="7.5" r="1"/>'),people:svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3 3 0 0 1 0 6M18 15c2 .6 3 2.3 3 5"/>'),chart:svg('<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>'),globe:svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>'),star:svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),share:svg('<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="M8.3 10.8l7.4-3.6M8.3 13.2l7.4 3.6"/>'),user:svg('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M16 8l4 4-4 4M20 12H9"/>'),x:svg('<path d="M6 6l12 12M18 6L6 18"/>')};
+const IC={pal:svg('<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.2-1-1.4-1-2.5 0-.9.7-1.7 1.8-1.7H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="14.5" cy="7.5" r="1"/>'),people:svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3 3 0 0 1 0 6M18 15c2 .6 3 2.3 3 5"/>'),chart:svg('<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>'),globe:svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>'),star:svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),share:svg('<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="M8.3 10.8l7.4-3.6M8.3 13.2l7.4 3.6"/>'),user:svg('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M16 8l4 4-4 4M20 12H9"/>'),x:svg('<path d="M6 6l12 12M18 6L6 18"/>'),wallet:svg('<path d="M4 7a2 2 0 0 1 2-2h11v4"/><path d="M4 7v10a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14" r="1"/>'),shield:svg('<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>')};
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isIn=()=>!!(window.__SB&&window.__SB.isIn());
 const gate=f=>()=>{if(!isIn()){window.__SB&&window.__SB.signIn('Sign in or create an account to use this.');return}f()};
@@ -7731,6 +7759,7 @@ function build(){
   +row('look','pal','Colours','Quick theme colours',`<span class="hmdots">${dots}</span>`)
   +row('comm','people','Community','Groups and shared spaces','<span class="hmpill">Join</span>')
   +row('studio','chart','Creator Studio','Views, likes and followers','<span class="hmlive"><i></i>Go Live</span>')
+  +(inn?row('earn','wallet','My Earnings',''):'')
   +`</div><div class="hmsec">App Preferences</div><div class="hmgrp">`
   +row('lang','globe','Language','Translate posts into',`<span class="hmpill">${esc(langName())} ▾</span>`)
   +row('int','star','Interests','What you see more of',`<span class="hmchips">${chips}</span>`)
@@ -7749,7 +7778,7 @@ const ACT={
  lang:()=>window.__TR&&window.__TR.pick(),
  int:()=>window.__CS&&window.__CS.interests(),
  inv:()=>{const u=location.href.split('#')[0];const done=()=>{try{window.toast&&window.toast('Link copied')}catch(e){}};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(done,()=>{});else if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{})},
- pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
+ earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
 };
 const OPEN=new Set(['terms','refunds','close']);
 b.addEventListener('click',e=>{
@@ -7757,6 +7786,7 @@ b.addEventListener('click',e=>{
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
  menu.innerHTML=build();
+ if(isIn()&&window.__ERN)window.__ERN.isOwner().then(ok=>{const g=menu&&menu.querySelector('[data-hm=pass]');if(ok&&g)g.parentNode.insertAdjacentHTML('afterbegin',row('owner','shield','Owner Dashboard',''))});
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
 });
@@ -9907,6 +9937,125 @@ renderVideos=function(){
  return r;
 };
 window.__PG={purge};
+})();
+
+</script>
+<script>
+/* ===== My Earnings + Owner dashboard (money is read from the server ledger only) ===== */
+(function(){
+const SB=()=>window.__SB;
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const R=c=>'R'+(Number(c||0)/100).toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2});
+const say=m=>{try{if(typeof toast==='function')toast(m)}catch(e){}};
+const sheet=h=>openSheet('<div class="ern">'+h+'</div>');
+const ST={not_configured:'Not set up',in_development:'In development',testing:'Testing',requires_attention:'Needs attention',waiting_external:'Waiting for approval',ready:'Ready to switch on',active:'On',paused:'Paused',disabled:'Off'};
+const ECO={social:'Social',commerce:'Commerce',business:'Business'};
+let owner=null;
+const isOwner=async()=>{if(owner!==null)return owner;try{owner=!!(SB()&&SB().isIn()&&await SB().rpc('is_owner'))}catch(e){owner=false}return owner};
+
+/* ---------- My Earnings ---------- */
+async function earnings(){
+ if(!SB().isIn()){SB().signIn();return}
+ sheet('<h3>My Earnings</h3><p class="ernp">Loading…</p>');
+ let rows;try{rows=await SB().rpc('my_earnings')||[]}catch(e){sheet('<h3>My Earnings</h3><p class="ernp">Earnings are not switched on yet. When creators and sellers can earn on Blend, your money will show here.</p>');return}
+ const sum=t=>{const o={pending:0,available:0,withdrawn:0,disputed:0};rows.filter(r=>!!r.is_test===t).forEach(r=>{if(r.bucket in o)o[r.bucket]+=Number(r.total_cents)});return o};
+ const card=(o,tag)=>{const life=o.pending+o.available+o.withdrawn;
+  return `<div class="ernbig"><small>${tag?'Test money (not real)':'Total earned'}</small><b>${R(life)}</b></div>
+  <div class="erngrid"><div><small>Available</small><b>${R(o.available)}</b></div><div><small>Pending</small><b>${R(o.pending)}</b></div><div><small>Withdrawn</small><b>${R(o.withdrawn)}</b></div></div>`};
+ const real=sum(false),test=sum(true),hasTest=rows.some(r=>r.is_test);
+ sheet('<h3>My Earnings</h3>'+card(real,false)+'<p class="ernp">Pending money becomes available after the payment period. Withdrawals open when payouts are switched on.</p>'+(hasTest?'<div class="erntest">'+card(test,true)+'</div>':''));
+}
+
+/* ---------- Owner dashboard ---------- */
+let D=null;
+async function load(){
+ const sb=await SB().client();
+ const [p,s,f,q,a]=await Promise.all([
+  sb.from('monetisation_products').select('*').order('ecosystem'),
+  sb.from('monetisation_settings').select('*'),
+  sb.from('fee_rules').select('*').order('code'),
+  sb.from('product_prereqs').select('*'),
+  sb.from('audit_log').select('*').order('id',{ascending:false}).limit(15)]);
+ for(const r of [p,s,f,q])if(r.error)throw r.error;
+ D={products:p.data||[],global:!!(s.data&&s.data[0]&&s.data[0].global_enabled),fees:f.data||[],pre:q.data||[],audit:(a&&a.data)||[]};
+}
+const feeOf=c=>{const f=D.fees.find(x=>x.code===c);return f?f.percent+'%'+(f.fixed_cents?' + '+R(f.fixed_cents):''):'None set'};
+const missing=c=>D.pre.filter(x=>x.product===c&&!x.done);
+async function owner_(view,arg){
+ if(!await isOwner()){say('Owner only');return}
+ try{await load()}catch(e){sheet('<h3>Owner Dashboard</h3><p class="ernp">The money system is not set up yet. Run the money foundation SQL first.</p>');return}
+ if(view==='product')return product(arg);
+ if(view==='fees')return fees();
+ if(view==='test')return test();
+ if(view==='log')return log();
+ if(view==='confirm')return confirm_(arg);
+ if(view==='confirmg')return confirmG(arg);
+ const on=D.products.filter(p=>p.status==='active').length;
+ let h=`<h3>Owner Dashboard</h3><p class="ernp">Only you can see this. Real money stays off until you switch it on.</p>
+ <div class="erncard"><div class="ernrow"><span class="ernt">All monetisation<small>${D.global?'Master switch is ON':'Master switch is OFF: no new money activity'}</small></span><span class="ernchip ${D.global?'on':''}">${D.global?'ON':'OFF'}</span></div>
+ <div class="ernbtns">${D.global?'<button data-e="gask" data-ea="0">Turn everything off</button>':''}<button class="p" data-e="gask" data-ea="1">Turn on all ready products</button></div></div>
+ <p class="ernp">${on} of ${D.products.length} products are on.</p>`;
+ for(const k of ['social','commerce','business']){
+  h+=`<div class="ernsec">${ECO[k]}</div><div class="erncard">`+D.products.filter(p=>p.ecosystem===k).map(p=>`<button class="ernrow" data-e="prod" data-ea="${esc(p.code)}"><span class="ernt">${esc(p.label)}</span><span class="ernchip ${p.status}">${ST[p.status]||esc(p.status)}</span></button>`).join('')+'</div>';
+ }
+ h+=`<div class="ernsec">Tools</div><div class="erncard"><button class="ernrow" data-e="view" data-ea="fees"><span class="ernt">Fees and commissions</span><span class="ernchev">›</span></button><button class="ernrow" data-e="view" data-ea="test"><span class="ernt">Try it with fake money</span><span class="ernchev">›</span></button><button class="ernrow" data-e="view" data-ea="log"><span class="ernt">Recent activity</span><span class="ernchev">›</span></button></div>`;
+ sheet(h);
+}
+function back(){return '<button class="ernback" data-e="view" data-ea="home">‹ Back</button>'}
+function product(c){
+ const p=D.products.find(x=>x.code===c);if(!p)return owner_();
+ const pre=D.pre.filter(x=>x.product===c),miss=pre.filter(x=>!x.done).length,s=p.status;
+ let h=back()+`<h3>${esc(p.label)}</h3><div class="ernrow"><span class="ernt">Status</span><span class="ernchip ${s}">${ST[s]||esc(s)}</span></div>
+ <p class="ernp">Blend's fee: <b>${esc(p.fee_code?feeOf(p.fee_code):'No fee rule yet')}</b></p>
+ <div class="ernsec">Before this can go on</div><div class="erncard">`+pre.map(x=>`<button class="ernrow" data-e="pre" data-ea="${esc(c)}|${esc(x.item)}|${x.done?0:1}"><span class="ernt">${esc(x.item)}</span><span class="ernchip ${x.done?'on':''}">${x.done?'Done':'Not done'}</span></button>`).join('')+'</div>';
+ h+='<div class="ernbtns">';
+ if(s==='active')h+=`<button data-e="st" data-ea="${esc(c)}|paused">Pause</button><button data-e="st" data-ea="${esc(c)}|disabled">Switch off</button>`;
+ else if(s==='ready'||s==='paused')h+=`<button class="p" data-e="ask" data-ea="${esc(c)}">Switch ON…</button>`+(s==='paused'?`<button data-e="st" data-ea="${esc(c)}|disabled">Switch off</button>`:'');
+ else h+=(miss?`<button disabled>${miss} requirement${miss>1?'s':''} still to do</button>`:`<button class="p" data-e="st" data-ea="${esc(c)}|ready">Mark as ready</button>`);
+ h+='</div>';
+ if(!['active','ready','paused'].includes(s))h+=`<p class="ernp">Note where it stands: <button class="ernlink" data-e="st" data-ea="${esc(c)}|testing">Testing</button> · <button class="ernlink" data-e="st" data-ea="${esc(c)}|waiting_external">Waiting for approval</button> · <button class="ernlink" data-e="st" data-ea="${esc(c)}|requires_attention">Needs attention</button></p>`;
+ sheet(h);
+}
+function confirm_(c){
+ const p=D.products.find(x=>x.code===c);
+ sheet(back()+`<h3>Switch on ${esc(p.label)}?</h3><div class="erncard ernlist">
+ <div>• This feature becomes live for all eligible users straight away.</div>
+ <div>• Blend's fee: ${esc(p.fee_code?feeOf(p.fee_code):'none set')}</div>
+ <div>• Real money will move through the payment provider, which charges its own fees.</div>
+ <div>• Existing records and payouts always stay safe if you switch it off later.</div></div>
+ <div class="ernbtns"><button data-e="prod" data-ea="${esc(c)}">Cancel</button><button class="p" data-e="st" data-ea="${esc(c)}|active">Yes, switch ON</button></div>`);
+}
+function confirmG(on){
+ const n=D.products.filter(p=>p.status==='ready'&&!missing(p.code).length);
+ sheet(back()+`<h3>${on==='1'?'Turn on all ready products?':'Turn everything off?'}</h3><div class="erncard ernlist">`+(on==='1'?(n.length?n.map(p=>`<div>• ${esc(p.label)}</div>`).join(''):'<div>No product is ready yet. Nothing will be switched on.</div>'):'<div>New payments, bookings and campaigns stop. Existing orders, money owed and payouts are kept.</div>')+`</div><div class="ernbtns"><button data-e="view" data-ea="home">Cancel</button><button class="p" data-e="glob" data-ea="${on}">Yes, do it</button></div>`);
+}
+function fees(){
+ sheet(back()+'<h3>Fees and commissions</h3><p class="ernp">Changing a fee here changes it everywhere, straight away. Past transactions keep the fee they were charged.</p><div class="erncard">'+D.fees.map(f=>`<div class="ernrow"><span class="ernt">${esc(f.label)}</span><span class="ernfee"><input type="number" inputmode="decimal" min="0" max="100" step="0.5" value="${f.percent}" data-fee="${esc(f.code)}" aria-label="${esc(f.label)} percent">%<button data-e="fee" data-ea="${esc(f.code)}">Save</button></span></div>`).join('')+'</div>');
+}
+function test(){
+ sheet(back()+'<h3>Try it with fake money</h3><p class="ernp">This posts a pretend R100 payment to your own account so you can see the fee split. It is labelled as test money and is never real.</p><div class="erncard">'+D.products.filter(p=>p.fee_code).map(p=>`<button class="ernrow" data-e="tsale" data-ea="${esc(p.code)}"><span class="ernt">${esc(p.label)}<small>Fee ${esc(feeOf(p.fee_code))}</small></span><span class="ernchev">R100 ›</span></button>`).join('')+'</div>');
+}
+function log(){
+ sheet(back()+'<h3>Recent activity</h3><div class="erncard">'+(D.audit.length?D.audit.map(a=>`<div class="ernrow"><span class="ernt">${esc(a.action.replace(/_/g,' '))}<small>${esc(new Date(a.at).toLocaleString())}</small></span></div>`).join(''):'<div class="ernrow"><span class="ernt">Nothing yet</span></div>')+'</div>');
+}
+async function act(fn,args,okMsg,after){
+ try{await SB().rpc(fn,args);say(okMsg)}catch(e){say((e&&e.message)||'Could not do that')}
+ await owner_(after&&after[0],after&&after[1]);
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.ern [data-e]');if(!b||b.disabled)return;
+ const k=b.dataset.e,a=b.dataset.ea||'';
+ if(k==='view')owner_(a==='home'?undefined:a);
+ else if(k==='prod')owner_('product',a);
+ else if(k==='ask')owner_('confirm',a);
+ else if(k==='gask')owner_('confirmg',a);
+ else if(k==='pre'){const[p,i,d]=a.split('|');act('set_prereq',{p_product:p,p_item:i,p_done:d==='1'},'Updated',['product',p])}
+ else if(k==='st'){const[p,s]=a.split('|');act('set_product_status',{p_code:p,p_status:s},s==='active'?'Switched ON':'Updated',['product',p])}
+ else if(k==='glob'){(async()=>{try{const n=await SB().rpc('set_global',{p_on:a==='1'});say(a==='1'?n+' product(s) switched on':'Everything is off')}catch(er){say(er.message||'Could not do that')}owner_()})()}
+ else if(k==='fee'){const i=document.querySelector('.ern [data-fee="'+a+'"]');act('set_fee',{p_code:a,p_percent:Number(i.value),p_fixed:(D.fees.find(f=>f.code===a)||{}).fixed_cents||0},'Fee saved',['fees'])}
+ else if(k==='tsale'){const u=window.__BK&&__BK.api&&__BK.api.uid&&__BK.api.uid();act('owner_test_sale',{p_product:a,p_payee:u,p_gross:10000},'Test payment posted. See My Earnings',['test'])}
+});
+window.__ERN={earnings,owner:()=>owner_(),isOwner};
 })();
 
 </script>
