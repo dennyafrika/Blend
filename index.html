@@ -1594,12 +1594,32 @@ html[data-halo] .topbar .icons .bkbtn,html[data-halo] .topbar .icons .palbtn{dis
 html[data-halo] .topbar .icons .haplus{display:grid}
 .haplus{display:none;width:30px;height:30px;place-items:center;border-radius:50%;background:var(--grad);color:#fff;border:0;padding:0;box-shadow:0 4px 10px color-mix(in srgb,var(--ac,rgb(91,75,255)) 30%,transparent)}
 .haplus svg{width:16px;height:16px}
-.hamenu{position:absolute;z-index:60;right:14px;top:62px;width:250px;padding:8px;border-radius:20px;background:var(--surface);border:1px solid var(--line);box-shadow:0 18px 40px rgba(16,19,34,.18)}
-.hamenu button{display:flex;align-items:center;gap:12px;width:100%;padding:11px 10px;border:0;background:none;border-radius:14px;color:var(--ink);font:700 14.5px var(--font-body);text-align:left}
-.hamenu button:hover,.hamenu button:focus-visible{background:var(--surface2)}
-.hamenu .hi{flex:none;width:36px;height:36px;border-radius:12px;background:var(--surface2);color:var(--accent);display:grid;place-items:center}
-.hamenu small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:1px}
-.hamenu .pdot{width:18px;height:18px;border-radius:50%;background:conic-gradient(#ff3d8b,#ffc933,#12b886,#2b8cff,#8a5cff,#ff3d8b)}
+.hamenu{position:absolute;z-index:60;right:10px;top:58px;width:min(350px,calc(100vw - 20px));max-height:calc(100vh - 80px);overflow-y:auto;padding:12px;border-radius:26px;background:var(--bg);border:1px solid var(--line);box-shadow:0 24px 50px rgba(0,0,0,.28);-webkit-overflow-scrolling:touch}
+.hamenu .hmhead{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px}
+.hamenu .hmhead b{font:800 19px var(--font-body);color:var(--ink)}
+.hamenu .hmx{width:32px;height:32px;border-radius:50%;border:0;background:var(--surface2);color:var(--ink);display:grid;place-items:center;padding:0}
+.hamenu .hmx svg{width:16px;height:16px}
+.hamenu .hmcard{display:flex;align-items:center;gap:12px;padding:14px;border-radius:20px;background:var(--grad);color:#fff;cursor:pointer}
+.hamenu .hmav{flex:none;width:44px;height:44px;border-radius:30%;background:rgba(255,255,255,.22);display:grid;place-items:center;font:800 18px var(--font-body)}
+.hamenu .hmcard .hmt{flex:1;min-width:0;font:800 16px var(--font-body)}
+.hamenu .hmcard small{color:rgba(255,255,255,.82)}
+.hamenu .hmgo{flex:none;padding:7px 14px;border-radius:99px;background:rgba(255,255,255,.95);color:#222;font:800 12.5px var(--font-body)}
+.hamenu .hmsec{padding:14px 6px 6px;font:800 11.5px var(--font-body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.hamenu .hmgrp{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.hamenu .hmr{display:flex;align-items:center;gap:11px;padding:11px 12px;cursor:pointer;color:var(--ink);font:700 14.5px var(--font-body)}
+.hamenu .hmr+.hmr{border-top:1px solid var(--line)}
+.hamenu .hmr:hover,.hamenu .hmr:focus-visible{background:var(--surface2);outline:0}
+.hamenu .hi{flex:none;width:34px;height:34px;border-radius:11px;background:var(--surface2);color:var(--accent);display:grid;place-items:center}
+.hamenu .hmt{flex:1;min-width:0}
+.hamenu small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hamenu .hmdots{display:flex;gap:6px}
+.hamenu .hmdot{width:18px;height:18px;border-radius:50%;border:2px solid transparent;padding:0;box-shadow:0 0 0 1px var(--line)}
+.hamenu .hmdot.on{border-color:var(--surface);box-shadow:0 0 0 2px var(--accent)}
+.hamenu .hmpill{flex:none;padding:6px 13px;border-radius:99px;background:var(--grad);color:#fff;font:800 12px var(--font-body);white-space:nowrap}
+.hamenu .hmchips{display:flex;gap:4px;flex-wrap:nowrap}
+.hamenu .hmchip{padding:4px 9px;border-radius:99px;background:var(--surface2);color:var(--accent);font:700 11px var(--font-body);white-space:nowrap}
+.hamenu .hmlinks{display:flex;gap:8px;padding:2px 2px 4px}
+.hamenu .hmlinks button{flex:1;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--accent);font:700 13.5px var(--font-body)}
 /* 4. floating + matches the profile button */
 html[data-halo] .mkfab{width:56px;height:56px;border-radius:50%;background:var(--grad);color:#fff;border:0;box-shadow:0 10px 24px color-mix(in srgb,var(--ac,rgb(91,75,255)) 38%,transparent)}
 html[data-halo] .mkfab.on{background:var(--surface);color:var(--accent);box-shadow:0 10px 24px rgba(16,19,34,.18)}
@@ -7681,34 +7701,70 @@ const root=document.documentElement;
 const b=document.createElement('button');b.className='haplus';b.id='haPlus';b.setAttribute('aria-label','More: colours, background and community');b.setAttribute('aria-haspopup','menu');b.setAttribute('aria-expanded','false');
 b.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
 const th=document.getElementById('themeSw');if(th&&th.parentNode===ic)ic.insertBefore(b,th);else ic.appendChild(b);
-let menu=null,cur=null;
+let menu=null;
 const close=()=>{if(menu){menu.remove();menu=null;b.setAttribute('aria-expanded','false')}};
-const items=[
- ['pdot','Colours and style','Buttons, tabs, background and fonts',()=>{const x=document.getElementById('palSw');x&&x.click()}],
- ['people','Community','Groups and shared spaces',()=>{const x=document.querySelector('#s-home .bkbtn');x&&x.click()}],
- ['share','Invite friends','Share Blend with someone',()=>{const u=location.href.split('#')[0];if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).catch(()=>{})}],
- ['chart','Creator Studio','Your views, likes and followers',()=>{window.__CS&&window.__CS.open()}],
- ['globe','Translate into','Choose your language for translations',()=>{window.__TR&&window.__TR.pick()}],
- ['star','My interests','Choose what you want to see more of',()=>{window.__CS&&window.__CS.interests()}],
- ['doc','Terms, privacy and refunds','How Blend works and your rights',()=>{window.__LG&&window.__LG.open('terms')}]
-];
-const svg=(p)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
-const icon={in:svg('<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>'),globe:svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>'),chart:svg('<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>'),star:svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),doc:svg('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/>'),pdot:'<span class="pdot"></span>',people:svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>'),share:svg('<path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/>')};
+const svg=(p)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const IC={pal:svg('<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.2-1-1.4-1-2.5 0-.9.7-1.7 1.8-1.7H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="14.5" cy="7.5" r="1"/>'),people:svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3 3 0 0 1 0 6M18 15c2 .6 3 2.3 3 5"/>'),chart:svg('<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>'),globe:svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>'),star:svg('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),share:svg('<circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="M8.3 10.8l7.4-3.6M8.3 13.2l7.4 3.6"/>'),user:svg('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/>'),key:svg('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'),trash:svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),out:svg('<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M16 8l4 4-4 4M20 12H9"/>'),x:svg('<path d="M6 6l12 12M18 6L6 18"/>')};
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isIn=()=>!!(window.__SB&&window.__SB.isIn());
+const gate=f=>()=>{if(!isIn()){window.__SB&&window.__SB.signIn('Sign in or create an account to use this.');return}f()};
+const DOTS=[['','Original'],['#2b8cff','Ocean'],['#12b886','Forest'],['#ff8c3c','Sunset'],['#ff3d8b','Rose']];
+const curAcc=()=>{try{return (window.__LOOK.get().acc)||''}catch(e){return''}};
+const setAcc=c=>{try{const L=window.__LOOK.get();L.acc=c;window.__LOOK.apply();localStorage.setItem('blend-look',JSON.stringify(L))}catch(e){}};
+const ints=()=>{try{return JSON.parse(localStorage.getItem('blend-interests')||'[]')}catch(e){return[]}};
+const me=()=>{try{const a=window.__BK&&window.__BK.api;const u=a&&a.uid&&a.uid();return{u,n:u?a.nameOf(u):''}}catch(e){return{u:'',n:''}}};
+const row=(id,ic,t,sub,right)=>`<div class="hmr" role="menuitem" tabindex="0" data-hm="${id}"><span class="hi">${IC[ic]}</span><span class="hmt">${t}<small>${sub}</small></span>${right||''}</div>`;
+function build(){
+ const inn=isIn(),m=me(),cur=curAcc();
+ const nm=inn?esc(m.n&&m.n!=='Someone'?m.n:'Your profile'):'Welcome to Blend';
+ const card=`<div class="hmcard" role="menuitem" tabindex="0" data-hm="${inn?'profile':'signin'}"><span class="hmav">${inn?esc((nm[0]||'B').toUpperCase()):IC.user}</span><span class="hmt">${nm}<small>${inn?'View your profile':'Sign in or create an account'}</small></span><span class="hmgo">${inn?'View':'Sign in'}</span></div>`;
+ const dots=DOTS.map(([c,n])=>`<button type="button" class="hmdot${cur===c?' on':''}" data-dot="${c}" aria-label="${n}" style="background:${c||'linear-gradient(135deg,#8E7CFF,#3B2FC9)'}"></button>`).join('');
+ const chips=ints().slice(0,3).map(t=>`<span class="hmchip">${esc(t)}</span>`).join('')||'<span class="hmchip">Choose</span>';
+ let h=`<div class="hmhead"><b>Settings</b><button type="button" class="hmx" data-hm="close" aria-label="Close">${IC.x}</button></div>`+card;
+ h+=`<div class="hmsec">Content &amp; Creator Tools</div><div class="hmgrp">`
+  +row('look','pal','Colours','Quick theme colours',`<span class="hmdots">${dots}</span>`)
+  +row('comm','people','Community','Groups and shared spaces','<span class="hmpill">Join</span>')
+  +row('studio','chart','Creator Studio','Views, likes and followers','<span class="hmpill">Go Live</span>')
+  +`</div><div class="hmsec">App Preferences</div><div class="hmgrp">`
+  +row('lang','globe','Language','Translate posts into',`<span class="hmpill">${esc(window.__TR?window.__TR.lang():'English')} ▾</span>`)
+  +row('int','star','Interests','What you see more of',`<span class="hmchips">${chips}</span>`)
+  +row('inv','share','Invite friends','Share Blend with someone','<span class="hmpill">Copy</span>')
+  +`</div>`;
+ if(inn)h+=`<div class="hmsec">Account</div><div class="hmgrp">`+row('pass','key','Change password','Choose a new password')+row('del','trash','Delete my account','Remove your account and data')+row('out','out','Sign out','Leave this account on this device')+`</div>`;
+ h+=`<div class="hmsec">Legal &amp; Metadata</div><div class="hmlinks"><button type="button" data-hm="terms">Terms &amp; Privacy</button><button type="button" data-hm="refunds">Refunds</button></div>`;
+ return h;
+}
+const ACT={
+ profile:()=>{const x=document.querySelector('#nav [data-k="profile"],#nav [data-k="me"]');x&&x.click()},
+ signin:()=>window.__SB&&window.__SB.signIn(),
+ look:()=>{const x=document.getElementById('palSw');x&&x.click()},
+ comm:()=>{const x=document.querySelector('#s-home .bkbtn');x&&x.click()},
+ studio:()=>window.__CS&&window.__CS.open(),
+ lang:()=>window.__TR&&window.__TR.pick(),
+ int:()=>window.__CS&&window.__CS.interests(),
+ inv:()=>{const u=location.href.split('#')[0];const done=()=>{try{window.toast&&window.toast('Link copied')}catch(e){}};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(done,()=>{});else if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{})},
+ pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
+};
+const OPEN=new Set(['terms','refunds','close']);
 b.addEventListener('click',e=>{
  e.stopPropagation();
  if(menu){close();return}
  menu=document.createElement('div');menu.className='hamenu';menu.setAttribute('role','menu');
- const all=window.__SB?items.concat(window.__SB.isIn()?[['key','Change password','Choose a new password',()=>window.__SB.newPass()],['trash','Delete my account','Permanently remove your account and data',()=>window.__SB.deleteAcc()],['out','Sign out','Leave this account on this device · build 107',()=>window.__SB.signOut()]]:[['in','Sign in or create an account','Like, comment, follow and post · build 107',()=>window.__SB.signIn()]]):items;cur=all;
- menu.innerHTML=all.map((it,i)=>`<button role="menuitem" data-hi="${i}"><span class="hi">${icon[it[0]]}</span><span>${it[1]}<small>${it[2]}</small></span></button>`).join('');
+ menu.innerHTML=build();
  document.getElementById('s-home').appendChild(menu);
  b.setAttribute('aria-expanded','true');
- menu.querySelector('button').focus();
 });
 document.addEventListener('click',e=>{
- const m=e.target.closest('.hamenu [data-hi]');
- if(m){const f=cur[+m.dataset.hi][3];close();setTimeout(f,0);return}
+ const d=e.target.closest('.hamenu [data-dot]');
+ if(d){e.stopPropagation();if(!isIn()){close();setTimeout(()=>window.__SB&&window.__SB.signIn(),0);return}setAcc(d.dataset.dot);menu.querySelectorAll('.hmdot').forEach(x=>x.classList.toggle('on',x===d));return}
+ const m=e.target.closest('.hamenu [data-hm]');
+ if(m){const k=m.dataset.hm;close();if(k==='close')return;
+  if(k==='terms'||k==='refunds'){setTimeout(()=>{window.__LG&&window.__LG.open(k==='refunds'?'refunds':'terms')},0);return}
+  if(k==='signin'){setTimeout(ACT.signin,0);return}
+  setTimeout(gate(ACT[k]),0);return}
  if(menu&&!e.target.closest('.hamenu'))close();
 });
+document.addEventListener('keydown',e=>{if(menu&&e.key==='Enter'&&document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.hm)document.activeElement.click()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 
