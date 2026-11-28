@@ -2295,6 +2295,9 @@ html[data-halo][data-theme="dark"]{--nvl:#B9A0FF}
 .ern .anaax{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:2px}
 .ern .anatab{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:4px;font-size:12.5px;padding:5px 0;border-top:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}.ern .anatab:first-child{border-top:0}.ern .anatab b{font-weight:600}
 .ern .anabig{font-size:20px;margin:4px 0;color:var(--ink)}
+.cosbadge{display:inline-block;margin:8px 0 0 14px;padding:2px 9px;border-radius:99px;font-size:11.5px;color:var(--cb,#888);background:color-mix(in srgb,var(--cb,#888) 14%,var(--surface))}
+.cosbadge.cbi{margin:0}
+.ernchip[data-st]{border:0;cursor:pointer;font:inherit;font-size:12.5px}
 
 /* test shop photos */
 .mkth.tpph{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#f3f3f3}
@@ -6011,9 +6014,10 @@ window.__PS={bgCss,CP:()=>CP,Mus,TR,applyMix,mixOf};
 (function(){
 const AI_NAME='Claude';
 IC.spark=IC.spark||'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7z"/>';
+const LN=()=>{try{return(window.__LG&&__LG.name&&__LG.name())||'English'}catch(e){return'English'}};
 const el=()=>document.getElementById('aip');
 let turns=[],ctl=null,busy=false,smp;
-const RULES=()=>'You are the in-app assistant inside Blend, a global social network prototype with Home, Videos, Market (shop, jobs, services) and You tabs, an earnings wallet, DMs and calls. Help people write posts, captions, bios and job profiles, translate text, explain how features work, and answer general questions. Be friendly and brief. Plain text only, no markdown tables. The person is currently on the "'+(S&&S.tab||'home')+'" page and prefers the interface language "'+(window.__LG?__LG.name():'English')+'". Answer in that language unless they write in another.';
+const RULES=()=>'You are the in-app assistant inside Blend, a global social network prototype with Home, Videos, Market (shop, jobs, services) and You tabs, an earnings wallet, DMs and calls. Help people write posts, captions, bios and job profiles, translate text, explain how features work, and answer general questions. Be friendly and brief. Plain text only, no markdown tables. The person is currently on the "'+(S&&S.tab||'home')+'" page and prefers the interface language "'+LN()+'". Answer in that language unless they write in another.';
 const SUGS=['Help me write a post','Write my job profile bio','Translate this to Zulu','What can Blend do?'];
 function open(){
  if(el())return;
@@ -6032,13 +6036,18 @@ function draw(){
  l.innerHTML=turns.map(m=>`<div class="am ${m.role==='user'?'u':m.err?'e':'a'}">${esc(m.content)}</div>`).join('')+(busy&&!turns[turns.length-1].live?'<div class="am a adots"></div>':'');
  l.scrollTop=l.scrollHeight;
 }
-const COPY={not_granted:'Access was not allowed. You can allow it from this page\'s permissions menu.',sampling_disabled:'The assistant is not available for this account.',rate_limited:'Too many questions too fast. Please wait a moment and try again.',session_expired:'Please sign in again to keep chatting.',upstream_error:'Something interrupted the answer. Tap send to try again.',refused:'I can\'t help with that one. Try asking something different.',prompt_too_large:'That message is too long. Try a shorter one.'};
+const COPY={not_granted:'Access was not allowed. You can allow it from this page\'s permissions menu.',sampling_disabled:'The assistant is not available for this account.',daily_limit:'You have used your assistant questions for today. They reset tomorrow.',switched_off:'The assistant is switched off for now.',rate_limited:'Too many questions too fast. Please wait a moment and try again.',session_expired:'Please sign in again to keep chatting.',upstream_error:'Something interrupted the answer. Tap send to try again.',refused:'I can\'t help with that one. Try asking something different.',prompt_too_large:'That message is too long. Try a shorter one.'};
 async function send(q){
  const t=$('#ain');const text=(q||(t&&t.value)||'').trim();if(!text||busy)return;
  if(t){t.value='';t.style.height='auto'}
  if(smp===undefined){try{smp=await (window.claude&&claude.use?claude.use('sample'):null)}catch(_){smp=null}}
  turns.push({role:'user',content:text});
- if(!smp){turns.push({role:'assistant',content:'The assistant works when Blend is opened inside Claude. It is not connected in this view.',err:true});draw();return}
+ if(!smp&&window.__SB&&__SB.isIn()){
+  smp=async(input)=>{const sb=await __SB.client();const r=await sb.functions.invoke('ai-chat',{body:{messages:input.slice(1),page:(S&&S.tab)||'home',lang:LN()}});
+   if(r.error){let code='upstream_error';try{const j=await r.error.context.json();code=j.code||code}catch(e){}throw{code}}
+   return {text:(r.data&&r.data.text)||''}};
+ }
+ if(!smp){turns.push({role:'assistant',content:(window.__SB&&!__SB.isIn())?'Sign in to use the assistant.':'The assistant is not connected yet.',err:true});draw();return}
  busy=true;ctl=new AbortController();draw();
  const hist=turns.filter(m=>!m.err&&!m.live).slice(-14).map(m=>({role:m.role,content:m.content}));
  const input=[{role:'user',content:RULES()},...hist];
@@ -7789,6 +7798,7 @@ function build(){
   +row('studio','chart','Creator Studio','Views, likes and followers','<span class="hmlive"><i></i>Go Live</span>')
   +(inn?row('earn','wallet','My Earnings',''):'')
   +(inn?row('coinw','wallet','Coin Wallet',''):'')
+  +(inn?row('pstore','wallet','Premium store',''):'')
   +`</div><div class="hmsec">App Preferences</div><div class="hmgrp">`
   +row('lang','globe','Language','Translate posts into',`<span class="hmpill">${esc(langName())} ▾</span>`)
   +row('int','star','Interests','What you see more of',`<span class="hmchips">${chips}</span>`)
@@ -7808,7 +7818,7 @@ const ACT={
  lang:()=>window.__TR&&window.__TR.pick(),
  int:()=>window.__CS&&window.__CS.interests(),
  inv:()=>{const u=location.href.split('#')[0];const done=()=>{try{window.toast&&window.toast('Link copied')}catch(e){}};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(done,()=>{});else if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{})},
- details:()=>window.__DMG&&window.__DMG.open(),coinw:()=>window.__ERN&&window.__ERN.wallet(),earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),links:()=>window.__ERN&&window.__ERN.links(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
+ details:()=>window.__DMG&&window.__DMG.open(),pstore:()=>window.__STORE&&window.__STORE.open(),coinw:()=>window.__ERN&&window.__ERN.wallet(),earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),links:()=>window.__ERN&&window.__ERN.links(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
 };
 const OPEN=new Set(['terms','refunds','close']);
 b.addEventListener('click',e=>{
@@ -10409,6 +10419,61 @@ document.addEventListener('click',e=>{
  else if(k==='copy'){try{navigator.clipboard.writeText(window.__ANAT).then(()=>say('Copied'))}catch(er){say('Could not copy')}}
 });
 window.__ANA={open:()=>open()};
+})();
+
+</script>
+<script>
+/* ===== Premium store: profile badges bought with coins (test coins until switched on) ===== */
+(function(){
+const SB=()=>window.__SB;
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const say=m=>{try{if(typeof toast==='function')toast(m)}catch(e){}};
+const sheet=h=>openSheet('<div class="ern">'+h+'</div>');
+let items=[],worn={},mine=new Set(),wearing=null;
+const meId=()=>{try{return __BK.api.uid()}catch(e){return ''}};
+const uidOf=p=>p.u==='me'?meId():String(p.u||'').slice(2);
+async function pull(){
+ try{const sb=await SB().client();
+  const [i,c]=await Promise.all([sb.from('store_items').select('*').order('sort'),sb.from('docs').select('id,data').eq('col','cosmetics')]);
+  if(!i.error&&i.data)items=i.data;
+  if(!c.error&&c.data){const w={};c.data.forEach(r=>{if(r.data&&r.data.badge)w[r.id]=r.data.badge});const s=JSON.stringify(w);if(s!==JSON.stringify(worn)){worn=w;try{if(typeof renderHome==='function'&&document.querySelector('#homeBody'))renderHome()}catch(e){}}}
+ }catch(e){}
+}
+const item=c=>items.find(x=>x.code===c);
+if(typeof postHTML==='function'){
+ const _ph=postHTML;
+ postHTML=function(p){const h=_ph.apply(this,arguments);if(!p)return h;const it=item(worn[uidOf(p)]);
+  return it?h.replace(/(<article[^>]*>)/,'$1<div class="cosbadge" style="--cb:'+esc(it.color)+'">'+esc(it.label)+'</div>'):h};
+}
+async function open(){
+ if(!SB().isIn()){SB().signIn();return}
+ sheet('<h3>Premium store</h3><p class="ernp">Loading…</p>');
+ let coins=0,test=0;
+ try{await pull();const w=await SB().rpc('my_wallet')||[];w.forEach(r=>{if(r.is_test)test=Number(r.coins);else coins=Number(r.coins)});
+  mine=new Set(((await SB().rpc('my_items'))||[]).map(r=>r.item_code));
+  const sb=await SB().client();const c=await sb.from('docs').select('data').eq('col','cosmetics').eq('id',meId());wearing=c.data&&c.data[0]&&c.data[0].data?c.data[0].data.badge:null}
+ catch(e){sheet('<h3>Premium store</h3><p class="ernp">The store is not switched on yet.</p>');return}
+ draw(coins,test);
+}
+function draw(coins,test){
+ const bal=coins+test;
+ sheet('<h3>Premium store</h3><div class="ernbig"><small>Your coins'+(test?' (includes test coins)':'')+'</small><b>'+bal.toLocaleString('en-ZA')+'</b></div>'+
+ '<p class="ernp">Badges show next to your name on your posts, for everyone to see.</p><div class="ernsec">Badges</div><div class="erncard">'+
+ (items.length?items.map(i=>{const own=mine.has(i.code),on=wearing===i.code;
+  const btn=own?(on?'<button class="ernchip" data-st="wear" data-sv="">Take off</button>':'<button class="ernchip" data-st="wear" data-sv="'+esc(i.code)+'">Wear</button>'):'<button class="ernchip" data-st="buy" data-sv="'+esc(i.code)+'">'+i.coins+' coins</button>';
+  return '<div class="ernrow"><span class="ernt"><span class="cosbadge cbi" style="--cb:'+esc(i.color)+'">'+esc(i.label)+'</span><small>'+(own?(on?'Worn now':'Owned'):'Not owned')+'</small></span>'+btn+'</div>'}).join(''):'<div class="ernrow"><span class="ernt">Nothing in the store yet</span></div>')+'</div>');
+}
+document.addEventListener('click',async e=>{
+ const b=e.target.closest&&e.target.closest('[data-st]');if(!b)return;e.stopPropagation();
+ const k=b.dataset.st,v=b.dataset.sv;
+ try{
+  if(k==='buy'){await SB().rpc('buy_item',{p_item:v});say('Bought')}
+  else if(k==='wear'){await SB().rpc('equip_item',{p_item:v||null});say(v?'Badge on':'Badge off')}
+ }catch(er){say((er&&er.message)||'That did not work');return}
+ await open();
+},true);
+setTimeout(pull,7000);setInterval(pull,120000);
+window.__STORE={open,pull};
 })();
 
 </script>
