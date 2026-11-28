@@ -2277,6 +2277,24 @@ html[data-halo][data-theme="dark"]{--nvl:#B9A0FF}
 .ern .ernsel{padding:7px 10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;max-width:160px}
 .ern .ernbtns button.ernbad{color:#d62b2b;border-color:#f1b9b9}.ern .ernbtns button.ernbad.p{background:#d62b2b;color:#fff;border:0}
 .ern .ernrow b{font-weight:600}
+.ern .ernchips{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 8px}
+.ern .ernchipb{padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px}
+.ern .ernchipb.on{background:var(--grad);color:#fff;border-color:transparent}
+.ern .ernconsent{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:var(--muted);line-height:1.4;padding:12px 4px}
+.ern .ernconsent input{margin-top:3px;width:20px;height:20px;flex:none}
+.ern .anacard{padding:12px 14px}.ern .anan{font-size:12.5px}
+.ern .anach{width:100%;height:64px;display:block;margin-top:8px}
+.ern .anagrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.ern .anast{padding:8px;border-radius:14px;background:color-mix(in srgb,var(--accent) 8%,var(--surface));text-align:center}
+.ern .anast small{display:block;font-size:11px;color:var(--muted)}.ern .anast b{font-size:16px;font-weight:600;color:var(--ink)}
+.ern .anarow{display:grid;grid-template-columns:42% 1fr auto;gap:8px;align-items:center;padding:4px 0;font-size:13.5px}
+.ern .anal{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ern .anarow b{font-weight:600;font-size:13px}
+.ern .anabar{height:8px;border-radius:99px;background:color-mix(in srgb,var(--ink) 8%,transparent);overflow:hidden}.ern .anabar i{display:block;height:100%;background:var(--grad);border-radius:99px}
+.ern .anasub{margin:10px 0 2px}
+.ern .anahours{display:flex;align-items:flex-end;gap:2px;height:56px}.ern .anahours i{flex:1;background:var(--grad);border-radius:2px}
+.ern .anaax{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:2px}
+.ern .anatab{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:4px;font-size:12.5px;padding:5px 0;border-top:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}.ern .anatab:first-child{border-top:0}.ern .anatab b{font-weight:600}
+.ern .anabig{font-size:20px;margin:4px 0;color:var(--ink)}
 
 /* test shop photos */
 .mkth.tpph{background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;background-color:#f3f3f3}
@@ -7773,6 +7791,7 @@ function build(){
   +`</div><div class="hmsec">App Preferences</div><div class="hmgrp">`
   +row('lang','globe','Language','Translate posts into',`<span class="hmpill">${esc(langName())} ▾</span>`)
   +row('int','star','Interests','What you see more of',`<span class="hmchips">${chips}</span>`)
+  +(inn?row('details','user','Your Details','','<span class="hmpill">Add</span>'):'')
   +row('inv','share','Invite Friends','Share Blend with someone','<span class="hmpill">Copy</span>')
   +`</div>`;
  if(inn)h+=`<div class="hmsec">Account</div><div class="hmgrp">`+row('pass','key','Change Password','Choose a new password')+row('del','trash','Delete My Account','Remove your account and data')+row('out','out','Sign Out','Leave this account on this device')+`</div>`;
@@ -7788,7 +7807,7 @@ const ACT={
  lang:()=>window.__TR&&window.__TR.pick(),
  int:()=>window.__CS&&window.__CS.interests(),
  inv:()=>{const u=location.href.split('#')[0];const done=()=>{try{window.toast&&window.toast('Link copied')}catch(e){}};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(done,()=>{});else if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{})},
- earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),links:()=>window.__ERN&&window.__ERN.links(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
+ details:()=>window.__DMG&&window.__DMG.open(),earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),links:()=>window.__ERN&&window.__ERN.links(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
 };
 const OPEN=new Set(['terms','refunds','close']);
 b.addEventListener('click',e=>{
@@ -10019,7 +10038,7 @@ async function owner_(view,arg){
  <div class="erncard"><div class="ernrow"><span class="ernt">All monetisation<small>${D.global?'Master switch is ON':'Master switch is OFF: no new money activity'}</small></span><span class="ernchip ${D.global?'on':''}">${D.global?'ON':'OFF'}</span></div>
  <div class="ernbtns">${D.global?'<button data-e="gask" data-ea="0">Turn everything off</button>':''}<button class="p" data-e="gask" data-ea="1">Turn on all ready products</button></div></div>
  <p class="ernp">${on} of ${D.products.length} products are on.</p>`;
- h+=`<div class="ernsec">People and network</div><div class="erncard"><button class="ernrow" data-e="adm" data-ea="accounts"><span class="ernt">Accounts</span><span class="ernchev">›</span></button><button class="ernrow" data-e="adm" data-ea="reach"><span class="ernt">Feed reach</span><span class="ernchev">›</span></button><button class="ernrow" data-e="adm" data-ea="activity"><span class="ernt">Live activity</span><span class="ernchev">›</span></button></div>`;
+ h+=`<div class="ernsec">People and network</div><div class="erncard"><button class="ernrow" data-e="adm" data-ea="analytics"><span class="ernt">Analytics</span><span class="ernchev">›</span></button><button class="ernrow" data-e="adm" data-ea="accounts"><span class="ernt">Accounts</span><span class="ernchev">›</span></button><button class="ernrow" data-e="adm" data-ea="reach"><span class="ernt">Feed reach</span><span class="ernchev">›</span></button><button class="ernrow" data-e="adm" data-ea="activity"><span class="ernt">Live activity</span><span class="ernchev">›</span></button></div>`;
  for(const k of ['social','commerce','business']){
   h+=`<div class="ernsec">${ECO[k]}</div><div class="erncard">`+D.products.filter(p=>p.ecosystem===k).map(p=>`<button class="ernrow" data-e="prod" data-ea="${esc(p.code)}"><span class="ernt">${esc(p.label)}</span><span class="ernchip ${p.status}">${ST[p.status]||esc(p.status)}</span></button>`).join('')+'</div>';
  }
@@ -10175,7 +10194,7 @@ async function activity(){
   <div class="ernsec">Your recent actions</div><div class="erncard">`+((la.data||[]).map(a=>`<div class="ernrow"><span class="ernt">${esc(String(a.action).replace(/_/g,' '))}<small>${esc(new Date(a.at).toLocaleString())}</small></span></div>`).join('')||'<div class="ernrow"><span class="ernt">Nothing yet</span></div>')+'</div>');
  }catch(e){sheet(back('home','Dashboard')+'<h3>Live activity</h3><p class="ernp">Could not load. Run the owner SQL first.</p>')}
 }
-function open(v){ if(v==='accounts')return accounts(); if(v==='reach')return reach(); if(v==='activity')return activity() }
+function open(v){ if(v==='analytics')return window.__ANA&&__ANA.open(); if(v==='accounts')return accounts(); if(v==='reach')return reach(); if(v==='activity')return activity() }
 let timer;
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='admq'){clearTimeout(timer);const v=e.target.value.trim();timer=setTimeout(()=>paintResults(v),250)}});
 document.addEventListener('click',async e=>{
@@ -10240,6 +10259,136 @@ async function blockedCheck(){
 }
 setTimeout(pull,6000);setTimeout(blockedCheck,9000);setInterval(pull,90000);
 window.__RCH={pull};
+})();
+
+</script>
+<script>
+/* ===== Your details: optional country, age range, gender; used only in anonymous statistics ===== */
+(function(){
+const COUNTRIES=[['ZA','South Africa'],['NG','Nigeria'],['KE','Kenya'],['GH','Ghana'],['ZW','Zimbabwe'],['BW','Botswana'],['NA','Namibia'],['MZ','Mozambique'],['ZM','Zambia'],['MW','Malawi'],['LS','Lesotho'],['SZ','Eswatini'],['AO','Angola'],['TZ','Tanzania'],['UG','Uganda'],['RW','Rwanda'],['ET','Ethiopia'],['CD','DR Congo'],['CM','Cameroon'],['CI','Ivory Coast'],['SN','Senegal'],['EG','Egypt'],['MA','Morocco'],['DZ','Algeria'],['TN','Tunisia'],['MU','Mauritius'],['GB','United Kingdom'],['IE','Ireland'],['US','United States'],['CA','Canada'],['AU','Australia'],['NZ','New Zealand'],['DE','Germany'],['FR','France'],['ES','Spain'],['PT','Portugal'],['IT','Italy'],['NL','Netherlands'],['SE','Sweden'],['NO','Norway'],['IN','India'],['PK','Pakistan'],['BD','Bangladesh'],['CN','China'],['JP','Japan'],['KR','South Korea'],['SG','Singapore'],['MY','Malaysia'],['PH','Philippines'],['ID','Indonesia'],['AE','United Arab Emirates'],['SA','Saudi Arabia'],['TR','Turkey'],['BR','Brazil'],['AR','Argentina'],['MX','Mexico'],['CO','Colombia'],['XX','Other country']];
+const AGES=['13-17','18-24','25-34','35-44','45-54','55+'];
+const GEN=[['f','Female'],['m','Male'],['x','Another / prefer not to say']];
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const cname=c=>{const x=COUNTRIES.find(y=>y[0]===c);return x?x[1]:(c||'Unknown')};
+const say=m=>{try{if(typeof toast==='function')toast(m)}catch(e){}};
+const rd=()=>{try{return JSON.parse(localStorage.getItem('blend-demo')||'{}')}catch(e){return{}}};
+const ints=()=>{try{return JSON.parse(localStorage.getItem('blend-interests')||'[]')}catch(e){return[]}};
+let cur={};
+function open(){
+ const A=window.__BK&&__BK.api;if(!window.__SB||!__SB.isIn()||!A||!A.uid()){window.__SB&&__SB.signIn();return}
+ cur=Object.assign({country:'',age:'',gender:'',consent:false},rd());
+ openSheet(`<div class="ern"><h3>Your details</h3><p class="ernp">All optional. Blend uses them only in anonymous statistics, for example "how many people in South Africa are 18 to 24". Your name, messages and posts are never part of it, and any group smaller than 5 people is never shown.</p>
+ <div class="erncard"><div class="ernrow"><span class="ernt">Country</span><select id="dmc" class="ernsel"><option value="">Choose…</option>${COUNTRIES.map(([c,n])=>`<option value="${c}"${cur.country===c?' selected':''}>${esc(n)}</option>`).join('')}</select></div></div>
+ <div class="ernsec">Age range</div><div class="ernchips" id="dma">${AGES.map(a=>`<button class="ernchipb${cur.age===a?' on':''}" data-dm="age" data-v="${a}">${a}</button>`).join('')}</div>
+ <div class="ernsec">Gender</div><div class="ernchips" id="dmg">${GEN.map(([k,l])=>`<button class="ernchipb${cur.gender===k?' on':''}" data-dm="gender" data-v="${k}">${l}</button>`).join('')}</div>
+ <div class="ernsec">Your interests</div><p class="ernp">${ints().length?esc(ints().join(', ')):'None chosen yet. You can pick them under Interests.'}</p>
+ <label class="ernrow ernconsent"><input type="checkbox" id="dmk"${cur.consent?' checked':''}><span>I agree that Blend may include these details in anonymous statistics. I can switch this off any time.</span></label>
+ <div class="ernbtns"><button class="p" data-dm="save">Save</button></div></div>`);
+}
+async function save(){
+ const A=__BK.api,u=A.uid(),g=i=>document.getElementById(i);
+ const d={country:g('dmc').value,age:cur.age||'',gender:cur.gender||'',consent:!!g('dmk').checked,interests:ints().slice(0,12),ts:Date.now()};
+ try{localStorage.setItem('blend-demo',JSON.stringify(d));if(d.country&&d.country!=='XX')localStorage.setItem('blend-country',d.country);else localStorage.removeItem('blend-country')}catch(e){}
+ try{await A.col('data/users/'+u+'/demo').doc('me').set(d);say('Saved');try{closeSheet()}catch(e){}}catch(e){say('Could not save. Try again later')}
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.ern [data-dm]');if(!b)return;
+ const k=b.dataset.dm;
+ if(k==='age'||k==='gender'){cur[k]=cur[k]===b.dataset.v?'':b.dataset.v;b.parentNode.querySelectorAll('.ernchipb').forEach(x=>x.classList.toggle('on',x===b&&!!cur[k]))}
+ else if(k==='save')save();
+});
+window.__DMG={open,cname,COUNTRIES,AGES};
+})();
+
+</script>
+<script>
+/* ===== Owner analytics: audience, behaviour, spending, estimates (aggregated numbers only) ===== */
+(function(){
+const SB=()=>window.__SB;
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const say=m=>{try{if(typeof toast==='function')toast(m)}catch(e){}};
+const sheet=h=>openSheet('<div class="ern">'+h+'</div>');
+const R=c=>'R'+(Number(c||0)/100).toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2});
+const N=x=>Number(x||0).toLocaleString('en-ZA');
+const cn=c=>c==='Other'?'Other (small groups)':(window.__DMG?__DMG.cname(c):c);
+const PN={live_gifts:'Live gifts',live_streaming:'Live streaming',private_sessions:'Private sessions',marketplace_payments:'Shop sales',creator_subscriptions:'Creator subscriptions',premium_memberships:'Premium memberships',promoted_content:'Promoted content',advertising:'Advertising'};
+let D=null,days=30;
+const tz='Africa/Johannesburg';
+const dstr=d=>d.toLocaleDateString('en-CA',{timeZone:tz});
+function series(rows,n,key){ // fill missing days with 0, oldest to newest
+ const m={};(rows||[]).forEach(r=>{m[String(r.d).slice(0,10)]=Number(r[key||'n'])});
+ const out=[],end=new Date(D.generated_at);
+ for(let i=n-1;i>=0;i--){out.push(m[dstr(new Date(end.getTime()-i*864e5))]||0)}return out;
+}
+function trend(ys,m){ // simple straight-line trend on the last 30 days, projected m days ahead
+ const y=ys.slice(-30),n=y.length;if(n<4)return{est:[],sum:null};
+ const xm=(n-1)/2,ym=y.reduce((a,b)=>a+b,0)/n;let sxy=0,sxx=0;y.forEach((v,i)=>{sxy+=(i-xm)*(v-ym);sxx+=(i-xm)*(i-xm)});
+ const b=sxx?sxy/sxx:0,a=ym-b*xm,est=[];for(let i=0;i<m;i++)est.push(Math.max(0,a+b*(n+i)));
+ return{est,sum:Math.round(est.reduce((p,c)=>p+c,0))};
+}
+function bars(vals,est){
+ const all=vals.concat(est||[]),mx=Math.max(1,...all),w=300,h=64,bw=w/all.length;
+ return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" class="anach" role="img">`+all.map((v,i)=>{const bh=Math.round(v/mx*(h-4));return `<rect x="${(i*bw+1).toFixed(1)}" y="${h-bh}" width="${Math.max(1,bw-2).toFixed(1)}" height="${bh}" rx="1.5" fill="var(--accent)" opacity="${i>=vals.length?.3:1}"/>`}).join('')+'</svg>';
+}
+const hb=(items,f)=>{if(!items||!items.length)return '<div class="ernrow"><span class="ernt">No data yet</span></div>';const mx=Math.max(1,...items.map(x=>Number(x.n!=null?x.n:x.cents)));
+ return items.map(x=>{const v=Number(x.n!=null?x.n:x.cents);return `<div class="anarow"><span class="anal">${esc(f?f(x.k):x.k)}</span><span class="anabar"><i style="width:${Math.max(2,Math.round(v/mx*100))}%"></i></span><b>${x.n!=null?N(v):R(v)}</b></div>`}).join('')};
+const card=(t,body,note)=>`<div class="ernsec">${t}</div><div class="erncard anacard">${body}</div>${note?'<p class="ernp anan">'+note+'</p>':''}`;
+const stat=(l,v)=>`<div class="anast"><small>${l}</small><b>${v}</b></div>`;
+async function open(d){
+ days=d||days;
+ sheet('<button class="ernback" data-adm="home">‹ Dashboard</button><h3>Analytics</h3><p class="ernp">Loading…</p>');
+ try{D=await SB().rpc('owner_analytics',{p_days:days})}catch(e){sheet('<button class="ernback" data-adm="home">‹ Dashboard</button><h3>Analytics</h3><p class="ernp">Analytics are not set up yet. Run the owner SQL (part 3) first.</p>');return}
+ render();
+}
+function head(t){return `<button class="ernback" data-adm="home">‹ Dashboard</button><h3>${t}</h3>`}
+function render(){
+ const nb=series(D.new_by_day,days),pb=series(D.posts_by_day,days),lb=series(D.likes_by_day,days),cb=series(D.comments_by_day,days),sb=series(D.spend_by_day,days,'cents');
+ const tn=trend(nb,30),tp=trend(pb,30),ts=trend(sb,30);
+ const sum=a=>a.reduce((x,y)=>x+y,0),hrs=new Array(24).fill(0);(D.hours||[]).forEach(x=>hrs[x.h]=Number(x.n));
+ const peak=hrs.indexOf(Math.max(...hrs)),mau=Number(D.mau)||0,dau=Number(D.dau)||0;
+ const cov=D.users_total?Math.round(100*D.audience_total/D.users_total):0;
+ const spendTot=sum((D.spend_by_product||[]).map(x=>Number(x.cents)));
+ let h=head('Analytics')+`<div class="ernchips">${[7,30,90].map(x=>`<button class="ernchipb${x===days?' on':''}" data-ana="range" data-v="${x}">${x} days</button>`).join('')}</div>`;
+ h+=card('Overview',`<div class="anagrid">${stat('Accounts',N(D.users_total))}${stat('Active today',N(dau))}${stat('Active this week',N(D.wau))}${stat('Active this month',N(mau))}${stat('Daily / monthly',mau?Math.round(100*dau/mau)+'%':'n/a')}${stat('New in '+days+' days',N(sum(nb)))}</div>`);
+ h+=card('New people per day',bars(nb,tn.est),tn.sum==null?'Not enough history for an estimate yet.':`Estimate: about <b>${N(tn.sum)}</b> new people in the next 30 days if the recent trend continues (faded bars). It is a straight-line guess, not a promise.`);
+ h+=card('Activity',`<div class="anagrid">${stat('Posts',N(sum(pb)))}${stat('Likes',N(sum(lb)))}${stat('Comments',N(sum(cb)))}</div>`+bars(pb,tp.est),tp.sum==null?'':`Estimate: about <b>${N(tp.sum)}</b> posts in the next 30 days at this pace.`);
+ h+=card('Busiest hours (South African time)',`<div class="anahours">${hrs.map((v,i)=>`<i style="height:${Math.max(3,Math.round(v/Math.max(1,...hrs)*54))}px" title="${i}:00"></i>`).join('')}</div><div class="anaax"><span>0</span><span>6</span><span>12</span><span>18</span><span>23</span></div>`,sum(hrs)?`Busiest around <b>${peak}:00</b>. Best time to post and to run promotions.`:'No activity in this period.');
+ const mx=D.mix||{};h+=card('What people post',hb([{k:'Video',n:mx.video||0},{k:'Photo',n:mx.photo||0},{k:'Text',n:mx.text||0}]));
+ h+=card('Audience',`<div class="anagrid">${stat('Shared details',N(D.audience_total))}${stat('Of all accounts',cov+'%')}</div><div class="ernsec anasub">Countries</div>${hb(D.countries,cn)}<div class="ernsec anasub">Age</div>${hb(D.ages)}<div class="ernsec anasub">Gender</div>${hb(D.genders,k=>({f:'Female',m:'Male',x:'Another / not said',Other:'Other (small groups)'}[k]||k))}<div class="ernsec anasub">Interests</div>${hb((D.interests||[]).slice(0,12))}`,`Only people who opted in are counted, and any group under ${D.min_group} people is folded into Other. Coverage grows as more people add their details.`);
+ h+=card('Behaviour by country',(D.by_country&&D.by_country.length)?`<div class="anatab"><b>Country</b><b>People</b><b>Active 30d</b><b>Posts</b><b>Likes</b></div>`+D.by_country.map(c=>`<div class="anatab"><span>${esc(cn(c.k))}</span><span>${N(c.users)}</span><span>${N(c.active30)}</span><span>${N(c.posts)}</span><span>${N(c.likes)}</span></div>`).join(''):'<div class="ernrow"><span class="ernt">Shows once 5 or more people in a country share details</span></div>');
+ h+=card('Spending (real money only)',spendTot||D.paying_users?`<div class="anagrid">${stat('Total paid',R(spendTot))}${stat('Paying people',N(D.paying_users))}${stat('Average each',D.paying_users?R(spendTot/D.paying_users):'n/a')}</div><div class="ernsec anasub">By product</div>${hb((D.spend_by_product||[]).map(x=>({k:x.k,cents:x.cents})),k=>PN[k]||k)}<div class="ernsec anasub">By age</div>${hb((D.spend_by_age||[]).map(x=>({k:x.k,cents:x.cents})))}<div class="ernsec anasub">By country</div>${hb((D.spend_by_country||[]).map(x=>({k:x.k,cents:x.cents})),cn)}`+bars(sb,ts.est):'<div class="ernrow"><span class="ernt">No real payments yet. Test money is never counted here.</span></div>',ts.sum?`Estimate: about <b>${R(ts.sum)}</b> paid in the next 30 days at this pace.`:'');
+ h+=`<div class="ernbtns"><button data-ana="report">Advertiser audience report</button><button data-ana="csv">Download all as CSV</button></div><p class="ernp anan">Updated ${esc(new Date(D.generated_at).toLocaleString())}. Numbers only: no names, messages or private content.</p>`;
+ sheet(h);
+}
+function report(){
+ const hrs=new Array(24).fill(0);(D.hours||[]).forEach(x=>hrs[x.h]=Number(x.n));
+ const top=hrs.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]).slice(0,3).map(x=>x[1]).sort((a,b)=>a-b);
+ const act=Number(D.mau)||0,posts=series(D.posts_by_day,days).reduce((a,b)=>a+b,0),likes=series(D.likes_by_day,days).reduce((a,b)=>a+b,0);
+ const L=[`Blend audience report (last ${days} days)`,`Accounts: ${D.users_total}`,`Active this month: ${act}`,`Active today: ${D.dau}`,`Posts per active person: ${act?(posts/act).toFixed(1):'n/a'}`,`Likes per active person: ${act?(likes/act).toFixed(1):'n/a'}`,
+  `Busiest hours: ${top.map(h=>h+':00').join(', ')||'n/a'}`,`Top countries: ${(D.countries||[]).slice(0,5).map(x=>cn(x.k)+' '+x.n).join(', ')||'n/a'}`,`Age: ${(D.ages||[]).map(x=>x.k+' '+x.n).join(', ')||'n/a'}`,`Top interests: ${(D.interests||[]).slice(0,8).map(x=>x.k+' '+x.n).join(', ')||'n/a'}`,
+  `Audience figures cover ${D.audience_total} people who opted in; groups under ${D.min_group} are hidden.`];
+ window.__ANAT=L.join('\n');
+ sheet('<button class="ernback" data-ana="main">‹ Analytics</button><h3>Advertiser audience report</h3><div class="erncard anacard"><div class="anagrid">'+stat('Accounts',N(D.users_total))+stat('Active monthly',N(act))+stat('Posts per active person',act?(posts/act).toFixed(1):'n/a')+stat('Likes per active person',act?(likes/act).toFixed(1):'n/a')+'</div></div>'+
+  card('Top countries',hb((D.countries||[]).slice(0,6),cn))+card('Age',hb(D.ages))+card('Interests',hb((D.interests||[]).slice(0,8)))+card('Best times to reach them',`<p class="anabig">${top.map(h=>h+':00').join(' · ')||'n/a'}</p>`)+
+  '<div class="ernbtns"><button class="p" data-ana="copy">Copy as text</button></div><p class="ernp anan">Anonymous totals only. Figures cover people who chose to share their details.</p>');
+}
+function csv(){
+ const rows=[['section','key','value']];
+ const add=(s,a,f)=>(a||[]).forEach(x=>rows.push([s,f?f(x):(x.k||x.d||x.h),x.n!=null?x.n:(x.cents!=null?x.cents:'')]));
+ rows.push(['overview','accounts',D.users_total],['overview','active_today',D.dau],['overview','active_week',D.wau],['overview','active_month',D.mau]);
+ add('new_per_day',D.new_by_day);add('posts_per_day',D.posts_by_day);add('likes_per_day',D.likes_by_day);add('comments_per_day',D.comments_by_day);add('hour',D.hours);
+ add('country',D.countries);add('age',D.ages);add('gender',D.genders);add('interest',D.interests);
+ (D.by_country||[]).forEach(c=>rows.push(['country_behaviour',c.k,[c.users,c.active30,c.posts,c.likes].join('|')]));
+ add('spend_product',D.spend_by_product);add('spend_day',D.spend_by_day);add('spend_age',D.spend_by_age);add('spend_country',D.spend_by_country);
+ const t=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+ try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download='blend-analytics-'+dstr(new Date())+'.csv';document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);say('Downloading CSV')}catch(e){say('Could not create the file')}
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.ern [data-ana]');if(!b)return;const k=b.dataset.ana;
+ if(k==='range')open(parseInt(b.dataset.v,10));else if(k==='main')render();else if(k==='report')report();else if(k==='csv')csv();
+ else if(k==='copy'){try{navigator.clipboard.writeText(window.__ANAT).then(()=>say('Copied'))}catch(er){say('Could not copy')}}
+});
+window.__ANA={open:()=>open()};
 })();
 
 </script>
