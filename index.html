@@ -5053,7 +5053,7 @@ const toC=(z,c)=>z*rateOf(c);
 const R2=n=>fmtC(n,W.cur);
 const W={cur:'ZAR',bal:510.60,kyc:false,banks:[],cards:[],nid:10,stack:[],pend:null,mode:'tap',merch:0,
  log:[
-  {id:'e1',k:'earn',src:'gift',amt:142,label:'Gifts on your live (Blend keeps 30%)',t:'Yesterday'},
+  {id:'e1',k:'earn',src:'gift',amt:142,label:'Gifts on your live (Blend keeps 10%)',t:'Yesterday'},
   {id:'e2',k:'earn',src:'views',amt:318.60,label:'212,400 views on your videos',t:'This week'},
   {id:'e3',k:'earn',src:'rewards',amt:50,label:'Blend welcome bonus',t:'3 days ago'}]};
 try{const c=localStorage.getItem('blend-cur');if(c&&CUR[c])W.cur=c}catch(_){}
@@ -5096,7 +5096,7 @@ function walletView(){
  const all=[...W.log,...W.cards.flatMap(c=>c.tx.filter(x=>x.k!=='load').map(x=>({...x,label:x.label||'Card'})))];
  page('Earnings','Gifts, views and rewards',`
  <div class="wlbal"><small>Available to use</small><b>${R2(W.bal)}</b><div class="wlbar"><i style="width:${e.gift/tot*100}%"></i><i style="width:${e.views/tot*100}%"></i><i style="width:${e.rewards/tot*100}%"></i></div><div class="wlkey"><span class="g">Gifts ${R2(e.gift)}</span><span class="v">Views ${R2(e.views)}</span><span class="r">Rewards ${R2(e.rewards)}</span></div></div>
- <p class="q" style="margin:8px 16px 0">Gifts: you keep 70%. Views: ${fmtC(1.5,W.cur)} per 1,000 views. Rewards: bonuses and referrals from Blend.</p>
+ <p class="q" style="margin:8px 16px 0">Gifts: you keep 90%. Views: ${fmtC(1.5,W.cur)} per 1,000 views. Rewards: bonuses and referrals from Blend.</p>
  <div style="padding:10px 16px 0"><button class="mkbtn sm ghost" data-wl="cur">${I('wallet',16)}Currency: ${W.cur} · ${esc(CUR[W.cur].n)}</button></div>
  <div class="wlacts"><button data-wl="withdraw">${I('bank',24)}Withdraw</button><button data-wl="newcard">${I('card',24)}New card</button><button data-wl="try">${I('sparkle',24)}Earn demo</button></div>
  <div class="wlh">Your cards<small>${W.cards.length} of 3</small></div>
@@ -5192,7 +5192,7 @@ function pay(c,mode){
 /* ----- earning demo ----- */
 function earn(src){
  let amt,label;
- if(src==='gift'){const g=rnd([['Rose',10],['Coffee',25],['Diamond',50],['Rocket',200]]),who=rnd(['Priya','Kabelo','Amara','Tom']);amt=g[1]*0.7;label=who+' sent you a '+g[0]+' (you keep 70%)'}
+ if(src==='gift'){const g=rnd([['Rose',10],['Coffee',25],['Diamond',50],['Rocket',200]]),who=rnd(['Priya','Kabelo','Amara','Tom']);amt=g[1]*0.9;label=who+' sent you a '+g[0]+' (you keep 90%)'}
  else if(src==='views'){const n=rnd([2000,5000,12000]);amt=n/1000*1.5;label=n.toLocaleString('en')+' new views on your latest video'}
  else{amt=20;label='Weekly creator bonus from Blend'}
  W.bal=+(W.bal+amt).toFixed(2);W.log.unshift({id:'e'+(++W.nid),k:'earn',src,amt,label,t:nowT()});
@@ -7788,6 +7788,7 @@ function build(){
   +row('comm','people','Community','Groups and shared spaces','<span class="hmpill">Join</span>')
   +row('studio','chart','Creator Studio','Views, likes and followers','<span class="hmlive"><i></i>Go Live</span>')
   +(inn?row('earn','wallet','My Earnings',''):'')
+  +(inn?row('coinw','wallet','Coin Wallet',''):'')
   +`</div><div class="hmsec">App Preferences</div><div class="hmgrp">`
   +row('lang','globe','Language','Translate posts into',`<span class="hmpill">${esc(langName())} ▾</span>`)
   +row('int','star','Interests','What you see more of',`<span class="hmchips">${chips}</span>`)
@@ -7807,7 +7808,7 @@ const ACT={
  lang:()=>window.__TR&&window.__TR.pick(),
  int:()=>window.__CS&&window.__CS.interests(),
  inv:()=>{const u=location.href.split('#')[0];const done=()=>{try{window.toast&&window.toast('Link copied')}catch(e){}};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(done,()=>{});else if(navigator.share)navigator.share({title:'Blend',url:u}).catch(()=>{})},
- details:()=>window.__DMG&&window.__DMG.open(),earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),links:()=>window.__ERN&&window.__ERN.links(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
+ details:()=>window.__DMG&&window.__DMG.open(),coinw:()=>window.__ERN&&window.__ERN.wallet(),earn:()=>window.__ERN&&window.__ERN.earnings(),owner:()=>window.__ERN&&window.__ERN.owner(),links:()=>window.__ERN&&window.__ERN.links(),pass:()=>window.__SB.newPass(),del:()=>window.__SB.deleteAcc(),out:()=>window.__SB.signOut()
 };
 const OPEN=new Set(['terms','refunds','close']);
 b.addEventListener('click',e=>{
@@ -9997,6 +9998,22 @@ async function earnings(){
 }
 
 
+
+/* ---------- Coin wallet ---------- */
+async function wallet(){
+ if(!SB().isIn()){SB().signIn();return}
+ sheet('<h3>Coin Wallet</h3><p class="ernp">Loading…</p>');
+ let rows;try{rows=await SB().rpc('my_wallet')||[]}catch(e){sheet('<h3>Coin Wallet</h3><p class="ernp">Coins and gifts are not switched on yet.</p>');return}
+ let gifts=[],cv=20,fee=10;
+ try{const sb=await SB().client();const[g,c,f]=await Promise.all([sb.from('gift_catalog').select('*').order('coins'),sb.from('coin_settings').select('*'),sb.from('fee_rules').select('*').eq('code','gift')]);
+  gifts=(g.data||[]).filter(x=>x.active!==false);if(c.data&&c.data[0])cv=Number(c.data[0].coin_value_cents);if(f.data&&f.data[0])fee=Number(f.data[0].percent)}catch(er){}
+ const bal=t=>{const r=rows.find(x=>!!x.is_test===t);return r?Number(r.coins):0},real=bal(false),test=bal(true);
+ sheet(`<h3>Coin Wallet</h3><div class="ernbig"><small>Your coins</small><b>${real.toLocaleString('en-ZA')}</b></div>`+(test?`<p class="ernp erntest">Test coins (not real): <b>${test.toLocaleString('en-ZA')}</b>. They only work while gifts are being tested.</p>`:'')+
+  `<div class="ernbtns"><button disabled>Buy coins: opens when payments are switched on</button></div>
+  <div class="ernsec">Gifts</div><div class="erncard">`+(gifts.length?gifts.map(g=>`<div class="ernrow"><span class="ernt">${esc(g.label)}<small>Worth ${R(g.coins*cv)} to the creator</small></span><span class="ernchip">${g.coins} coin${g.coins>1?'s':''}</span></div>`).join(''):'<div class="ernrow"><span class="ernt">No gifts listed yet</span></div>')+`</div>
+  <p class="ernp">When you send a gift, the creator receives ${100-fee}% of its value and Blend keeps ${fee}%. Coins have no cash value to the sender.</p>`);
+}
+
 /* ---------- Owner links (plain web addresses, no secrets) ---------- */
 const P='https://supabase.com/dashboard/project/huarbxmwpnvpwnolyzxm';
 const LINKS=[
@@ -10077,7 +10094,7 @@ function fees(){
  sheet(back()+'<h3>Fees and commissions</h3><p class="ernp">Changing a fee here changes it everywhere, straight away. Past transactions keep the fee they were charged.</p><div class="erncard">'+D.fees.map(f=>`<div class="ernrow"><span class="ernt">${esc(f.label)}</span><span class="ernfee"><input type="number" inputmode="decimal" min="0" max="100" step="0.5" value="${f.percent}" data-fee="${esc(f.code)}" aria-label="${esc(f.label)} percent">%<button data-e="fee" data-ea="${esc(f.code)}">Save</button></span></div>`).join('')+'</div>');
 }
 function test(){
- sheet(back()+'<h3>Try it with fake money</h3><p class="ernp">This posts a pretend R100 payment to your own account so you can see the fee split. It is labelled as test money and is never real.</p><div class="erncard">'+D.products.filter(p=>p.fee_code).map(p=>`<button class="ernrow" data-e="tsale" data-ea="${esc(p.code)}"><span class="ernt">${esc(p.label)}<small>Fee ${esc(feeOf(p.fee_code))}</small></span><span class="ernchev">R100 ›</span></button>`).join('')+'</div>');
+ sheet(back()+'<h3>Try it with fake money</h3><p class="ernp">This posts a pretend R100 payment to your own account so you can see the fee split. It is labelled as test money and is never real.</p><div class="erncard">'+D.products.filter(p=>p.fee_code).map(p=>`<button class="ernrow" data-e="tsale" data-ea="${esc(p.code)}"><span class="ernt">${esc(p.label)}<small>Fee ${esc(feeOf(p.fee_code))}</small></span><span class="ernchev">R100 ›</span></button>`).join('')+'</div><div class="ernsec">Test coins</div><div class="erncard"><button class="ernrow" data-e="tcoins" data-ea="500"><span class="ernt">Give myself 500 test coins<small>For trying gifts. Never real.</small></span><span class="ernchev">›</span></button></div>');
 }
 function log(){
  sheet(back()+'<h3>Recent activity</h3><div class="erncard">'+(D.audit.length?D.audit.map(a=>`<div class="ernrow"><span class="ernt">${esc(a.action.replace(/_/g,' '))}<small>${esc(new Date(a.at).toLocaleString())}</small></span></div>`).join(''):'<div class="ernrow"><span class="ernt">Nothing yet</span></div>')+'</div>');
@@ -10091,6 +10108,7 @@ document.addEventListener('click',e=>{
  const k=b.dataset.e,a=b.dataset.ea||'';
  if(k==='view')owner_(a==='home'?undefined:a);
  else if(k==='prod')owner_('product',a);
+ else if(k==='tcoins'){const u=window.__BK&&__BK.api&&__BK.api.uid&&__BK.api.uid();act('owner_give_test_coins',{p_user:u,p_coins:Number(a)},'500 test coins added',['test'])}
  else if(k==='adm'){window.__ADM&&__ADM.open(a)}
  else if(k==='ask')owner_('confirm',a);
  else if(k==='gask')owner_('confirmg',a);
@@ -10100,7 +10118,7 @@ document.addEventListener('click',e=>{
  else if(k==='fee'){const i=document.querySelector('.ern [data-fee="'+a+'"]');act('set_fee',{p_code:a,p_percent:Number(i.value),p_fixed:(D.fees.find(f=>f.code===a)||{}).fixed_cents||0},'Fee saved',['fees'])}
  else if(k==='tsale'){const u=window.__BK&&__BK.api&&__BK.api.uid&&__BK.api.uid();act('owner_test_sale',{p_product:a,p_payee:u,p_gross:10000},'Test payment posted. See My Earnings',['test'])}
 });
-window.__ERN={links:()=>links(false),earnings,owner:()=>owner_(),isOwner};
+window.__ERN={wallet,links:()=>links(false),earnings,owner:()=>owner_(),isOwner};
 })();
 
 </script>
@@ -10151,7 +10169,7 @@ async function user(id){
  let h=back('accounts','Accounts')+`<div class="ernhdr"><span class="ernuav big">${ini(uname(d))}</span><div><b>${esc(uname(d))}</b><small>@${esc(d.h||'')}${blocked?' · <span class="ernred">Blocked</span>':''}</small></div></div>
  <div class="erncard"><div class="ernrow"><span class="ernt">Posts</span><span class="ernchip">${po.count==null?'?':po.count}</span></div><div class="ernrow"><span class="ernt">Feed reach</span><span class="ernchip ${reach?'ready':''}">${reach?(reach.scope==='global'?'Everyone':'Region '+esc(reach.region)):'None'}</span></div></div>
  <div class="ernsec">Powers</div><div class="erncard">`+ROLES.map(([k,l,s])=>`<button class="ernrow" data-adm="role" data-id="${esc(id)}" data-r="${k}" data-on="${roles.has(k)?0:1}"><span class="ernt">${l}${s?'<small>'+s+'</small>':''}</span><span class="ernchip ${roles.has(k)?'on':''}">${roles.has(k)?'On':'Off'}</span></button>`).join('')+`</div>
- <div class="ernbtns"><button data-adm="reachform" data-id="${esc(id)}">Feed reach…</button><button data-adm="rename" data-id="${esc(id)}">Edit name…</button></div>
+ <div class="ernbtns"><button data-adm="reachform" data-id="${esc(id)}">Feed reach…</button><button data-adm="rename" data-id="${esc(id)}">Edit name…</button><button data-adm="tcoins" data-id="${esc(id)}">Give 500 test coins</button></div>
  <div class="ernbtns">${blocked?`<button data-adm="unblock" data-id="${esc(id)}">Unblock</button>`:`<button data-adm="block" data-id="${esc(id)}">Block</button>`}<button class="ernbad" data-adm="delask" data-id="${esc(id)}">Delete…</button></div>`;
  sheet(h);
 }
@@ -10211,6 +10229,7 @@ document.addEventListener('click',async e=>{
  if(k==='delgo'){const v=(document.getElementById('admdel')||{}).value||'';if(v.trim().toLowerCase()!==uname(U[id]).toLowerCase()){say('Type the name exactly to confirm');return}
   return run('owner_delete_user',{p_user:id},'Account deleted',()=>accounts(Q))}
  if(k==='rename'){const nn=prompt('New name',uname(U[id]));if(nn&&nn.trim())return run('docs_merge',{p_col:'users',p_id:id,p_patch:{n:nn.trim().slice(0,40)}},'Name updated',()=>user(id));return}
+ if(k==='tcoins')return run('owner_give_test_coins',{p_user:id,p_coins:500},'500 test coins given',()=>user(id));
  if(k==='reachform')return reachForm(id);
  if(k==='reachme'){const u=window.__BK&&__BK.api&&__BK.api.uid&&__BK.api.uid();if(u){const q=await (await dbc()).from('docs').select('id,data').eq('col','users').eq('id',u);U[u]=(q.data&&q.data[0]&&q.data[0].data)||{};reachForm(u)}return}
  if(k==='rcclear')return run('owner_clear_reach',{p_user:id},'Reach removed',()=>reach());
